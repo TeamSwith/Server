@@ -2,8 +2,8 @@
 name: issue template
 about: swith server issue template
 title: ''
-labels: "✔️ setting"
-assignees: sseongeun
+labels: ''
+assignees: ''
 
 ---
 
