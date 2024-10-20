@@ -34,7 +34,7 @@ refactor/#32-쿼리-최적화
 
 ---
 
-# 3. commit convention**
+# 3. commit convention
 
 **📌 형식**:
 
@@ -50,7 +50,7 @@ feat(#32) : User 필드값 annotation 추가
 
 
 ---
-# 4. PR conventions**
+# 4. PR conventions
 **📌 형식**:
 
 커밋 타입 : 커밋 내용 (#이슈번호)
