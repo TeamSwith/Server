@@ -1,4 +1,4 @@
-package swith.swithServer.domain;
+package swith.swithServer.domain.Group.Entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

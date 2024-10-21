@@ -1,8 +1,9 @@
-package swith.swithServer.domain;
+package swith.swithServer.domain.Study.Entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import swith.swithServer.domain.Group.Entity.Group;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
