@@ -39,10 +39,10 @@ public class Group extends BaseEntity {
 
     private String notice;
 
-    public void setMember_num(int member_num){
+    public void updateMember_num(int member_num){
         this.member_num = member_num;
     }
-    public void setNotice(String notice) {
+    public void updateNotice(String notice) {
         this.notice = notice;
     }
 }

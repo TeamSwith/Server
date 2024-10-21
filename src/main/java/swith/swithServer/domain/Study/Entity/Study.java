@@ -33,11 +33,11 @@ public class Study extends BaseEntity {
     @JoinColumn(name = "group_id", nullable = false)
     private Group group_id;
 
-    public void setTime(LocalDateTime time) {
+    public void updateTime(LocalDateTime time) {
         this.time = time;
     }
 
-    public void setLocation(String location){
+    public void updateLocation(String location){
         this.location = location;
     }
 }
