@@ -7,6 +7,7 @@ import swith.swithServer.domain.Group.Entity.Group;
 import swith.swithServer.domain.common.BaseEntity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
@@ -19,7 +20,7 @@ public class Study extends BaseEntity {
     @NotNull
     private LocalDate date;
 
-    private LocalTime time;
+    private LocalDateTime time;
 
     private String location;
 
