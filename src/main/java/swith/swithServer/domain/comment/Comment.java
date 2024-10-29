@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import swith.swithServer.domain.common.BaseEntity;
 import swith.swithServer.domain.user.entity.User;
+// 스터디 참조 코드 추가 예정
 
 @Getter
 @Entity
@@ -21,8 +22,12 @@ public class Comment extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "study_id",  nullable = false)
+//    private Study study;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id",  nullable = false)
     private User user;
 
 //    public void updateContent(String content) {
