@@ -21,7 +21,7 @@ public class SwaggerConfig {
     private List<Server> getServers() {
         return List.of(new Server()
                 .url("/api")
-                .description("swith api 명세서"));
+                .description("swith server API"));
     }
 
 
