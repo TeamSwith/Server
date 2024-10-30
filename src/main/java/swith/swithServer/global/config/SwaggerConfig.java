@@ -21,7 +21,7 @@ public class SwaggerConfig {
     private List<Server> getServers() {
         return List.of(new Server()
                 .url("/api")
-                .description("백엔드 api 서버"));
+                .description("swith api 명세서"));
     }
 
 
@@ -30,7 +30,7 @@ public class SwaggerConfig {
         return new Info()
                 .title("swith API")
                 .version("dev")
-                .description("swith swagger API");
+                .description("swith api 명세서");
     }
 
 }
