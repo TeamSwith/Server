@@ -11,7 +11,6 @@ import swith.swithServer.domain.common.BaseEntity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Getter
 @Entity
@@ -20,7 +19,7 @@ import java.time.LocalTime;
 public class Study extends BaseEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long study_id;
+    private Long studyId;
 
     @NotNull
     private LocalDate date;
@@ -30,8 +29,8 @@ public class Study extends BaseEntity {
     private String location;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id", nullable = false)
-    private Group group_id;
+    @JoinColumn(name = "groupId", nullable = false)
+    private Group groupId;
 
     public void updateTime(LocalDateTime time) {
         this.time = time;

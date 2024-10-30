@@ -20,13 +20,18 @@ public class Group extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long group_id;
+    private Long groupId;
 
     @NotNull
-    private String group_pw;
+    private String groupPw;
 
+    //최대 인원 수
     @NotNull
-    private int member_num;
+    private int maxNum;
+
+    //현재 인원 수
+    @NotNull
+    private int memberNum;
 
     @NotNull
     private String subject;
@@ -39,8 +44,8 @@ public class Group extends BaseEntity {
 
     private String notice;
 
-    public void updateMember_num(int member_num){
-        this.member_num = member_num;
+    public void updateMemberNum(int memberNum){
+        this.memberNum = memberNum;
     }
     public void updateNotice(String notice) {
         this.notice = notice;
