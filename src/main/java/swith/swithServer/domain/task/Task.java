@@ -17,14 +17,14 @@ public class Task extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long task_id;
+    private Long taskId;
 
     @NotNull
     @Column(length = 50)
     private String content;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "study_id", nullable = false)
+//    @JoinColumn(name = "studyId", nullable = false)
 //    private Study study;
 
     @NotNull

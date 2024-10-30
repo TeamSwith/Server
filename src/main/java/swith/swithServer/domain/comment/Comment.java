@@ -16,18 +16,18 @@ public class Comment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long comment_id;
+    private Long commentId;
 
     @NotNull
     @Column(columnDefinition = "TEXT")
     private String content;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "study_id",  nullable = false)
+//    @JoinColumn(name = "studyId",  nullable = false)
 //    private Study study;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id",  nullable = false)
+    @JoinColumn(name = "userId",  nullable = false)
     private User user;
 
 //    public void updateContent(String content) {
