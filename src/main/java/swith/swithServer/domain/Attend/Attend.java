@@ -27,4 +27,8 @@ public class Attend extends BaseEntity {
     @NotNull
     @Enumerated(EnumType.STRING)
     private AttendStatus attendStatus;
+
+    public void updateAttendStatus(AttendStatus attendStatus) {
+        this.attendStatus = attendStatus;
+    }
 }
