@@ -30,7 +30,7 @@ public class Study extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "groupId", nullable = false)
-    private Group groupId;
+    private Group group;
 
     public void updateTime(LocalDateTime time) {
         this.time = time;
