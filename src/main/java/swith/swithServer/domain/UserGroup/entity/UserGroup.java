@@ -1,4 +1,4 @@
-package swith.swithServer.domain.UserGroup;
+package swith.swithServer.domain.UserGroup.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
