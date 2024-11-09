@@ -9,11 +9,10 @@ import swith.swithServer.domain.Study.service.StudyService;
 
 import java.time.LocalDateTime;
 @RestController
-@RequestMapping("/주소~~")
+@RequestMapping("/api/study")
 @RequiredArgsConstructor
 public class StudyController {
     private final StudyService studyService;
-
 
     //study 생성
     @PostMapping
@@ -21,7 +20,6 @@ public class StudyController {
         Study createdStudy = studyService.createStudy(study);
         return ResponseEntity.ok(createdStudy);
     }
-
 
     //study 수정
     @PutMapping("/{id}")
@@ -32,7 +30,6 @@ public class StudyController {
         Study updatedStudy = studyService.updateStudy(id, time, location);
         return ResponseEntity.ok(updatedStudy);
     }
-
 
     //study 삭제
     @DeleteMapping("/{id}")
