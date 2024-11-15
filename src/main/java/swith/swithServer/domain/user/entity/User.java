@@ -2,10 +2,7 @@ package swith.swithServer.domain.user.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import swith.swithServer.domain.common.BaseEntity;
 
 @Getter
@@ -34,5 +31,14 @@ public class User extends BaseEntity {
     @NotNull
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
+
+    @Builder
+    private User(String email,String nickname) {
+        this.email=email;
+        this.nickname=nickname;
+        this.snsType=SnsType.KAKAO;
+        this.userStatus=UserStatus.ACTIVE;
+        this.userRole=UserRole.NORMAL;
+    }
 
 }
