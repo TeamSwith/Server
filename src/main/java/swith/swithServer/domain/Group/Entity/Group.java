@@ -20,7 +20,11 @@ public class Group extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long groupId;
+    private Long id;
+
+    //사용자 입력 id
+    @NotNull
+    private String groupId;
 
     @NotNull
     private String groupPw;
