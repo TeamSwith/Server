@@ -1,12 +1,8 @@
-package swith.swithServer.domain.Study.Entity;
+package swith.swithServer.domain.study.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import swith.swithServer.domain.Group.Entity.Group;
+import lombok.*;
 import swith.swithServer.domain.common.BaseEntity;
 
 import java.time.LocalDate;
@@ -14,12 +10,12 @@ import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@RequiredArgsConstructor
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Study extends BaseEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long studyId;
+    private Long id;
 
     @NotNull
     private LocalDate date;
@@ -28,9 +24,9 @@ public class Study extends BaseEntity {
 
     private String location;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "groupId", nullable = false)
-    private Group group;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "groupId", nullable = false)
+//    private Group group;
 
     public void updateTime(LocalDateTime time) {
         this.time = time;
