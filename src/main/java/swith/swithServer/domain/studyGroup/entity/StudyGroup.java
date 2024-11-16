@@ -1,4 +1,4 @@
-package swith.swithServer.domain.Group.Entity;
+package swith.swithServer.domain.studyGroup.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -8,11 +8,11 @@ import swith.swithServer.domain.common.BaseEntity;
 
 @Getter
 @Entity
-//@AllArgsConstructor
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 //@RequiredArgsConstructor
-@Table(name="ggg")
-public class Group extends BaseEntity {
+//@Table(name="ggg")
+public class StudyGroup extends BaseEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
@@ -50,7 +50,7 @@ public class Group extends BaseEntity {
         this.notice = notice;
     }
     //테스트용
-    public Group(String groupId, String groupPw, int maxNum, int memberNum, String subject, String period, String communication){
+    public StudyGroup(String groupId, String groupPw, int maxNum, int memberNum, String subject, String period, String communication){
         this.groupId =groupId;
         this.groupPw=groupPw;
         this.maxNum=maxNum;
