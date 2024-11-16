@@ -1,23 +1,18 @@
 package swith.swithServer.domain.Group.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import swith.swithServer.domain.common.BaseEntity;
 
 
 @Getter
 @Entity
-@RequiredArgsConstructor
+//@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@RequiredArgsConstructor
+@Table(name="ggg")
 public class Group extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
@@ -53,5 +48,16 @@ public class Group extends BaseEntity {
     }
     public void updateNotice(String notice) {
         this.notice = notice;
+    }
+    //테스트용
+    public Group(String groupId, String groupPw, int maxNum, int memberNum, String subject, String period, String communication){
+        this.groupId =groupId;
+        this.groupPw=groupPw;
+        this.maxNum=maxNum;
+        this.memberNum=memberNum;
+        this.subject=subject;
+        this.period=period;
+        this.communication=communication;
+
     }
 }
