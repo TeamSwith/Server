@@ -1,16 +1,20 @@
-package swith.swithServer.domain.task;
+package swith.swithServer.domain.task.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import swith.swithServer.domain.common.BaseEntity;
-// 스터디 참조 코드 추가 예정
+//import jakarta.persistence.Entity;
+//import jakarta.persistence.GeneratedValue;
+//import jakarta.persistence.GenerationType;
+//import jakarta.persistence.Id;
 
-// 논의 사항 : ERD에 과제 상태, 시간 추가해야하지 않을까요?
 
 @Getter
+@Setter // 필드 수정 가능하도록 추가
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Task extends BaseEntity {
@@ -22,10 +26,6 @@ public class Task extends BaseEntity {
     @NotNull
     @Column(length = 50)
     private String content;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "studyId", nullable = false)
-//    private Study study;
 
     @NotNull
     @Enumerated(EnumType.STRING)

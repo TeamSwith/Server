@@ -1,4 +1,4 @@
-package swith.swithServer.domain.user.entity;
+package swith.swithServer.domain.user.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
