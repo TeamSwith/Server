@@ -1,10 +1,10 @@
 package swith.swithServer.domain.study.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.common.BaseEntity;
 
@@ -24,8 +24,8 @@ public class Study extends BaseEntity {
     @NotNull
     private LocalDate date;
 
-    @Schema(type = "LocalTime")
-    @DateTimeFormat(pattern = "HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    @Schema(type = "string", pattern = "HH:mm:ss", example = "12:00:00")
     private LocalTime time;
 
     private String location;

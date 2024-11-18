@@ -10,8 +10,6 @@ import swith.swithServer.domain.common.BaseEntity;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-//@RequiredArgsConstructor
-//@Table(name="ggg")
 public class StudyGroup extends BaseEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)

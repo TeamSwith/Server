@@ -10,7 +10,6 @@ import swith.swithServer.domain.userGroup.repository.UserGroupRepository;
 
 @Service
 @RequiredArgsConstructor
-//@NoArgsConstructor
 public class UserGroupService {
     private final UserGroupRepository userGroupRepository;
 

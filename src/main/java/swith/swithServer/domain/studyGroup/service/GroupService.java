@@ -11,8 +11,6 @@ import swith.swithServer.domain.user.entity.User;
 import swith.swithServer.global.error.ErrorCode;
 import swith.swithServer.global.error.exception.BusinessException;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class GroupService {
@@ -28,15 +26,19 @@ public class GroupService {
 
     //id로 찾기
     @Transactional
-    public Optional<StudyGroup> getGroupById(Long id){
-        return groupRepository.findById(id);
+    public StudyGroup getGroupById(Long id){
+        StudyGroup studyGroup = groupRepository.findById(id)
+                .orElseThrow(()->new BusinessException(ErrorCode.GROUP_DOESNT_EXIST));
+        return studyGroup;
     }
 
 
     //groupId,groupPw에 매칭되는 그룹 찾기
     @Transactional
-    public Optional<StudyGroup> getGroupByIdPw(String groupId, String groupPw){
-        return groupRepository.findByGroupIdAndGroupPw(groupId, groupPw);
+    public StudyGroup getGroupByIdPw(String groupId, String groupPw){
+        StudyGroup studyGroup = groupRepository.findByGroupIdAndGroupPw(groupId, groupPw)
+                .orElseThrow(()->new BusinessException(ErrorCode.GROUP_LOGIN_ERROR));
+        return studyGroup;
     }
 
     //사용자의 스터디 가입 여부 확인
@@ -50,6 +52,7 @@ public class GroupService {
     public StudyGroup updateNotice(Long id, String notice){
         StudyGroup studyGroup = groupRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.GROUP_DOESNT_EXIST));
+
         studyGroup.updateNotice(notice);
         return groupRepository.save(studyGroup);
     }

@@ -20,13 +20,13 @@ public class Attend extends BaseEntity {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = false)
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "studyId", nullable = false)
-    private Study study;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "userId", nullable = false)
+//    private User user;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "studyId", nullable = false)
+//    private Study study;
 
     @NotNull
     @Enumerated(EnumType.STRING)

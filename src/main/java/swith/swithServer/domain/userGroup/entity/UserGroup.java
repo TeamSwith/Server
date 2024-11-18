@@ -11,7 +11,6 @@ import swith.swithServer.domain.user.entity.User;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-//@RequiredArgsConstructor
 public class UserGroup extends BaseEntity {
 
     @Id

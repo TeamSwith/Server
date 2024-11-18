@@ -1,83 +1,54 @@
 package swith.swithServer.domain.study.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import swith.swithServer.domain.study.dto.StudyRequestDto;
+import swith.swithServer.domain.study.dto.StudyResponseDto;
+import swith.swithServer.domain.study.dto.StudyUpdateDto;
 import swith.swithServer.domain.study.entity.Study;
 import swith.swithServer.domain.study.service.StudyService;
-import swith.swithServer.global.error.ErrorCode;
-import swith.swithServer.global.error.exception.BusinessException;
 import swith.swithServer.global.response.ApiResponse;
-
-import java.net.URI;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/group/{id}/study")
 @RequiredArgsConstructor
-
+@Tag(name="날짜 별 스터디")
 public class StudyController {
     private final StudyService studyService;
 
-    //study 생성 (날짜, groupId 필요)
-/*    @PostMapping
-    public ResponseEntity<Study> createStudy(@RequestBody Study study){
-        Study createdStudy = studyService.createStudy(study);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdStudy);
-    }
-  */
 
     @PostMapping
-    public ApiResponse<Study> createStudy(
-            @PathVariable Long id,
-            @RequestParam LocalDate date,
-            @RequestParam LocalTime time,
-            @RequestParam String location){
-        Study createdStudy = studyService.createStudy(date, time, location, id);
-        //return ResponseEntity.status(HttpStatus.CREATED).body(createdStudy);
-        return new ApiResponse<>(201,createdStudy);
+    @Operation(summary="스터디 일정 생성")
+    public ApiResponse<StudyResponseDto> createStudy(
+            @PathVariable Long id, @RequestBody StudyRequestDto studyRequestDto
+            ){
+        Study createdStudy = studyService.createStudy(studyRequestDto.getDate(), studyRequestDto.getTime(), studyRequestDto.getLocation(), id);
+        return new ApiResponse<>(201, StudyResponseDto.from(createdStudy));
     }
 
-    //study 수정
     @PatchMapping("/{studyId}")
-    public ApiResponse<Study> updateStudy(
+    @Operation(summary = "스터디 일정 수정")
+    public ApiResponse<StudyResponseDto> updateStudy(
             @PathVariable Long studyId,
-            @RequestParam LocalTime time,
-            @RequestParam String location){
-        Study updatedStudy = studyService.updateStudy(studyId, time, location);
-        //return ResponseEntity.ok().body(updatedStudy);
-        return new ApiResponse<>(200, updatedStudy);
+            @RequestBody StudyUpdateDto studyUpdateDto){
+        Study updatedStudy = studyService.updateStudy(studyId, studyUpdateDto.getTime(), studyUpdateDto.getLocation());
+        return new ApiResponse<>(200, StudyResponseDto.from(updatedStudy));
     }
 
-    //study 삭제
     @DeleteMapping("/{studyId}")
+    @Operation(summary = "스터디 일정 삭제")
     public ApiResponse<Void> deleteStudy(@PathVariable Long studyId){
         studyService.deleteStudy(studyId);
-        //return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         return new ApiResponse<>(204,null);
     }
 
-    //study 시간, 위치 보여주기
     @GetMapping("/{studyId}")
-    public ApiResponse<Map<String, Object>> getStudyInfo(@PathVariable Long studyId){
-        Study study = studyService.getStudyById(studyId)
-                .orElseThrow(()-> new BusinessException(ErrorCode.STUDY_DOESNT_EXIST));
-
-        Map<String, Object> response = new HashMap<>();
-        //response.put("time", study.getTime());
-        //response.put("location", study.getLocation());
-        //테스트 용!
-        response.put("time", "12:00:00");
-        response.put("location", "숭실둥실대학교");
-        //return ResponseEntity.ok(response);
-        return new ApiResponse<>(200, response);
+    @Operation(summary = "스터디 일정 가져오기")
+    public ApiResponse<StudyResponseDto> getStudyInfo(@PathVariable Long studyId){
+        Study study = studyService.getStudyById(studyId);
+        return new ApiResponse<>(200, StudyResponseDto.from(study));
 
     }
 
