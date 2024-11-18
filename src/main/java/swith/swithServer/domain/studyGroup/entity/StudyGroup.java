@@ -47,15 +47,4 @@ public class StudyGroup extends BaseEntity {
     public void updateNotice(String notice) {
         this.notice = notice;
     }
-    //테스트용
-    public StudyGroup(String groupId, String groupPw, int maxNum, int memberNum, String subject, String period, String communication){
-        this.groupId =groupId;
-        this.groupPw=groupPw;
-        this.maxNum=maxNum;
-        this.memberNum=memberNum;
-        this.subject=subject;
-        this.period=period;
-        this.communication=communication;
-
-    }
 }

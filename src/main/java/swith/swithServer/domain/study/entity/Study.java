@@ -15,7 +15,6 @@ import java.time.LocalTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-//@RequiredArgsConstructor
 public class Study extends BaseEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)

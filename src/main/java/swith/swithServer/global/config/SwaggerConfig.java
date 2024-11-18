@@ -8,13 +8,13 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import java.util.List;
 
 @Configuration
 public class SwaggerConfig {
     private final String JWT = "JWT";
     private final String BEARER = "Bearer";
-
 
 
     @Bean
@@ -31,6 +31,9 @@ public class SwaggerConfig {
                 .url("/api")
                 .description("swith server API"));
     }
+
+
+
     private Info getInfo() {
         return new Info()
                 .title("swith API")

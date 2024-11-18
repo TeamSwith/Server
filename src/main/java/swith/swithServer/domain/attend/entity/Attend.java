@@ -1,4 +1,4 @@
-package swith.swithServer.domain.attend.entity;
+package swith.swithServer.domain.Attend.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -13,12 +13,13 @@ import swith.swithServer.domain.user.entity.User;
 
 @Getter
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Attend extends BaseEntity {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "userId", nullable = false)
