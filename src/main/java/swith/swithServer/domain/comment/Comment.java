@@ -28,9 +28,9 @@ public class Comment extends BaseEntity {
 //    @JoinColumn(name = "studyId",  nullable = false)
 //    private Study study;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId",  nullable = false)
-    private User user;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "userId",  nullable = false)
+//    private User user;
 
 //    public void updateContent(String content) {
 //        this.content = content;
