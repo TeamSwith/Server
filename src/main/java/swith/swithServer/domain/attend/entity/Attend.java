@@ -1,4 +1,4 @@
-package swith.swithServer.domain.Attend.entity;
+package swith.swithServer.domain.attend.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import swith.swithServer.domain.attend.entity.AttendStatus;
 import swith.swithServer.domain.study.entity.Study;
 import swith.swithServer.domain.common.BaseEntity;
 import swith.swithServer.domain.user.entity.User;

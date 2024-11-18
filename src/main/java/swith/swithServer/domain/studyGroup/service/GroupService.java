@@ -17,12 +17,6 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final UserGroupRepository userGroupRepository;
 
-    //테스트 용
-    @Transactional
-    public StudyGroup createGroup(String groupId, String groupPw, int maxNum, int memberNum, String subject, String period, String communication){
-        StudyGroup studyGroup = new StudyGroup(groupId,groupPw,maxNum,memberNum,subject,period,communication);
-        return groupRepository.save(studyGroup);
-    }
 
     //id로 찾기
     @Transactional

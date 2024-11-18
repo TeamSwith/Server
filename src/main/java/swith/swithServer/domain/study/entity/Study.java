@@ -30,7 +30,7 @@ public class Study extends BaseEntity {
     private String location;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "groupId", nullable = false)
+    @JoinColumn(name = "studyGroupId", nullable = false)
     private StudyGroup studyGroup;
 
 
