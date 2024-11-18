@@ -13,9 +13,6 @@ import swith.swithServer.domain.user.service.UserService;
 import swith.swithServer.global.oauth.service.OauthService;
 import swith.swithServer.global.response.ApiResponse;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @RestController
 @RequestMapping("/group")
 @RequiredArgsConstructor

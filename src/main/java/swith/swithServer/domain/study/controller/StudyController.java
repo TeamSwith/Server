@@ -18,7 +18,6 @@ import swith.swithServer.global.response.ApiResponse;
 public class StudyController {
     private final StudyService studyService;
 
-
     @PostMapping
     @Operation(summary="스터디 일정 생성")
     public ApiResponse<StudyResponseDto> createStudy(
@@ -51,5 +50,4 @@ public class StudyController {
         return new ApiResponse<>(200, StudyResponseDto.from(study));
 
     }
-
 }

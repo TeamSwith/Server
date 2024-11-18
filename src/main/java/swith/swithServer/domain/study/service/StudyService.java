@@ -13,15 +13,11 @@ import swith.swithServer.domain.study.repository.StudyRepository;
 import swith.swithServer.global.error.ErrorCode;
 import swith.swithServer.global.error.exception.BusinessException;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 @Service
 @RequiredArgsConstructor
 public class StudyService {
     private final StudyRepository studyRepository;
     private final GroupRepository groupRepository;
-
 
     //id로 찾기
     public Study getStudyById(Long id){
