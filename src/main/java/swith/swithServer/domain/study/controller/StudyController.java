@@ -24,7 +24,7 @@ public class StudyController {
     public ApiResponse<StudyResponseDto> createStudy(
             @PathVariable Long id, @RequestBody StudyRequestDto studyRequestDto
             ){
-        Study createdStudy = studyService.createStudy(studyRequestDto.getDate(), studyRequestDto.getTime(), studyRequestDto.getLocation(), id);
+        Study createdStudy = studyService.createStudy(studyRequestDto, id);
         return new ApiResponse<>(201, StudyResponseDto.from(createdStudy));
     }
 
@@ -33,7 +33,7 @@ public class StudyController {
     public ApiResponse<StudyResponseDto> updateStudy(
             @PathVariable Long studyId,
             @RequestBody StudyUpdateDto studyUpdateDto){
-        Study updatedStudy = studyService.updateStudy(studyId, studyUpdateDto.getTime(), studyUpdateDto.getLocation());
+        Study updatedStudy = studyService.updateStudy(studyId, studyUpdateDto);
         return new ApiResponse<>(200, StudyResponseDto.from(updatedStudy));
     }
 

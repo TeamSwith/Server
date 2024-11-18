@@ -13,6 +13,7 @@ import java.time.LocalTime;
 @Builder
 public class StudyResponseDto {
     private Long id;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
     @Schema(type = "string", pattern = "HH:mm:ss", example = "12:00:00")

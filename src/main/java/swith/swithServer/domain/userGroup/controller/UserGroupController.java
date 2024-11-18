@@ -30,7 +30,7 @@ public class UserGroupController {
     @Operation(summary = "스터디 가입하기")
     public ApiResponse<String> createUserGroup(
             @RequestBody UserGroupDto userGroupDto){
-        User user = userService.getUserById(userGroupDto.getUserId());
+        User user = userService.getUserById(userGroupDto);
         StudyGroup studyGroup = groupService.getGroupById(userGroupDto.getGroupId());
         userGroupService.createUserGroup(user, studyGroup);
         studyGroup.updateMemberNum(studyGroup.getMemberNum()+1);

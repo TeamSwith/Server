@@ -11,6 +11,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Getter
 public class StudyRequestDto {
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
     @Schema(type = "string", pattern = "HH:mm:ss", example = "12:00:00")

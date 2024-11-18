@@ -4,6 +4,8 @@ package swith.swithServer.domain.study.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import swith.swithServer.domain.study.dto.StudyRequestDto;
+import swith.swithServer.domain.study.dto.StudyUpdateDto;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.studyGroup.repository.GroupRepository;
 import swith.swithServer.domain.study.entity.Study;
@@ -30,20 +32,20 @@ public class StudyService {
 
     //study 생성
     @Transactional
-    public Study createStudy(LocalDate date, LocalTime time, String location, Long id){
+    public Study createStudy(StudyRequestDto studyRequestDto, Long id){
         StudyGroup studyGroup = groupRepository.findById(id)
                 .orElseThrow(()->new BusinessException(ErrorCode.GROUP_DOESNT_EXIST));
-        Study study = new Study(date, time, location, studyGroup);
+        Study study = new Study(studyRequestDto.getDate(), studyRequestDto.getTime(), studyRequestDto.getLocation(), studyGroup);
         return studyRepository.save(study);
     }
 
     //study 수정
     @Transactional
-    public Study updateStudy(Long id, LocalTime time, String location){
+    public Study updateStudy(Long id, StudyUpdateDto studyUpdateDto){
         Study study = studyRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.STUDY_DOESNT_EXIST));
-        study.updateTime(time);
-        study.updateLocation(location);
+        study.updateTime(studyUpdateDto.getTime());
+        study.updateLocation(studyUpdateDto.getLocation());
         return studyRepository.save(study);
     }
 

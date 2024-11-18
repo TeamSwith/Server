@@ -10,6 +10,7 @@ import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.studyGroup.service.GroupService;
 import swith.swithServer.domain.user.entity.User;
 import swith.swithServer.domain.user.service.UserService;
+import swith.swithServer.global.oauth.service.OauthService;
 import swith.swithServer.global.response.ApiResponse;
 
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import java.util.Map;
 public class GroupController {
     private final GroupService groupService;
     private final UserService userService;
+    private final OauthService authService;
 
 
 
@@ -30,28 +32,30 @@ public class GroupController {
     public ApiResponse<?> joinGroup(@RequestBody GroupRequestDto groupRequestDto){
 
         //id와 pw가 매칭되는 group 여부 확인
-        StudyGroup studyGroup = groupService.getGroupByIdPw(groupRequestDto.getGroupId(), groupRequestDto.getGroupPw());
+        StudyGroup studyGroup = groupService.getGroupByIdPw(groupRequestDto);
 
         //user 조회
-        User user = userService.getUserById(groupRequestDto.getUserId());
+        User user = userService.getUserById(groupRequestDto);
 
-        //가입 여부 확인
-        boolean isUserInGroup = groupService.isUserInGroup(user, studyGroup);
+        //현재 로그인 되어 있는 user와 일치하는지 확인
+        if(user== authService.getLoginUser()) {
 
-        if (isUserInGroup) {
+            //가입 여부 확인
+            boolean isUserInGroup = groupService.isUserInGroup(user, studyGroup);
+
+            if (isUserInGroup) {
                 //가입되어 있을 때
-                return new ApiResponse<>(200, GroupResponseDto.from(studyGroup.getId(), "이미 가입되어 있음", "redirect:/"+studyGroup.getId()));
-//
-        }
-        else {
+                return new ApiResponse<>(200, GroupResponseDto.from(studyGroup.getId(), "이미 가입되어 있음", "redirect:/" + studyGroup.getId()));
+            } else {
                 //가입되어 있지 않을 때 group 의 정원 확인
-            if(studyGroup.getMemberNum()< studyGroup.getMaxNum()) {
-                return new ApiResponse<>(200,GroupResponseDto.from(studyGroup.getId(), "가입 전","redirect:http://localhost:8080/api/user-group/create"));
-            }
-            else{
-                return new ApiResponse<>(404,"정원을 초과했습니다.");
+                if (studyGroup.getMemberNum() < studyGroup.getMaxNum()) {
+                    return new ApiResponse<>(200, GroupResponseDto.from(studyGroup.getId(), "가입 전", "redirect:http://localhost:8080/api/user-group/create"));
+                } else {
+                    return new ApiResponse<>(404, "정원을 초과했습니다.");
+                }
             }
         }
+        return new ApiResponse<>(400,"요청한 사용자와 일치하지 않습니다.");
 
     }
 

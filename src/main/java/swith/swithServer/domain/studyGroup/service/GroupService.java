@@ -4,6 +4,7 @@ package swith.swithServer.domain.studyGroup.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import swith.swithServer.domain.studyGroup.dto.GroupRequestDto;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.studyGroup.repository.GroupRepository;
 import swith.swithServer.domain.userGroup.repository.UserGroupRepository;
@@ -29,8 +30,8 @@ public class GroupService {
 
     //groupId,groupPw에 매칭되는 그룹 찾기
     @Transactional
-    public StudyGroup getGroupByIdPw(String groupId, String groupPw){
-        StudyGroup studyGroup = groupRepository.findByGroupIdAndGroupPw(groupId, groupPw)
+    public StudyGroup getGroupByIdPw(GroupRequestDto groupRequestDto){
+        StudyGroup studyGroup = groupRepository.findByGroupIdAndGroupPw(groupRequestDto.getGroupId(), groupRequestDto.getGroupPw())
                 .orElseThrow(()->new BusinessException(ErrorCode.GROUP_LOGIN_ERROR));
         return studyGroup;
     }
