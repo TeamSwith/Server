@@ -1,4 +1,4 @@
-package swith.swithServer.domain.task.entity;
+package swith.swithServer.domain.usertask.entity;
 
 public enum TaskStatus {
     PENDING,

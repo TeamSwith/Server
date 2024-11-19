@@ -13,7 +13,6 @@ import swith.swithServer.domain.user.entity.User;
 import swith.swithServer.domain.group.repository.GroupRepository;
 import swith.swithServer.domain.study.repository.StudyRepository;
 import swith.swithServer.domain.user.repository.UserRepository;
-import swith.swithServer.global.exception.ResourceNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 

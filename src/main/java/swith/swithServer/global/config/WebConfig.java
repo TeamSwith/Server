@@ -29,6 +29,7 @@ public class WebConfig implements WebMvcConfigurer {
                         .requestMatchers("/api/groups/details").permitAll()
                         .requestMatchers("/api/groups/delete").permitAll()
                         .requestMatchers("/api/comments/create").permitAll()
+                        .requestMatchers("/api/user-groups/users").permitAll()
                         .anyRequest().authenticated() // 나머지는 인증 필요
                 );
         return http.build();

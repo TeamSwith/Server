@@ -12,7 +12,7 @@ public class GroupCreateRequest {
     private String groupInsertId;
     private String groupPw;
 
-    private String groupName;      // Optional: 그룹 이름
+    private String groupName = "groupName";      // Optional: 그룹 이름
     private int maxNum = 10;       // Default 값
     private int memberNum = 0;     // Default 값
     private String subject = "0";   // Default 값

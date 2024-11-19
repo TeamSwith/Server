@@ -18,8 +18,8 @@ public class GroupService {
     // 스터디 생성
     public GroupDomain createGroup(GroupCreateRequest request) {
         GroupDomain group = new GroupDomain(
-                null, // groupId는 자동 생성되므로 null로 설정
-                request.getGroupInsertId(), // 사용자 입력 ID
+                null,
+                request.getGroupInsertId(),
                 request.getGroupPw(),
                 request.getGroupName(),
                 request.getMaxNum(),
@@ -27,7 +27,7 @@ public class GroupService {
                 request.getSubject(),
                 request.getPeriod(),
                 request.getCommunication(),
-                null // notice는 기본값으로 null
+                null
         );
 
         return groupRepository.save(group);
