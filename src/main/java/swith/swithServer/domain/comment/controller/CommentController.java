@@ -1,41 +1,55 @@
-//package swith.swithServer.domain.comment.controller;
-//
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.*;
-//import java.util.List;
-//import swith.swithServer.domain.comment.domain.Comment;
-//import swith.swithServer.domain.comment.service.CommentService;
-//import swith.swithServer.domain.comment.controller.CommentRequestDTO;
-//import swith.swithServer.domain.comment.controller.CommentResponseDTO;
-//
-//@RestController
-//@RequestMapping("/api/comments")
-//@RequiredArgsConstructor
-//public class CommentController {
-//
-//    private final CommentService commentService;
-//
-//    // comment 작성
-//    // @PostMapping
-//    // public ResponseEntity<CommentResponseDTO> createComment(@RequestBody CommentRequestDTO commentRequest) {
-//    //     Comment comment = commentService.createComment(commentRequest);
-//    //     CommentResponseDTO response = new CommentResponseDTO(comment.getCommentId(), comment.getContent());
-//    //     return new ResponseEntity<>(response, HttpStatus.CREATED);
-//    // }
-//
-//    // comment 삭제
-//    @DeleteMapping("/{commentId}")
-//    public ResponseEntity<String> deleteComment(@PathVariable Long commentId) {
-//        commentService.deleteComment(commentId);
-//        return new ResponseEntity<>("Comment deleted successfully", HttpStatus.OK);
-//    }
-//
-//    // comment 조회
-//    @GetMapping("/study/{studyId}")
-//    public ResponseEntity<List<CommentResponseDTO>> getCommentsByStudyId(@PathVariable Long studyId) {
-//        List<CommentResponseDTO> comments = commentService.getCommentsByStudyId(studyId);
-//        return ResponseEntity.ok(comments);
-//    }
-//}
+package swith.swithServer.domain.comment.controller;
+
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import swith.swithServer.global.response.ApiResponse;
+import swith.swithServer.domain.comment.dto.CommentRequest;
+import swith.swithServer.domain.comment.dto.CommentResponse;
+import swith.swithServer.domain.comment.dto.CommentUpdateRequest;
+import swith.swithServer.domain.comment.service.CommentService;
+import io.swagger.v3.oas.annotations.Parameter;
+import java.util.List;
+
+
+@RestController
+@RequestMapping("/comments")
+@RequiredArgsConstructor
+public class CommentController {
+
+    private final CommentService commentService;
+
+
+    // 댓글 생성 API
+    @PostMapping("/create")
+    @Operation(summary = "Create a new comment", description = "Creates a new comment using the provided request body.")
+    public ApiResponse<String> createComment(@RequestBody CommentRequest request) {
+        commentService.createComment(request);
+        return new ApiResponse<>(201, "Comment created successfully");
+    }
+
+    // 댓글 삭제 API(commentId)
+    @DeleteMapping("/delete")
+    @Operation(summary = "Delete a comment", description = "Deletes a comment using its commentId.")
+    public ApiResponse<String> deleteComment(
+            @RequestParam("commentId") @Parameter(description = "ID of the comment to be deleted") Long commentId) {
+        commentService.deleteComment(commentId);
+        return new ApiResponse<>(200, "Comment deleted successfully");
+    }
+
+    // 댓글 조회 API(studyId)
+    @GetMapping("/by-study")
+    public ApiResponse<List<CommentResponse>> getCommentsByStudyId(
+            @RequestParam("studyId") Long studyId) {
+        List<CommentResponse> comments = commentService.getCommentsByStudyId(studyId);
+        return new ApiResponse<>(200, comments);
+    }
+
+    // 댓글 수정 API
+    @PutMapping("/update-content")
+    public ApiResponse<String> updateCommentContent(@RequestBody CommentUpdateRequest request) {
+        String updatedContent = commentService.updateCommentContent(request);
+        return new ApiResponse<>(200, updatedContent);
+    }
+
+}

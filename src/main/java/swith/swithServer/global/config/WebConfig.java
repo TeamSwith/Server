@@ -16,7 +16,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*");
-
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -28,7 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
                         .requestMatchers("/api/groups/update").permitAll()
                         .requestMatchers("/api/groups/details").permitAll()
                         .requestMatchers("/api/groups/delete").permitAll()
-
+                        .requestMatchers("/api/comments/create").permitAll()
                         .anyRequest().authenticated() // 나머지는 인증 필요
                 );
         return http.build();

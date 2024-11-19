@@ -1,4 +1,4 @@
-package swith.swithServer.domain.group.domain;
+package swith.swithServer.domain.group.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -46,12 +46,5 @@ public class GroupDomain extends BaseEntity {
     private String communication;
 
     private String notice;
-
-//    public void updateMemberNum(int memberNum){
-//        this.memberNum = memberNum;
-//    }
-//    public void updateNotice(String notice) {
-//        this.notice = notice;
-//    }
 
 }
