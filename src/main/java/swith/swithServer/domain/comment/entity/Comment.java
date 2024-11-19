@@ -3,7 +3,7 @@ package swith.swithServer.domain.comment.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import swith.swithServer.domain.group.entity.GroupDomain;
+import swith.swithServer.domain.group.entity.Group;
 import swith.swithServer.domain.user.entity.User;
 import swith.swithServer.domain.study.entity.Study;
 import swith.swithServer.domain.common.BaseEntity;
@@ -31,7 +31,7 @@ public class Comment extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id", nullable = false)
-    private GroupDomain group;
+    private Group group;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "study_id", nullable = false)
@@ -42,7 +42,7 @@ public class Comment extends BaseEntity {
         this.content = content;
     }
 
-    public Comment(String content, Study study, User user, GroupDomain group) {
+    public Comment(String content, Study study, User user, Group group) {
         this.content = content;
         this.study = study;
         this.user = user;

@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import swith.swithServer.domain.common.BaseEntity;
-import swith.swithServer.domain.group.entity.GroupDomain;
+import swith.swithServer.domain.group.entity.Group;
 import swith.swithServer.domain.user.entity.User;
 
 @Getter
@@ -25,9 +25,9 @@ public class UserGroup extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "groupId", nullable = false)
-    private GroupDomain studyGroup;
+    private Group studyGroup;
 
-    public UserGroup(User user, GroupDomain studyGroup){
+    public UserGroup(User user, Group studyGroup){
         this.user = user;
         this.studyGroup = studyGroup;
     }

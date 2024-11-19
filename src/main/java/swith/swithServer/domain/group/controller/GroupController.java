@@ -7,7 +7,7 @@ import swith.swithServer.domain.group.dto.GroupCreateRequest;
 import swith.swithServer.domain.group.dto.GroupUpdateRequest;
 import swith.swithServer.domain.group.dto.GroupResponse;
 import swith.swithServer.domain.group.service.GroupService;
-import swith.swithServer.domain.group.entity.GroupDomain;
+import swith.swithServer.domain.group.entity.Group;
 
 @RestController
 @RequestMapping("/groups")
@@ -18,8 +18,8 @@ public class GroupController {
 
     // 그룹 생성 API
     @PostMapping("/create")
-    public ApiResponse<GroupDomain> createGroup(@RequestBody GroupCreateRequest request) {
-        GroupDomain createdGroup = groupService.createGroup(request);
+    public ApiResponse<Group> createGroup(@RequestBody GroupCreateRequest request) {
+        Group createdGroup = groupService.createGroup(request);
         return new ApiResponse<>(201, createdGroup);
     }
 

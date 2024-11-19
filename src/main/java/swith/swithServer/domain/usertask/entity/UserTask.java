@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import swith.swithServer.domain.common.BaseEntity;
-import swith.swithServer.domain.group.entity.GroupDomain;
+import swith.swithServer.domain.group.entity.Group;
 import swith.swithServer.domain.user.entity.User;
 
 @Getter
@@ -22,7 +22,7 @@ public class UserTask extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "groupId", nullable = false)
-    private GroupDomain group;
+    private Group group;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = false)
@@ -33,7 +33,7 @@ public class UserTask extends BaseEntity {
     @Column(length = 10)
     private TaskStatus taskStatus;
 
-    public UserTask(GroupDomain group, User user, TaskStatus taskStatus) {
+    public UserTask(Group group, User user, TaskStatus taskStatus) {
         this.group = group;
         this.user = user;
         this.taskStatus = taskStatus;
