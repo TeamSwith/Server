@@ -20,7 +20,7 @@ public class GroupService {
 
 
     //id로 찾기
-    @Transactional
+
     public StudyGroup getGroupById(Long id){
         StudyGroup studyGroup = groupRepository.findById(id)
                 .orElseThrow(()->new BusinessException(ErrorCode.GROUP_DOESNT_EXIST));
@@ -29,7 +29,6 @@ public class GroupService {
 
 
     //groupId,groupPw에 매칭되는 그룹 찾기
-    @Transactional
     public StudyGroup getGroupByIdPw(GroupRequestDto groupRequestDto){
         StudyGroup studyGroup = groupRepository.findByGroupIdAndGroupPw(groupRequestDto.getGroupId(), groupRequestDto.getGroupPw())
                 .orElseThrow(()->new BusinessException(ErrorCode.GROUP_LOGIN_ERROR));
@@ -37,7 +36,6 @@ public class GroupService {
     }
 
     //사용자의 스터디 가입 여부 확인
-    @Transactional
     public boolean isUserInGroup(User user, StudyGroup studyGroup){
         return userGroupRepository.existsByUserAndStudyGroup(user, studyGroup);
     }

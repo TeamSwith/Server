@@ -23,15 +23,4 @@ public class UserService {
         return user;
     }
 
-    public User getUserById(GroupRequestDto groupRequestDto){
-        User user = userRepository.findById(groupRequestDto.getUserId())
-                .orElseThrow(()->new BusinessException(ErrorCode.USER_DOESNT_EXIST));
-        return user;
-    }
-
-    public User getUserById(UserGroupDto userGroupDto){
-        User user = userRepository.findById(userGroupDto.getUserId())
-                .orElseThrow(()->new BusinessException(ErrorCode.USER_DOESNT_EXIST));
-        return user;
-    }
 }

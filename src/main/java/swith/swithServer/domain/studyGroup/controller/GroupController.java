@@ -32,7 +32,7 @@ public class GroupController {
         StudyGroup studyGroup = groupService.getGroupByIdPw(groupRequestDto);
 
         //user 조회
-        User user = userService.getUserById(groupRequestDto);
+        User user = userService.getUserById(groupRequestDto.getUserId());
 
         //현재 로그인 되어 있는 user와 일치하는지 확인
         if(user== authService.getLoginUser()) {
