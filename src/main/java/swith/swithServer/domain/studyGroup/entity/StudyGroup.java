@@ -34,7 +34,7 @@ public class StudyGroup extends BaseEntity {
     private String subject;
 
     @NotNull
-    private String period;
+    private int period;
 
     @NotNull
     private String communication;

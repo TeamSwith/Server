@@ -34,8 +34,8 @@ public class GroupController {
         //user 조회
         User user = userService.getUserById(groupRequestDto.getUserId());
 
-        //현재 로그인 되어 있는 user와 일치하는지 확인
-        if(user== authService.getLoginUser()) {
+        //현재 로그인 되어 있는 user와 일치하는지 확인          email이 unique하다고 생각해 비교 대상으로 삼았습니다.
+        if(user.getEmail().equals(authService.getLoginUser().getEmail())) {
 
             //가입 여부 확인
             boolean isUserInGroup = groupService.isUserInGroup(user, studyGroup);
