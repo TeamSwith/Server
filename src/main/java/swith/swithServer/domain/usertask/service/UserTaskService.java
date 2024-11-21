@@ -27,4 +27,17 @@ public class UserTaskService {
         userTask.updateTaskStatus(TaskStatus.COMPLETED);
         return TaskStatus.COMPLETED.name();
     }
+
+    @Transactional
+    public String updateTaskStatusToPending(Long userId, Long taskId) {
+        UserTask userTask = userTaskRepository.findByUserIdAndId(userId, taskId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_TASK_NOT_FOUND));
+
+        if (userTask.getTaskStatus() != TaskStatus.COMPLETED) {
+            throw new BusinessException(ErrorCode.TASK_NOT_COMPLETED);
+        }
+
+        userTask.updateTaskStatus(TaskStatus.PENDING);
+        return TaskStatus.PENDING.name();
+    }
 }

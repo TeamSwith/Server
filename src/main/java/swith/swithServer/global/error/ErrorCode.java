@@ -28,6 +28,8 @@ public enum ErrorCode {
     // UserTask 관련 에러
     USER_TASK_NOT_FOUND(404, "해당 사용자 ID와 과제 ID로 과제를 찾을 수 없습니다."), //
     TASK_ALREADY_COMPLETED(400, "해당 과제는 이미 완료 상태입니다."),
+    TASK_NOT_COMPLETED(400, "해당 과제는 완료 상태가 아닙니다."), // 추가된 에러 코드
+
 
     INVALID_GROUP_ID(404, "존재하지 않는 그룹 ID입니다."),
     INVALID_STUDY_ID(404, "존재하지 않는 스터디 ID입니다."),

@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -31,14 +30,12 @@ public class CommentService {
 
     // 댓글 생성 API
     @Transactional
-    public void createComment(CommentRequest request) {
-//    public void createComment(CommentRequest request, User loggedInUser) {
+    public void createComment(Long studyId, CommentRequest request) {
+        Study study = studyRepository.findById(studyId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_STUDY_ID));
 
         Group group = groupRepository.findById(request.getGroupId())
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
-
-        Study study = studyRepository.findById(request.getStudyId())
-                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_STUDY_ID));
 
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_USER_ID));
@@ -55,8 +52,7 @@ public class CommentService {
 
     // 댓글 삭제 API (commentId)
     @Transactional
-//    public void deleteComment(Long commentId) {
-    public void deleteComment(Long commentId, User user) {
+    public void deleteComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_DOESNT_EXIST));
 
@@ -65,8 +61,8 @@ public class CommentService {
 
     // 댓글 조회 API (studyId)
     @Transactional(readOnly = true)
-//    public List<CommentResponse> getCommentsByStudyId(Long studyId) {
-    public List<CommentResponse> getCommentsByStudyId(Long studyId, User user) {
+    public List<CommentResponse> getCommentsByStudyId(Long studyId) {
+        // studyId 유효성 검사
         studyRepository.findById(studyId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_STUDY_ID));
 
@@ -78,9 +74,8 @@ public class CommentService {
 
     // 댓글 수정 API
     @Transactional
-//    public String updateCommentContent(CommentUpdateRequest request) {
-    public String updateCommentContent(CommentUpdateRequest request, User user) {
-        Comment comment = commentRepository.findById(request.getCommentId())
+    public String updateCommentContent(Long commentId, CommentUpdateRequest request) {
+        Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_DOESNT_EXIST));
 
         comment.updateContent(request.getContent());

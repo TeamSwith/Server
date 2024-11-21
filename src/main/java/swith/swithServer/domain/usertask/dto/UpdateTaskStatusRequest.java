@@ -15,4 +15,5 @@ public class UpdateTaskStatusRequest {
 
     @NotNull
     private Long taskId;
+
 }

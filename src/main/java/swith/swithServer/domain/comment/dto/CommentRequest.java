@@ -11,9 +11,6 @@ public class CommentRequest {
     private String content;
 
     @NotNull
-    private Long studyId;
-
-    @NotNull
     private Long userId;
 
     @NotNull
