@@ -1,9 +1,6 @@
 package swith.swithServer.domain.studyGroup.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import swith.swithServer.domain.common.BaseEntity;
@@ -14,7 +11,6 @@ import swith.swithServer.domain.common.BaseEntity;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StudyGroup extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
@@ -38,7 +34,7 @@ public class StudyGroup extends BaseEntity {
     private String subject;
 
     @NotNull
-    private String period;
+    private int period;
 
     @NotNull
     private String communication;
