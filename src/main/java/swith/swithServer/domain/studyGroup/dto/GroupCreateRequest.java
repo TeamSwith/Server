@@ -1,4 +1,4 @@
-package swith.swithServer.domain.group.dto;
+package swith.swithServer.domain.studyGroup.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import swith.swithServer.domain.group.entity.Group;
+import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.common.BaseEntity;
 
 import java.time.LocalDate;
@@ -33,14 +33,14 @@ public class Study extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id", nullable = false)
-    private Group group;
+    private StudyGroup studyGroup;
 
 
-    public Study(LocalDate date, LocalTime time, String location, Group group){
+    public Study(LocalDate date, LocalTime time, String location, StudyGroup studyGroup){
         this.date = date;
         this.time = time;
         this.location = location;
-        this.group = group;
+        this.studyGroup = studyGroup;
     }
     public void updateTime(LocalTime time) {
         this.time = time;

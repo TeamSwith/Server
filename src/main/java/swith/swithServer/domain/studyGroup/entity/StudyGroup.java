@@ -1,4 +1,4 @@
-package swith.swithServer.domain.group.entity;
+package swith.swithServer.domain.studyGroup.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -11,7 +11,7 @@ import swith.swithServer.domain.common.BaseEntity;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "`group`")
-public class Group extends BaseEntity {
+public class StudyGroup extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

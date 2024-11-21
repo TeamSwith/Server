@@ -7,10 +7,10 @@ import swith.swithServer.domain.comment.dto.CommentRequest;
 import swith.swithServer.domain.comment.dto.CommentResponse;
 import swith.swithServer.domain.comment.dto.CommentUpdateRequest;
 import swith.swithServer.domain.comment.repository.CommentRepository;
-import swith.swithServer.domain.group.entity.Group;
+import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.study.entity.Study;
 import swith.swithServer.domain.user.entity.User;
-import swith.swithServer.domain.group.repository.GroupRepository;
+import swith.swithServer.domain.studyGroup.repository.GroupRepository;
 import swith.swithServer.domain.study.repository.StudyRepository;
 import swith.swithServer.domain.user.repository.UserRepository;
 import swith.swithServer.global.error.ErrorCode;
@@ -34,7 +34,7 @@ public class CommentService {
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_STUDY_ID));
 
-        Group group = groupRepository.findById(request.getGroupId())
+        StudyGroup studyGroup = groupRepository.findById(request.getGroupId())
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
 
         User user = userRepository.findById(request.getUserId())
@@ -44,7 +44,7 @@ public class CommentService {
                 request.getContent(),
                 study,
                 user,
-                group
+                studyGroup
         );
 
         commentRepository.save(comment);

@@ -1,13 +1,13 @@
-package swith.swithServer.domain.group.service;
+package swith.swithServer.domain.studyGroup.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import swith.swithServer.domain.group.entity.Group;
-import swith.swithServer.domain.group.dto.GroupCreateRequest;
-import swith.swithServer.domain.group.dto.GroupUpdateRequest;
-import swith.swithServer.domain.group.dto.GroupResponse;
-import swith.swithServer.domain.group.repository.GroupRepository;
+import swith.swithServer.domain.studyGroup.entity.StudyGroup;
+import swith.swithServer.domain.studyGroup.dto.GroupCreateRequest;
+import swith.swithServer.domain.studyGroup.dto.GroupUpdateRequest;
+import swith.swithServer.domain.studyGroup.dto.GroupResponse;
+import swith.swithServer.domain.studyGroup.repository.GroupRepository;
 import swith.swithServer.global.error.ErrorCode;
 import swith.swithServer.global.error.exception.BusinessException;
 
@@ -21,12 +21,12 @@ public class GroupService {
 
     // 스터디 생성
     @Transactional
-    public Group createGroup(GroupCreateRequest request) {
+    public StudyGroup createGroup(GroupCreateRequest request) {
         if (groupRepository.existsByGroupInsertId(request.getGroupInsertId())) { // 변경된 부분
             throw new BusinessException(ErrorCode.GROUP_INSERT_ID_ALREADY_EXISTS); // 변경된 부분
         }
 
-        Group group = new Group(
+        StudyGroup studyGroup = new StudyGroup(
                 null,
                 request.getGroupInsertId(),
                 request.getGroupPw(),
@@ -39,43 +39,43 @@ public class GroupService {
                 null
         );
 
-        return groupRepository.save(group);
+        return groupRepository.save(studyGroup);
     }
 
     // GET groupInsertID
     public String findGroupInsertIdByGroupId(Long groupId) {
-        Group group = groupRepository.findById(groupId)
+        StudyGroup studyGroup = groupRepository.findById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
-        return group.getGroupInsertId();
+        return studyGroup.getGroupInsertId();
     }
 
     // 그룹 정보 수정
     @Transactional
     public void updateGroup(Long groupId, GroupUpdateRequest updateRequest) {
-        Group group = groupRepository.findById(groupId)
+        StudyGroup studyGroup = groupRepository.findById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
 
-        group.setGroupName(updateRequest.getGroupName());
-        group.setMaxNum(updateRequest.getMaxNum());
-        group.setSubject(updateRequest.getSubject());
-        group.setPeriod(updateRequest.getPeriod());
-        group.setCommunication(updateRequest.getCommunication());
+        studyGroup.setGroupName(updateRequest.getGroupName());
+        studyGroup.setMaxNum(updateRequest.getMaxNum());
+        studyGroup.setSubject(updateRequest.getSubject());
+        studyGroup.setPeriod(updateRequest.getPeriod());
+        studyGroup.setCommunication(updateRequest.getCommunication());
 
-        groupRepository.save(group);
+        groupRepository.save(studyGroup);
     }
 
     // groupId로 그룹정보 GET
     public GroupResponse getGroupDetails(Long groupId) {
-        Group group = groupRepository.findById(groupId)
+        StudyGroup studyGroup = groupRepository.findById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
 
         return GroupResponse.builder()
-                .groupName(group.getGroupName())
-                .groupInsertId(group.getGroupInsertId())
-                .maxNum(group.getMaxNum())
-                .subject(group.getSubject())
-                .period(group.getPeriod())
-                .communication(group.getCommunication())
+                .groupName(studyGroup.getGroupName())
+                .groupInsertId(studyGroup.getGroupInsertId())
+                .maxNum(studyGroup.getMaxNum())
+                .subject(studyGroup.getSubject())
+                .period(studyGroup.getPeriod())
+                .communication(studyGroup.getCommunication())
                 .build();
     }
 

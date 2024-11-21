@@ -1,15 +1,15 @@
-package swith.swithServer.domain.group.controller;
+package swith.swithServer.domain.studyGroup.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import swith.swithServer.global.response.ApiResponse;
-import swith.swithServer.domain.group.dto.GroupCreateRequest;
-import swith.swithServer.domain.group.dto.GroupUpdateRequest;
-import swith.swithServer.domain.group.dto.GroupResponse;
-import swith.swithServer.domain.group.service.GroupService;
-import swith.swithServer.domain.group.entity.Group;
+import swith.swithServer.domain.studyGroup.dto.GroupCreateRequest;
+import swith.swithServer.domain.studyGroup.dto.GroupUpdateRequest;
+import swith.swithServer.domain.studyGroup.dto.GroupResponse;
+import swith.swithServer.domain.studyGroup.service.GroupService;
+import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 @RestController
 @RequestMapping("/groups")
 @RequiredArgsConstructor
@@ -20,9 +20,9 @@ public class GroupController {
     // 그룹 생성 API
     @PostMapping("")
     @Operation(summary = "Create new group", description = "")
-    public ApiResponse<Group> createGroup(@RequestBody GroupCreateRequest request) {
-        Group createdGroup = groupService.createGroup(request);
-        return new ApiResponse<>(201, createdGroup);
+    public ApiResponse<StudyGroup> createGroup(@RequestBody GroupCreateRequest request) {
+        StudyGroup createdStudyGroup = groupService.createGroup(request);
+        return new ApiResponse<>(201, createdStudyGroup);
     }
 
     // groupID로 groupInsertId 가져오는 API
