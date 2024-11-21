@@ -1,6 +1,7 @@
 package swith.swithServer.domain.comment.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import swith.swithServer.global.response.ApiResponse;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/comments")
 @RequiredArgsConstructor
+@Tag(name="댓글(comment)")
 public class CommentController {
 
     private final CommentService commentService;
@@ -25,7 +27,7 @@ public class CommentController {
 
     // 댓글 생성 API
     @PostMapping("/{studyId}")
-    @Operation(summary = "Create comment", description = "Creates a new comment using studyId")
+    @Operation(summary = "댓글 생성", description = "Creates a new comment using studyId")
     public ApiResponse<String> createComment(
             @Parameter(description = "ID of the study where the comment will be created", required = true)
             @PathVariable(name = "studyId") Long studyId,
@@ -36,7 +38,7 @@ public class CommentController {
 
     // 댓글 삭제 API
     @DeleteMapping("/{commentId}")
-    @Operation(summary = "Delete comment", description = "Deletes comment using commentId.")
+    @Operation(summary = "댓글 삭제", description = "Deletes comment using commentId.")
     public ApiResponse<String> deleteComment(
             @Parameter(description = "ID of the comment to be deleted", required = true)
             @PathVariable(name = "commentId") Long commentId) {
@@ -45,8 +47,8 @@ public class CommentController {
     }
 
     // 댓글 조회 API
-    @GetMapping("/{studyId}/by-study")
-    @Operation(summary = "Get comments", description = "Get comments using commentid")
+    @GetMapping("/{studyId}")
+    @Operation(summary = "댓글 조회", description = "Get comments using commentid")
     public ApiResponse<List<CommentResponse>> getCommentsByStudyId(
             @Parameter(description = "ID of the study to fetch comments for", required = true)
             @PathVariable(name = "studyId") Long studyId) {
@@ -55,8 +57,8 @@ public class CommentController {
     }
 
     // 댓글 수정 API
-    @PutMapping("/{commentId}/update")
-    @Operation(summary = "Update comment content", description = "Updates the content of a comment using its commentId.")
+    @PutMapping("/{commentId}")
+    @Operation(summary = "댓글 수정", description = "Updates the content of a comment using its commentId.")
     public ApiResponse<String> updateCommentContent(
             @Parameter(description = "ID of the comment to be updated", required = true)
             @PathVariable(name = "commentId") Long commentId,

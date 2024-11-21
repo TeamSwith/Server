@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ErrorCode {
 
+
     // USER
     USER_DOESNT_EXIST(404,"존재하지 않는 회원입니다."),
 
@@ -33,7 +34,19 @@ public enum ErrorCode {
 
     INVALID_GROUP_ID(404, "존재하지 않는 그룹 ID입니다."),
     INVALID_STUDY_ID(404, "존재하지 않는 스터디 ID입니다."),
-    INVALID_USER_ID(404, "존재하지 않는 사용자 ID입니다.");
+    INVALID_USER_ID(404, "존재하지 않는 사용자 ID입니다."),
+
+
+    //GROUP
+    GROUP_DOESNT_EXIST(404,"존재하지 않는 그룹입니다."),
+
+    GROUP_LOGIN_ERROR(404, "아이디와 비밀번호가 일치하지 않습니다."),
+
+    //STUDY
+    STUDY_DOESNT_EXIST(404,"존재하지 않는 스터디입니다."),
+
+    //Task
+    TASK_DOESNT_EXIST(404, "존재하지 않는 과제입니다");
 
     private final int status;
     private final String message;

@@ -12,10 +12,9 @@ import swith.swithServer.domain.common.BaseEntity;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "`group`")
 public class StudyGroup extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "group_id")
+    @Column(name = "studyGroupId")
     private Long id;
 
     // 사용자 입력 ID

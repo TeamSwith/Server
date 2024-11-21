@@ -2,6 +2,7 @@ package swith.swithServer.domain.usertask.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import swith.swithServer.domain.usertask.dto.UpdateTaskStatusRequest;
@@ -11,13 +12,14 @@ import swith.swithServer.global.response.ApiResponse;
 @RestController
 @RequestMapping("/api/usertasks")
 @RequiredArgsConstructor
+@Tag(name="User 과제")
 public class UserTaskController {
 
     private final UserTaskService userTaskService;
 
     // Task 상태 COMPLETED로 업데이트 API
     @PutMapping("/{userId}/{taskId}/COMPLETED")
-    @Operation(summary = "Update task status to COMPLETED", description = "Using userId, taskId")
+    @Operation(summary = "과제 완료 처리", description = "Using userId, taskId")
     public ApiResponse<String> updateTaskStatus(
             @Parameter(description = "ID of the user", required = true)
             @PathVariable(name = "userId") Long userId,
@@ -29,7 +31,7 @@ public class UserTaskController {
 
     // Task 상태 PENDING으로 업데이트 API
     @PutMapping("/{userId}/{taskId}/PENDING")
-    @Operation(summary = "Update task status to PENDING", description = "Using userId, taskId")
+    @Operation(summary = "과제 미완료 처리", description = "Using userId, taskId")
     public ApiResponse<String> updateTaskStatusToPending(
             @Parameter(description = "ID of the user", required = true)
             @PathVariable(name = "userId") Long userId,

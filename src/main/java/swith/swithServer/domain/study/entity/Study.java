@@ -5,8 +5,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.common.BaseEntity;
+import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -32,7 +32,7 @@ public class Study extends BaseEntity {
     private String location;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id", nullable = false)
+    @JoinColumn(name = "studyGroupId", nullable = false)
     private StudyGroup studyGroup;
 
 
