@@ -8,5 +8,7 @@ import java.util.List;
 
 @Repository
 public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
+    boolean existsByStudyGroupId(Long id);
+
     List<UserGroup> findByStudyGroupId(Long id);
 }

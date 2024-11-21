@@ -23,7 +23,7 @@ public enum ErrorCode {
     COMMENT_DOESNT_EXIST(404, "존재하지 않는 댓글입니다."),
 
     // UserGroup 관련 에러
-    GROUP_DOESNT_EXIST_OR_NO_USERS(404, "해당 그룹이 존재하지 않거나, 그룹에 사용자가 없습니다."),
+    GROUP_HAS_NO_USERS(404, "그룹에 사용자가 없습니다."),
 
     // UserTask 관련 에러
     USER_TASK_NOT_FOUND(404, "해당 사용자 ID와 과제 ID로 과제를 찾을 수 없습니다."), //
