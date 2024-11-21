@@ -1,12 +1,11 @@
 package swith.swithServer.domain.group.dto;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import jakarta.validation.constraints.NotNull;
 
 @Getter
 @Setter
-@Data
-
 public class GroupUpdateRequest {
     @NotNull
     private String groupName;
