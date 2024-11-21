@@ -18,7 +18,7 @@ public class UserGroupService {
 
     // groupId로 사용자 ID 목록 조회 API
     public List<Long> findUserIdsByGroupId(Long groupId) {
-        List<UserGroup> userGroups = userGroupRepository.findByStudyGroupGroupId(groupId);
+        List<UserGroup> userGroups = userGroupRepository.findByStudyGroupId(groupId);
 
         if (userGroups.isEmpty()) {
             throw new BusinessException(ErrorCode.GROUP_DOESNT_EXIST_OR_NO_USERS);
