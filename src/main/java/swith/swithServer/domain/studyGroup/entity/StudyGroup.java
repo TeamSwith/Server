@@ -4,12 +4,18 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import swith.swithServer.domain.common.BaseEntity;
+import swith.swithServer.domain.study.entity.Study;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Setter
 @Getter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 @Table(name = "`group`")
 public class StudyGroup extends BaseEntity {
     @Id
@@ -43,6 +49,10 @@ public class StudyGroup extends BaseEntity {
     private String communication;
 
     private String notice;
+
+    @OneToMany(mappedBy = "studyGroup", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @Builder.Default
+    private List<Study> studies = new ArrayList<>();
 
     public void updateMemberNum(Long memberNum){
         this.memberNum = memberNum;

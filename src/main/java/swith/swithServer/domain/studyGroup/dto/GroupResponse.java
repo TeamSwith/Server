@@ -1,16 +1,13 @@
 package swith.swithServer.domain.studyGroup.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.EqualsAndHashCode;
 import lombok.Builder;
+import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 
 @Getter
-@Setter
-//@ToString
-//@EqualsAndHashCode
 @Builder
+@AllArgsConstructor
 public class GroupResponse {
     private String groupName;
     private String groupInsertId;
@@ -18,4 +15,16 @@ public class GroupResponse {
     private String subject;
     private Long period;
     private String communication;
+
+    public static GroupResponse from(StudyGroup studyGroup) {
+        return GroupResponse.builder()
+                .groupName(studyGroup.getGroupName())
+                .groupInsertId(studyGroup.getGroupInsertId())
+                .maxNum(studyGroup.getMaxNum())
+                .subject(studyGroup.getSubject())
+                .period(studyGroup.getPeriod())
+                .communication(studyGroup.getCommunication())
+                .build();
+    }
+
 }

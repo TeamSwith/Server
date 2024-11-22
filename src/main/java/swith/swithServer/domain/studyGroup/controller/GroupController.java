@@ -11,8 +11,8 @@ import swith.swithServer.domain.studyGroup.dto.GroupCreateRequest;
 import swith.swithServer.domain.studyGroup.dto.GroupUpdateRequest;
 import swith.swithServer.domain.studyGroup.dto.GroupResponse;
 import swith.swithServer.domain.studyGroup.service.GroupService;
-import swith.swithServer.domain.studyGroup.dto.GroupRequest; // 확인 후 불필요 시 삭제
-import swith.swithServer.domain.studyGroup.dto.GroupLoginResponse; // 확인 후 불필요 시 삭제
+import swith.swithServer.domain.studyGroup.dto.GroupRequest;
+import swith.swithServer.domain.studyGroup.dto.GroupLoginResponse;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.user.entity.User;
 import swith.swithServer.domain.user.service.UserService;
@@ -81,7 +81,7 @@ public class GroupController {
         return new ApiResponse<>(201, createdStudyGroup);
     }
 
-    // groupId로 그룹 정도 받아오는 API
+    // groupId로 그룹 정보 받아오는 API
     @GetMapping("/{groupId}/details")
     @Operation(summary = "스터디 그룹 정보 조회", description = "using groupId")
     public ApiResponse<GroupResponse> getGroupDetails(
@@ -100,25 +100,26 @@ public class GroupController {
         return new ApiResponse<>(200, groupInsertId);
     }
 
-    // groupId로 group 데이터 수정하는 API
-    @PutMapping("/{groupId}")
+    // 스터디 그룹 정보 수정 API
+    @PatchMapping("/{groupId}/details")
     @Operation(summary = "스터디 그룹 정보 수정", description = "Using groupId")
-    public ApiResponse<String> updateGroup(
+    public ApiResponse<GroupResponse> updateGroup(
             @Parameter(description = "ID of the group to be updated", required = true)
             @PathVariable(name = "groupId") Long groupId,
             @RequestBody GroupUpdateRequest updateRequest) {
-        groupService.updateGroup(groupId, updateRequest);
-        return new ApiResponse<>(200, "Group updated successfully");
+        GroupResponse updatedGroup = groupService.updateGroupAndGetDetails(groupId, updateRequest);
+        return new ApiResponse<>(200, updatedGroup);
     }
 
-    // groupId를 기준으로 그룹 삭제하는 API
+
     @DeleteMapping("/{groupId}")
     @Operation(summary = "스터디 그룹 삭제", description = "Using GroupId")
-    public ApiResponse<Void> deleteGroup(
+    public ApiResponse<GroupResponse> deleteGroup(
             @Parameter(description = "ID of the group to be deleted", required = true)
             @PathVariable(name = "groupId") Long groupId) {
+        GroupResponse groupToDelete = groupService.getGroupDetails(groupId);
         groupService.deleteGroup(groupId);
-        return new ApiResponse<>(204, null);
+        return new ApiResponse<>(200, groupToDelete); // 명시적으로 GroupResponse 반환
     }
 }
 

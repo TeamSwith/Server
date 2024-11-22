@@ -36,6 +36,7 @@ public class Study extends BaseEntity {
     private StudyGroup studyGroup;
 
 
+
     public Study(LocalDate date, LocalTime time, String location, StudyGroup studyGroup){
         this.date = date;
         this.time = time;
