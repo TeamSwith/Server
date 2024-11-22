@@ -1,13 +1,9 @@
 package swith.swithServer.domain.user.service;
 
-import lombok.RequiredArgsConstructor;
-
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import swith.swithServer.domain.studyGroup.dto.GroupRequestDto;
 import swith.swithServer.domain.user.entity.User;
 import swith.swithServer.domain.user.repository.UserRepository;
-import swith.swithServer.domain.userGroup.dto.UserGroupDto;
 import swith.swithServer.global.error.ErrorCode;
 import swith.swithServer.global.error.exception.BusinessException;
 

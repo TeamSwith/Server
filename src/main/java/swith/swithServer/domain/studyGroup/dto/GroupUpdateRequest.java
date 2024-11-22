@@ -11,13 +11,13 @@ public class GroupUpdateRequest {
     private String groupName;
 
     @NotNull
-    private int maxNum;
+    private Long maxNum;
 
     @NotNull
     private String subject;
 
     @NotNull
-    private int period;
+    private Long period;
 
     @NotNull
     private String communication;

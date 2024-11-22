@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface GroupRepository extends JpaRepository<StudyGroup, Long> {
     boolean existsByGroupInsertId(String groupInsertId);
-    Optional<StudyGroup> findByIdAndGroupPw(Long id, String groupPw);
+    Optional<StudyGroup> findByGroupInsertIdAndGroupPw(String groupInsertId, String groupPw);
 }
