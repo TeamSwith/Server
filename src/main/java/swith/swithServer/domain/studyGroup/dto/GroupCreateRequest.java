@@ -12,9 +12,9 @@ public class GroupCreateRequest {
     private String groupInsertId;
     private String groupPw;
     private String groupName = "groupName";      // Optional: 그룹 이름
-    private int maxNum = 10;       // Default 값
-    private int memberNum = 0;     // Default 값
+    private Long maxNum = 10L;       // Default 값
+    private Long memberNum = 0L;     // Default 값
     private String subject = "0";   // Default 값
-    private int period = 1;        // Default 값
+    private Long period = 1L;        // Default 값
     private String communication = "0"; // Default 값
 }
