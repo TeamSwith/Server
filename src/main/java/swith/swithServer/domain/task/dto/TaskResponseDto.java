@@ -5,7 +5,6 @@ import jakarta.persistence.Enumerated;
 import lombok.Builder;
 import lombok.Getter;
 import swith.swithServer.domain.task.entity.Task;
-import swith.swithServer.domain.task.entity.TaskStatus;
 
 import java.util.ArrayList;
 import java.util.List;

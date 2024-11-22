@@ -6,5 +6,6 @@ import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import java.util.Optional;
 
 public interface GroupRepository extends JpaRepository<StudyGroup, Long> {
-    Optional<StudyGroup> findByGroupIdAndGroupPw(String groupId, String groupPw);
+    boolean existsByGroupInsertId(String groupInsertId);
+    Optional<StudyGroup> findByIdAndGroupPw(Long id, String groupPw);
 }

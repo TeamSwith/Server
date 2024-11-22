@@ -22,7 +22,7 @@ public class StudyService {
     //id로 찾기
     public Study getStudyById(Long id){
         Study study=studyRepository.findById(id)
-                .orElseThrow(()-> new BusinessException(ErrorCode.STUDY_DOESNT_EXIST));
+                .orElseThrow(()-> new BusinessException(ErrorCode.INVALID_STUDY_ID));
         return study;
     }
 
@@ -30,7 +30,7 @@ public class StudyService {
     @Transactional
     public Study createStudy(StudyRequestDto studyRequestDto, Long id){
         StudyGroup studyGroup = groupRepository.findById(id)
-                .orElseThrow(()->new BusinessException(ErrorCode.GROUP_DOESNT_EXIST));
+                .orElseThrow(()->new BusinessException(ErrorCode.INVALID_GROUP_ID));
         Study study = new Study(studyRequestDto.getDate(), studyRequestDto.getTime(), studyRequestDto.getLocation(), studyGroup);
         return studyRepository.save(study);
     }
@@ -39,7 +39,7 @@ public class StudyService {
     @Transactional
     public Study updateStudy(Long id, StudyUpdateDto studyUpdateDto){
         Study study = studyRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.STUDY_DOESNT_EXIST));
+                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_STUDY_ID));
         study.updateTime(studyUpdateDto.getTime());
         study.updateLocation(studyUpdateDto.getLocation());
         return studyRepository.save(study);
@@ -49,7 +49,7 @@ public class StudyService {
     @Transactional
     public void deleteStudy(Long id){
         Study study = studyRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.STUDY_DOESNT_EXIST));
+                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_STUDY_ID));
         studyRepository.delete(study);
     }
 

@@ -71,13 +71,4 @@ public class AuthController {
         return new ApiResponse<>(200,user.getEmail());
     }
 
-    @GetMapping("/test")
-    @Operation(summary = "배포 test용 ")
-    public ApiResponse<String> testApi(){
-        return new ApiResponse<>(200,"api 정상 호출");
-    }
-
-
-
-
 }
