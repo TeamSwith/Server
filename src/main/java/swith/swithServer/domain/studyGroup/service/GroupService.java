@@ -73,49 +73,19 @@ public class GroupService {
         StudyGroup studyGroup = groupRepository.findById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
 
-        updateRequest.applyTo(studyGroup); // 변경된 부분: DTO에서 업데이트 처리
+        updateRequest.applyTo(studyGroup);
         groupRepository.save(studyGroup);
 
-        return GroupResponse.from(studyGroup); // DTO 클래스에서 변환 처리
+        return GroupResponse.from(studyGroup);
     }
-
-//    @Transactional
-//    public GroupResponse updateGroupAndGetDetails(Long groupId, GroupUpdateRequest updateRequest) {
-//        StudyGroup studyGroup = groupRepository.findById(groupId)
-//                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
-//
-//        studyGroup.setGroupName(updateRequest.getGroupName());
-//        studyGroup.setMaxNum(updateRequest.getMaxNum());
-//        studyGroup.setSubject(updateRequest.getSubject());
-//        studyGroup.setPeriod(updateRequest.getPeriod());
-//        studyGroup.setCommunication(updateRequest.getCommunication());
-//
-//        groupRepository.save(studyGroup);
-//
-//        return GroupResponse.from(studyGroup);
-//    }
 
     // groupId로 그룹정보 GET
     public GroupResponse getGroupDetails(Long groupId) {
         StudyGroup studyGroup = groupRepository.findById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
 
-        return GroupResponse.from(studyGroup); // DTO 클래스에서 변환 처리
+        return GroupResponse.from(studyGroup);
     }
-
-//    public GroupResponse getGroupDetails(Long groupId) {
-//        StudyGroup studyGroup = groupRepository.findById(groupId)
-//                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
-//
-//        return GroupResponse.builder()
-//                .groupName(studyGroup.getGroupName())
-//                .groupInsertId(studyGroup.getGroupInsertId())
-//                .maxNum(studyGroup.getMaxNum())
-//                .subject(studyGroup.getSubject())
-//                .period(studyGroup.getPeriod())
-//                .communication(studyGroup.getCommunication())
-//                .build();
-//    }
 
     // groupId로 그룹 삭제
     @Transactional

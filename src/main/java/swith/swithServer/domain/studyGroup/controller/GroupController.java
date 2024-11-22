@@ -111,7 +111,7 @@ public class GroupController {
         return new ApiResponse<>(200, updatedGroup);
     }
 
-
+    // 스터디 그룹 삭제 API
     @DeleteMapping("/{groupId}")
     @Operation(summary = "스터디 그룹 삭제", description = "Using GroupId")
     public ApiResponse<GroupResponse> deleteGroup(

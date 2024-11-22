@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Setter
 @Getter
 @Entity
 @AllArgsConstructor
@@ -59,5 +58,13 @@ public class StudyGroup extends BaseEntity {
     }
     public void updateNotice(String notice) {
         this.notice = notice;
+    }
+
+    public void updateGroupDetails(String groupName, Long maxNum, String subject, Long period, String communication) { // 변경된 부분
+        this.groupName = groupName;
+        this.maxNum = maxNum;
+        this.subject = subject;
+        this.period = period;
+        this.communication = communication;
     }
 }
