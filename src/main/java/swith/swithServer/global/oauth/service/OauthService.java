@@ -94,8 +94,9 @@ public class OauthService {
         Long id = jsonNode.get("id").asLong();
         String email = jsonNode.path("kakao_account").path("email").asText();
         String nickname = jsonNode.path("properties").path("nickname").asText();
+        String image = jsonNode.path("properties").path("profile_image").asText();
 
-        return KakaoUserDto.of(id, email, nickname);
+        return KakaoUserDto.of(id, email, nickname,image);
     }
 
 
