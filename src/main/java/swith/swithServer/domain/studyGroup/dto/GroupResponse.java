@@ -14,8 +14,8 @@ import lombok.Builder;
 public class GroupResponse {
     private String groupName;
     private String groupInsertId;
-    private int maxNum;
+    private Long maxNum;
     private String subject;
-    private int period;
+    private Long period;
     private String communication;
 }

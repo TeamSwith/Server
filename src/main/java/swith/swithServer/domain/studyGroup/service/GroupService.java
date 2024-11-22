@@ -3,7 +3,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import swith.swithServer.domain.studyGroup.dto.GroupRequestDto;
+import swith.swithServer.domain.studyGroup.dto.GroupRequest;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.studyGroup.dto.GroupCreateRequest;
 import swith.swithServer.domain.studyGroup.dto.GroupUpdateRequest;
@@ -26,13 +26,13 @@ public class GroupService {
     //id로 찾기
     public StudyGroup getGroupById(Long id) {
         StudyGroup studyGroup = groupRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.GROUP_LOGIN_ERROR));
+                .orElseThrow(() -> new BusinessException(ErrorCode.GROUP_DOESNT_EXIST));
         return studyGroup;
     }
 
-    //groupId,groupPw에 매칭되는 그룹 찾기
-    public StudyGroup getGroupByIdPw(GroupRequestDto groupRequestDto) {
-        StudyGroup studyGroup = groupRepository.findByIdAndGroupPw(groupRequestDto.getGroupId(), groupRequestDto.getGroupPw())
+    //groupInsertId,groupPw에 매칭되는 그룹 찾기
+    public StudyGroup getGroupByInsertIdPw(GroupRequest groupRequest) {
+        StudyGroup studyGroup = groupRepository.findByGroupInsertIdAndGroupPw(groupRequest.getGroupInsertId(), groupRequest.getGroupPw())
                 .orElseThrow(() -> new BusinessException(ErrorCode.GROUP_LOGIN_ERROR));
         return studyGroup;
     }
@@ -46,7 +46,7 @@ public class GroupService {
     @Transactional
     public StudyGroup updateNotice(Long id, String notice) {
         StudyGroup studyGroup = groupRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.GROUP_LOGIN_ERROR));
+                .orElseThrow(() -> new BusinessException(ErrorCode.GROUP_DOESNT_EXIST));
 
         studyGroup.updateNotice(notice);
         return groupRepository.save(studyGroup);

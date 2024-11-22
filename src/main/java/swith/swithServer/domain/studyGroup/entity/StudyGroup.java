@@ -28,23 +28,23 @@ public class StudyGroup extends BaseEntity {
     private String groupName;
 
     @NotNull
-    private int maxNum;
+    private Long maxNum;
 
     @NotNull
-    private int memberNum;
+    private Long memberNum;
 
     @NotNull
     private String subject;
 
     @NotNull
-    private int period;
+    private Long period;
 
     @NotNull
     private String communication;
 
     private String notice;
 
-    public void updateMemberNum(int memberNum){
+    public void updateMemberNum(Long memberNum){
         this.memberNum = memberNum;
     }
     public void updateNotice(String notice) {
