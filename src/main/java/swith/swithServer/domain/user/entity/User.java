@@ -21,6 +21,9 @@ public class User extends BaseEntity {
     private String nickname;
 
     @NotNull
+    private String image;
+
+    @NotNull
     @Enumerated(EnumType.STRING)
     private SnsType snsType;
 
@@ -33,9 +36,10 @@ public class User extends BaseEntity {
     private UserRole userRole;
 
     @Builder
-    private User(String email,String nickname) {
+    private User(String email,String nickname,String image) {
         this.email=email;
         this.nickname=nickname;
+        this.image=image;
         this.snsType=SnsType.KAKAO;
         this.userStatus=UserStatus.ACTIVE;
         this.userRole=UserRole.NORMAL;

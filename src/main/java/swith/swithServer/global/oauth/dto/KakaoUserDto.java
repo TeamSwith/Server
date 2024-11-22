@@ -3,6 +3,7 @@ package swith.swithServer.global.oauth.dto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import swith.swithServer.domain.user.entity.User;
 
 @Builder(access = AccessLevel.PRIVATE)
 @Getter
@@ -19,6 +20,15 @@ public class KakaoUserDto {
                 .email(email)
                 .nickname(nickname)
                 .image(image)
+                .build();
+    }
+
+    public static KakaoUserDto from(User user){
+        return KakaoUserDto.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .image(user.getImage())
                 .build();
     }
 }

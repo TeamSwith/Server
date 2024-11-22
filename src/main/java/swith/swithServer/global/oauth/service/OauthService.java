@@ -122,6 +122,7 @@ public class OauthService {
         User user =User.builder()
                     .email(kakaoUser.getEmail())
                     .nickname(kakaoUser.getNickname())
+                    .image(kakaoUser.getImage())
                     .build();
         return userRepository.save(user);
     }
@@ -133,6 +134,10 @@ public class OauthService {
         return userRepository.findByEmail(principal)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_DOESNT_EXIST));
 
+    }
+
+    public KakaoUserDto getUserInfo(User user){
+        return KakaoUserDto.from(user);
     }
 
 }
