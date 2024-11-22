@@ -94,8 +94,9 @@ public class OauthService {
         Long id = jsonNode.get("id").asLong();
         String email = jsonNode.path("kakao_account").path("email").asText();
         String nickname = jsonNode.path("properties").path("nickname").asText();
+        String image = jsonNode.path("properties").path("profile_image").asText();
 
-        return KakaoUserDto.of(id, email, nickname);
+        return KakaoUserDto.of(id, email, nickname,image);
     }
 
 
@@ -121,6 +122,7 @@ public class OauthService {
         User user =User.builder()
                     .email(kakaoUser.getEmail())
                     .nickname(kakaoUser.getNickname())
+                    .image(kakaoUser.getImage())
                     .build();
         return userRepository.save(user);
     }
@@ -132,6 +134,10 @@ public class OauthService {
         return userRepository.findByEmail(principal)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_DOESNT_EXIST));
 
+    }
+
+    public KakaoUserDto getUserInfo(User user){
+        return KakaoUserDto.from(user);
     }
 
 }

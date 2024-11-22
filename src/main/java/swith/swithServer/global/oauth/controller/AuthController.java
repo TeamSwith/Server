@@ -27,7 +27,7 @@ public class AuthController {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
 
-    @GetMapping("/oauth/kakao/login")
+    @GetMapping("/oauth/kakao")
     @Operation(summary = "카카오 로그인 - 토큰 발급")
     public ApiResponse<TokenResponseDto> kakaoCallback(@RequestParam String code) {
 
@@ -66,9 +66,10 @@ public class AuthController {
 
     @GetMapping("/getLoginUser")
     @Operation(summary = "현재 로그인되어있는 유저 [test용]")
-    public ApiResponse<String> getLoginUser(){
+    public ApiResponse<KakaoUserDto> getLoginUser(){
         User user=authService.getLoginUser();
-        return new ApiResponse<>(200,user.getEmail());
+        KakaoUserDto kakaoUserDto=authService.getUserInfo(user);
+        return new ApiResponse<>(200,kakaoUserDto);
     }
 
 }
