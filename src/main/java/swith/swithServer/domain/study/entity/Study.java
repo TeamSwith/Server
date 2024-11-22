@@ -5,8 +5,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.common.BaseEntity;
+import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,7 +17,8 @@ import java.time.LocalTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Study extends BaseEntity {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "study_id")
     private Long id;
 
     @NotNull

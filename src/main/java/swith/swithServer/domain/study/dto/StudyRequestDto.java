@@ -18,4 +18,3 @@ public class StudyRequestDto {
     private LocalTime time;
     private String location;
 }
-

@@ -5,28 +5,31 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import swith.swithServer.domain.common.BaseEntity;
 
-
+@Setter
 @Getter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "`group`")
 public class StudyGroup extends BaseEntity {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "studyGroupId")
     private Long id;
 
-    //사용자 입력 id
+    // 사용자 입력 ID
     @NotNull
-    private String groupId;
+    private String groupInsertId;
 
     @NotNull
     private String groupPw;
 
-    //최대 인원 수
+    @NotNull
+    private String groupName;
+
     @NotNull
     private int maxNum;
 
-    //현재 인원 수
     @NotNull
     private int memberNum;
 

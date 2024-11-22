@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class GroupRequestDto {
-    private String groupId;
+    private Long groupId;
     private String groupPw;
     private Long userId;
 }
