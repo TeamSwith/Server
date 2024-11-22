@@ -8,8 +8,8 @@ import lombok.Builder;
 
 @Getter
 @Setter
-@ToString
-@EqualsAndHashCode
+//@ToString
+//@EqualsAndHashCode
 @Builder
 public class GroupResponse {
     private String groupName;
