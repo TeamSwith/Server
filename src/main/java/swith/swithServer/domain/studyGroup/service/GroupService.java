@@ -55,27 +55,12 @@ public class GroupService {
     // 스터디 생성
     @Transactional
     public StudyGroup createGroup(GroupCreateRequest request) {
-        if (groupRepository.existsByGroupInsertId(request.getGroupInsertId())) { // 변경된 부분
-            throw new BusinessException(ErrorCode.GROUP_INSERT_ID_ALREADY_EXISTS); // 변경된 부분
+        if (groupRepository.existsByGroupInsertId(request.getGroupInsertId())) {
+            throw new BusinessException(ErrorCode.GROUP_INSERT_ID_ALREADY_EXISTS);
         }
-
-        StudyGroup studyGroup = new StudyGroup(
-                null,
-                request.getGroupInsertId(),
-                request.getGroupPw(),
-                request.getGroupName(),
-                request.getMaxNum(),
-                request.getMemberNum(),
-                request.getSubject(),
-                request.getPeriod(),
-                request.getCommunication(),
-                null
-        );
-
+        StudyGroup studyGroup = request.toEntity();
         return groupRepository.save(studyGroup);
     }
-
-    // GET groupInsertID
     public String findGroupInsertIdByGroupId(Long groupId) {
         StudyGroup studyGroup = groupRepository.findById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
@@ -84,17 +69,14 @@ public class GroupService {
 
     // 그룹 정보 수정
     @Transactional
-    public void updateGroup(Long groupId, GroupUpdateRequest updateRequest) {
+    public GroupResponse updateGroupAndGetDetails(Long groupId, GroupUpdateRequest updateRequest) {
         StudyGroup studyGroup = groupRepository.findById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
 
-        studyGroup.setGroupName(updateRequest.getGroupName());
-        studyGroup.setMaxNum(updateRequest.getMaxNum());
-        studyGroup.setSubject(updateRequest.getSubject());
-        studyGroup.setPeriod(updateRequest.getPeriod());
-        studyGroup.setCommunication(updateRequest.getCommunication());
-
+        updateRequest.applyTo(studyGroup);
         groupRepository.save(studyGroup);
+
+        return GroupResponse.from(studyGroup);
     }
 
     // groupId로 그룹정보 GET
@@ -102,14 +84,7 @@ public class GroupService {
         StudyGroup studyGroup = groupRepository.findById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
 
-        return GroupResponse.builder()
-                .groupName(studyGroup.getGroupName())
-                .groupInsertId(studyGroup.getGroupInsertId())
-                .maxNum(studyGroup.getMaxNum())
-                .subject(studyGroup.getSubject())
-                .period(studyGroup.getPeriod())
-                .communication(studyGroup.getCommunication())
-                .build();
+        return GroupResponse.from(studyGroup);
     }
 
     // groupId로 그룹 삭제

@@ -1,11 +1,17 @@
 package swith.swithServer.domain.studyGroup.dto;
 
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 import jakarta.validation.constraints.NotNull;
+import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 
 @Getter
-@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(force = true)
 public class GroupUpdateRequest {
     @NotNull
     private String groupName;
@@ -21,4 +27,14 @@ public class GroupUpdateRequest {
 
     @NotNull
     private String communication;
+
+    public void applyTo(StudyGroup studyGroup) {
+        studyGroup.updateGroupDetails(
+                this.groupName,
+                this.maxNum,
+                this.subject,
+                this.period,
+                this.communication
+        );
+    }
 }
