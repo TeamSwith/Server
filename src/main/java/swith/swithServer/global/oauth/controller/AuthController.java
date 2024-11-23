@@ -2,6 +2,7 @@ package swith.swithServer.global.oauth.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,8 @@ import swith.swithServer.global.oauth.dto.TokenResponseDto;
 import swith.swithServer.global.oauth.service.OauthService;
 import swith.swithServer.global.response.ApiResponse;
 
+import java.io.IOException;
+
 @RestController
 @RequiredArgsConstructor
 @Tag(name="카카오 로그인")
@@ -29,7 +32,7 @@ public class AuthController {
 
     @GetMapping("/oauth/kakao")
     @Operation(summary = "카카오 로그인 - 토큰 발급")
-    public ApiResponse<TokenResponseDto> kakaoCallback(@RequestParam String code) {
+    public void kakaoCallback(@RequestParam String code, HttpServletResponse response) throws IOException {
 
         String kakaoAccessToken = authService.getKakaoAccessToken(code);
 
@@ -42,7 +45,14 @@ public class AuthController {
             jwtTokens = authService.SignupUser(kakaoUser);
         }
 
-        return new ApiResponse<>(200,TokenResponseDto.from(jwtTokens));
+        String redirectUrl = String.format(
+                "http://localhost:3000/local-callback?access-token=%s&refresh-token=%s",
+                jwtTokens.getAccessToken(),
+                jwtTokens.getRefreshToken()
+        );
+
+        response.sendRedirect(redirectUrl);
+
     }
 
     @PostMapping("/oauth/kakao/refresh")
