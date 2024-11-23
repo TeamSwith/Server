@@ -46,16 +46,20 @@ public class CommentService {
     // 댓글 삭제 API (commentId)
     @Transactional
     public void deleteComment(Long commentId) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_DOESNT_EXIST));
-
+        Comment comment = getCommentById(commentId);
         commentRepository.delete(comment);
     }
 
-    // 댓글 조회 API (studyId)
+    // 댓글 조회(1개 / 삭제 API에 이용)
+    @Transactional(readOnly = true)
+    public Comment getCommentById(Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_DOESNT_EXIST));
+    }
+
+    // 스터디 모든 댓글 조회 API (studyId)
     @Transactional(readOnly = true)
     public List<CommentResponse> getCommentsByStudyId(Long studyId) {
-        // studyId 유효성 검사
         studyRepository.findById(studyId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_STUDY_ID));
 

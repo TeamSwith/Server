@@ -21,7 +21,6 @@ public class CommentRequest {
     @NotNull
     private Long groupId;
 
-    // Comment 엔티티를 생성하는 메서드 추가
     public Comment toEntity(Study study, User user, StudyGroup studyGroup) {
         return new Comment(content, study, user, studyGroup);
     }

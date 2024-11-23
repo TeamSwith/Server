@@ -36,14 +36,17 @@ public class CommentController {
         Comment createdComment = commentService.createComment(studyId, request);
         return new ApiResponse<>(201, CommentResponse.fromEntity(createdComment));
     }
+
     // 댓글 삭제 API
     @DeleteMapping("/{commentId}")
     @Operation(summary = "댓글 삭제", description = "Deletes comment using commentId.")
-    public ApiResponse<String> deleteComment(
+    public ApiResponse<CommentResponse> deleteComment(
             @Parameter(description = "ID of the comment to be deleted", required = true)
             @PathVariable(name = "commentId") Long commentId) {
-        commentService.deleteComment(commentId);
-        return new ApiResponse<>(200, "Comment deleted successfully");
+        Comment deletedComment = commentService.getCommentById(commentId); // 삭제 전 조회
+        commentService.deleteComment(commentId); // 실제 삭제
+        return new ApiResponse<>(200, CommentResponse.fromEntity(deletedComment)); // 삭제된 데이터 반환
+
     }
 
     // 댓글 조회 API
