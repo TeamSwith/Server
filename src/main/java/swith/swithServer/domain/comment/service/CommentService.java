@@ -30,7 +30,7 @@ public class CommentService {
 
     // 댓글 생성 API
     @Transactional
-    public void createComment(Long studyId, CommentRequest request) {
+    public Comment createComment(Long studyId, CommentRequest request) {
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_STUDY_ID));
 
@@ -40,14 +40,7 @@ public class CommentService {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_USER_ID));
 
-        Comment comment = new Comment(
-                request.getContent(),
-                study,
-                user,
-                studyGroup
-        );
-
-        commentRepository.save(comment);
+        return commentRepository.save(request.toEntity(study, user, studyGroup));
     }
 
     // 댓글 삭제 API (commentId)

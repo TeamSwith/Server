@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import swith.swithServer.domain.comment.entity.Comment;
 import swith.swithServer.global.response.ApiResponse;
 import swith.swithServer.domain.comment.dto.CommentRequest;
 import swith.swithServer.domain.comment.dto.CommentResponse;
@@ -28,14 +29,13 @@ public class CommentController {
     // 댓글 생성 API
     @PostMapping("/{studyId}")
     @Operation(summary = "댓글 생성", description = "Creates a new comment using studyId")
-    public ApiResponse<String> createComment(
+    public ApiResponse<CommentResponse> createComment(
             @Parameter(description = "ID of the study where the comment will be created", required = true)
             @PathVariable(name = "studyId") Long studyId,
             @RequestBody CommentRequest request) {
-        commentService.createComment(studyId, request);
-        return new ApiResponse<>(201, "Comment created successfully");
+        Comment createdComment = commentService.createComment(studyId, request);
+        return new ApiResponse<>(201, CommentResponse.fromEntity(createdComment));
     }
-
     // 댓글 삭제 API
     @DeleteMapping("/{commentId}")
     @Operation(summary = "댓글 삭제", description = "Deletes comment using commentId.")

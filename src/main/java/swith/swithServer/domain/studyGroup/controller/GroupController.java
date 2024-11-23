@@ -107,8 +107,8 @@ public class GroupController {
             @Parameter(description = "ID of the group to be updated", required = true)
             @PathVariable(name = "groupId") Long groupId,
             @RequestBody GroupUpdateRequest updateRequest) {
-        GroupResponse updatedGroup = groupService.updateGroupAndGetDetails(groupId, updateRequest);
-        return new ApiResponse<>(200, updatedGroup);
+        return new ApiResponse<>(200, groupService.updateGroupAndGetDetails(groupId, updateRequest));
+
     }
 
     // 스터디 그룹 삭제 API
