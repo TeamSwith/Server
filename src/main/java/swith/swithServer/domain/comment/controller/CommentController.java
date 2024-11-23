@@ -27,15 +27,6 @@ public class CommentController {
     private final OauthService oauthService; // OauthService 주입 추가
 
     // 댓글 생성 API
-//    @PostMapping("/{studyId}")
-//    @Operation(summary = "댓글 생성", description = "Creates a new comment using studyId")
-//    public ApiResponse<CommentResponse> createComment(
-//            @Parameter(description = "ID of the study where the comment will be created", required = true)
-//            @PathVariable(name = "studyId") Long studyId,
-//            @RequestBody CommentRequest request) {
-//        Comment createdComment = commentService.createComment(studyId, request);
-//        return new ApiResponse<>(201, CommentResponse.fromEntity(createdComment));
-//    }
     @PostMapping("/{studyId}/{userId}/{groupId}")
     @Operation(summary = "댓글 생성", description = "Creates a new comment using studyId, userId, and groupId")
     public ApiResponse<CommentResponse> createComment(
