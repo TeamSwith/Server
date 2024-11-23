@@ -33,26 +33,21 @@ public class UserTaskController {
             @RequestBody UpdateTaskStatusRequest request,
             HttpServletRequest httpServletRequest) {
 
-        // Authorization 헤더에서 JWT 토큰 추출
         String token = extractToken(httpServletRequest);
         if (token == null) {
             throw new BusinessException(ErrorCode.NOT_VALID_ERROR);
         }
 
-        // JWT 토큰에서 사용자 이메일 추출
         String userEmail = jwtTokenProvider.getUserEmail(token);
         if (userEmail == null) {
             throw new BusinessException(ErrorCode.NOT_VALID_ERROR);
         }
 
-        // 이메일로 사용자 조회
         User loginUser = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_DOESNT_EXIST));
 
-        // 디버깅용 로그: 로그인된 사용자 정보
         System.out.println("로그인된 사용자: " + loginUser.getEmail());
 
-        // 과제 상태 업데이트 처리
         String updatedStatus = userTaskService.updateTaskStatus(loginUser.getId(), taskId, request.getTaskStatus());
         return new ApiResponse<>(200, "Task status updated to " + updatedStatus);
     }

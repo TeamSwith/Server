@@ -28,21 +28,36 @@ public class CommentService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
 
+    // 댓글 생성 API
     @Transactional
-    public CommentResponse createComment(Long studyId, Long userId, Long groupId, CommentRequest request) {
+    public CommentResponse createComment(Long studyId, Long groupId, User user, CommentRequest request) {
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_STUDY_ID));
 
         StudyGroup studyGroup = groupRepository.findById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_USER_ID));
-
+        // DTO의 toEntity 메서드를 사용해 엔티티 생성
         Comment comment = request.toEntity(study, user, studyGroup);
 
+        // 저장 후 CommentResponse로 변환
         return CommentResponse.fromEntity(commentRepository.save(comment));
     }
+//    @Transactional
+//    public CommentResponse createComment(Long studyId, Long userId, Long groupId, CommentRequest request) {
+//        Study study = studyRepository.findById(studyId)
+//                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_STUDY_ID));
+//
+//        StudyGroup studyGroup = groupRepository.findById(groupId)
+//                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
+//
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_USER_ID));
+//
+//        Comment comment = request.toEntity(study, user, studyGroup);
+//
+//        return CommentResponse.fromEntity(commentRepository.save(comment));
+//    }
 
     // 댓글 삭제 API (commentId)
     @Transactional
