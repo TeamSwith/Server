@@ -16,28 +16,50 @@ public class UserTaskService {
     private final UserTaskRepository userTaskRepository;
 
     @Transactional
-    public String updateTaskStatus(Long userId, Long taskId) {
+    public String updateTaskStatus(Long userId, Long taskId, String taskStatus) {
+        TaskStatus newStatus;
+        try {
+            newStatus = TaskStatus.valueOf(taskStatus.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new BusinessException(ErrorCode.NOT_VALID_ERROR);
+        }
+
         UserTask userTask = userTaskRepository.findByUserIdAndId(userId, taskId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_TASK_NOT_FOUND));
 
-        if (userTask.getTaskStatus() == TaskStatus.COMPLETED) {
+        if (newStatus == TaskStatus.COMPLETED && userTask.getTaskStatus() == TaskStatus.COMPLETED) {
             throw new BusinessException(ErrorCode.TASK_ALREADY_COMPLETED);
         }
 
-        userTask.updateTaskStatus(TaskStatus.COMPLETED);
-        return TaskStatus.COMPLETED.name();
-    }
-
-    @Transactional
-    public String updateTaskStatusToPending(Long userId, Long taskId) {
-        UserTask userTask = userTaskRepository.findByUserIdAndId(userId, taskId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_TASK_NOT_FOUND));
-
-        if (userTask.getTaskStatus() != TaskStatus.COMPLETED) {
+        if (newStatus == TaskStatus.PENDING && userTask.getTaskStatus() != TaskStatus.COMPLETED) {
             throw new BusinessException(ErrorCode.TASK_NOT_COMPLETED);
         }
 
-        userTask.updateTaskStatus(TaskStatus.PENDING);
-        return TaskStatus.PENDING.name();
+        userTask.updateTaskStatus(newStatus);
+        return newStatus.name();
     }
 }
+//    @Transactional
+//    public String updateTaskStatus(Long userId, Long taskId, String taskStatus) {
+//        TaskStatus newStatus;
+//        try {
+//            newStatus = TaskStatus.valueOf(taskStatus.toUpperCase());
+//        } catch (IllegalArgumentException e) {
+//            throw new BusinessException(ErrorCode.NOT_VALID_ERROR);
+//        }
+//
+//        UserTask userTask = userTaskRepository.findByUserIdAndId(userId, taskId)
+//                .orElseThrow(() -> new BusinessException(ErrorCode.USER_TASK_NOT_FOUND));
+//
+//        if (newStatus == TaskStatus.COMPLETED && userTask.getTaskStatus() == TaskStatus.COMPLETED) {
+//            throw new BusinessException(ErrorCode.TASK_ALREADY_COMPLETED);
+//        }
+//
+//        if (newStatus == TaskStatus.PENDING && userTask.getTaskStatus() != TaskStatus.COMPLETED) {
+//            throw new BusinessException(ErrorCode.TASK_NOT_COMPLETED);
+//        }
+//
+//        userTask.updateTaskStatus(newStatus);
+//        return newStatus.name();
+//    }
+// }

@@ -3,41 +3,65 @@ package swith.swithServer.domain.usertask.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import swith.swithServer.domain.usertask.dto.UpdateTaskStatusRequest;
 import swith.swithServer.domain.usertask.service.UserTaskService;
+import swith.swithServer.global.error.ErrorCode;
+import swith.swithServer.global.error.exception.BusinessException;
+import swith.swithServer.global.jwt.service.JwtTokenProvider;
 import swith.swithServer.global.response.ApiResponse;
+import swith.swithServer.domain.user.entity.User;
+import swith.swithServer.domain.user.repository.UserRepository;
 
 @RestController
-@RequestMapping("/api/usertasks")
+@RequestMapping("/usertasks")
 @RequiredArgsConstructor
-@Tag(name="User 과제")
+@Tag(name = "User 과제")
 public class UserTaskController {
 
     private final UserTaskService userTaskService;
+    private final JwtTokenProvider jwtTokenProvider; // JWT 토큰 검증 및 정보 추출
+    private final UserRepository userRepository;
 
-    // Task 상태 COMPLETED로 업데이트 API
-    @PutMapping("/{userId}/{taskId}/COMPLETED")
-    @Operation(summary = "과제 완료 처리", description = "Using userId, taskId")
+    @PutMapping("/{taskId}")
+    @Operation(summary = "과제 상태 업데이트", description = "현재 로그인된 사용자와 taskId를 사용하여 과제 상태를 업데이트합니다.")
     public ApiResponse<String> updateTaskStatus(
-            @Parameter(description = "ID of the user", required = true)
-            @PathVariable(name = "userId") Long userId,
             @Parameter(description = "ID of the task", required = true)
-            @PathVariable(name = "taskId") Long taskId) {
-        String updatedStatus = userTaskService.updateTaskStatus(userId, taskId);
+            @PathVariable(name = "taskId") Long taskId,
+            @RequestBody UpdateTaskStatusRequest request,
+            HttpServletRequest httpServletRequest) {
+
+        // Authorization 헤더에서 JWT 토큰 추출
+        String token = extractToken(httpServletRequest);
+        if (token == null) {
+            throw new BusinessException(ErrorCode.NOT_VALID_ERROR);
+        }
+
+        // JWT 토큰에서 사용자 이메일 추출
+        String userEmail = jwtTokenProvider.getUserEmail(token);
+        if (userEmail == null) {
+            throw new BusinessException(ErrorCode.NOT_VALID_ERROR);
+        }
+
+        // 이메일로 사용자 조회
+        User loginUser = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_DOESNT_EXIST));
+
+        // 디버깅용 로그: 로그인된 사용자 정보
+        System.out.println("로그인된 사용자: " + loginUser.getEmail());
+
+        // 과제 상태 업데이트 처리
+        String updatedStatus = userTaskService.updateTaskStatus(loginUser.getId(), taskId, request.getTaskStatus());
         return new ApiResponse<>(200, "Task status updated to " + updatedStatus);
     }
 
-    // Task 상태 PENDING으로 업데이트 API
-    @PutMapping("/{userId}/{taskId}/PENDING")
-    @Operation(summary = "과제 미완료 처리", description = "Using userId, taskId")
-    public ApiResponse<String> updateTaskStatusToPending(
-            @Parameter(description = "ID of the user", required = true)
-            @PathVariable(name = "userId") Long userId,
-            @Parameter(description = "ID of the task", required = true)
-            @PathVariable(name = "taskId") Long taskId) {
-        String updatedStatus = userTaskService.updateTaskStatusToPending(userId, taskId);
-        return new ApiResponse<>(200, "Task status updated to " + updatedStatus);
+    private String extractToken(HttpServletRequest request) {
+        String header = request.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer ")) {
+            return header.substring(7);
+        }
+        return null;
     }
 }

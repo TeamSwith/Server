@@ -11,9 +11,5 @@ import lombok.NoArgsConstructor;
 public class UpdateTaskStatusRequest {
 
     @NotNull
-    private Long userId;
-
-    @NotNull
-    private Long taskId;
-
+    private String taskStatus;
 }
