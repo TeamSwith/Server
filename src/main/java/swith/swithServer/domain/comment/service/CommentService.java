@@ -28,19 +28,20 @@ public class CommentService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
 
-    // 댓글 생성 API
     @Transactional
-    public Comment createComment(Long studyId, CommentRequest request) {
+    public CommentResponse createComment(Long studyId, Long userId, Long groupId, CommentRequest request) {
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_STUDY_ID));
 
-        StudyGroup studyGroup = groupRepository.findById(request.getGroupId())
+        StudyGroup studyGroup = groupRepository.findById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
 
-        User user = userRepository.findById(request.getUserId())
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_USER_ID));
 
-        return commentRepository.save(request.toEntity(study, user, studyGroup));
+        Comment comment = request.toEntity(study, user, studyGroup);
+
+        return CommentResponse.fromEntity(commentRepository.save(comment));
     }
 
     // 댓글 삭제 API (commentId)

@@ -27,14 +27,27 @@ public class CommentController {
     private final OauthService oauthService; // OauthService 주입 추가
 
     // 댓글 생성 API
-    @PostMapping("/{studyId}")
-    @Operation(summary = "댓글 생성", description = "Creates a new comment using studyId")
+//    @PostMapping("/{studyId}")
+//    @Operation(summary = "댓글 생성", description = "Creates a new comment using studyId")
+//    public ApiResponse<CommentResponse> createComment(
+//            @Parameter(description = "ID of the study where the comment will be created", required = true)
+//            @PathVariable(name = "studyId") Long studyId,
+//            @RequestBody CommentRequest request) {
+//        Comment createdComment = commentService.createComment(studyId, request);
+//        return new ApiResponse<>(201, CommentResponse.fromEntity(createdComment));
+//    }
+    @PostMapping("/{studyId}/{userId}/{groupId}")
+    @Operation(summary = "댓글 생성", description = "Creates a new comment using studyId, userId, and groupId")
     public ApiResponse<CommentResponse> createComment(
             @Parameter(description = "ID of the study where the comment will be created", required = true)
             @PathVariable(name = "studyId") Long studyId,
+            @Parameter(description = "ID of the user creating the comment", required = true)
+            @PathVariable(name = "userId") Long userId,
+            @Parameter(description = "ID of the group associated with the comment", required = true)
+            @PathVariable(name = "groupId") Long groupId,
             @RequestBody CommentRequest request) {
-        Comment createdComment = commentService.createComment(studyId, request);
-        return new ApiResponse<>(201, CommentResponse.fromEntity(createdComment));
+        // PathVariable로 받은 userId와 groupId를 Service에 전달
+        return new ApiResponse<>(201, commentService.createComment(studyId, userId, groupId, request));
     }
 
     // 댓글 삭제 API

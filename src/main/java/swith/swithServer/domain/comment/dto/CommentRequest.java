@@ -15,12 +15,6 @@ public class CommentRequest {
     @NotBlank
     private String content;
 
-    @NotNull
-    private Long userId;
-
-    @NotNull
-    private Long groupId;
-
     public Comment toEntity(Study study, User user, StudyGroup studyGroup) {
         return new Comment(content, study, user, studyGroup);
     }
