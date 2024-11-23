@@ -32,8 +32,7 @@ public class AuthController {
 
     @GetMapping("/oauth/kakao")
     @Operation(summary = "카카오 로그인 - 토큰 발급")
-    public void kakaoCallback(@RequestParam("code") String code, HttpServletResponse response) throws IOException {
-//    public void kakaoCallback(@RequestParam String code, HttpServletResponse response) throws IOException {
+    public void kakaoCallback(@RequestParam String code, HttpServletResponse response) throws IOException {
 
         String kakaoAccessToken = authService.getKakaoAccessToken(code);
 
