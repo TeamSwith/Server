@@ -3,6 +3,7 @@ package swith.swithServer.global.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -22,6 +23,7 @@ public class SecurityConfig {
     public SecurityFilterChain FilterChain(HttpSecurity http) throws Exception {
 
         http
+                .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/api/oauth/**").permitAll()
                         .requestMatchers("/api/swagger-ui/**","/api/v3/api-docs/**","/api/swagger-resources/**").permitAll()
@@ -29,6 +31,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/getLoginUser").authenticated()
                         .anyRequest().permitAll()
                 )
+                .cors(Customizer.withDefaults())
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class) // 필터 추가 위치 조정
                 .formLogin(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable);
