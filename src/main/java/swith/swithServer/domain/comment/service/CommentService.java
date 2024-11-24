@@ -16,6 +16,9 @@ import swith.swithServer.domain.user.repository.UserRepository;
 import swith.swithServer.global.error.ErrorCode;
 import swith.swithServer.global.error.exception.BusinessException;
 import org.springframework.transaction.annotation.Transactional;
+import swith.swithServer.global.oauth.service.OauthService;
+import swith.swithServer.domain.user.entity.User; // getLoginUser 사용하려고 추가함
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,37 +30,24 @@ public class CommentService {
     private final StudyRepository studyRepository;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final OauthService authService;
 
     // 댓글 생성 API
+
     @Transactional
-    public CommentResponse createComment(Long studyId, Long groupId, User user, CommentRequest request) {
+    public CommentResponse createComment(Long studyId, Long groupId, CommentRequest request) {
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_STUDY_ID));
 
         StudyGroup studyGroup = groupRepository.findById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
 
-        // DTO의 toEntity 메서드를 사용해 엔티티 생성
+        User user = authService.getLoginUser();
+
         Comment comment = request.toEntity(study, user, studyGroup);
 
-        // 저장 후 CommentResponse로 변환
         return CommentResponse.fromEntity(commentRepository.save(comment));
     }
-//    @Transactional
-//    public CommentResponse createComment(Long studyId, Long userId, Long groupId, CommentRequest request) {
-//        Study study = studyRepository.findById(studyId)
-//                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_STUDY_ID));
-//
-//        StudyGroup studyGroup = groupRepository.findById(groupId)
-//                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
-//
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_USER_ID));
-//
-//        Comment comment = request.toEntity(study, user, studyGroup);
-//
-//        return CommentResponse.fromEntity(commentRepository.save(comment));
-//    }
 
     // 댓글 삭제 API (commentId)
     @Transactional
