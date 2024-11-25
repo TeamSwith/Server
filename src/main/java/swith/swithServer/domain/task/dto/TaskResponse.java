@@ -1,7 +1,5 @@
 package swith.swithServer.domain.task.dto;
 import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.Builder;
 import lombok.Getter;
 import swith.swithServer.domain.task.entity.Task;
@@ -11,29 +9,26 @@ import java.util.List;
 
 @Getter
 @Builder
-public class TaskResponseDto {
+public class TaskResponse {
     private Long id;
     @Column(length = 50)
     private String content;
 
-//    @Enumerated(EnumType.STRING)
-//    private TaskStatus status;
-
-    public static TaskResponseDto from(Task task){
-        return TaskResponseDto.builder()
+    public static TaskResponse from(Task task){
+        return TaskResponse.builder()
                 .id(task.getId())
                 .content(task.getContent())
                 .build();
     }
-    public static List<TaskResponseDto> from(List<Task> task){
-        List<TaskResponseDto> taskResponseDtoList = new ArrayList<>();
+    public static List<TaskResponse> from(List<Task> task){
+        List<TaskResponse> taskResponseList = new ArrayList<>();
         for(Task tasks : task){
-            TaskResponseDto taskResponseDto = TaskResponseDto.builder()
+            TaskResponse taskResponse = TaskResponse.builder()
                     .id(tasks.getId())
                     .content(tasks.getContent())
                     .build();
-            taskResponseDtoList.add(taskResponseDto);
+            taskResponseList.add(taskResponse);
         }
-        return taskResponseDtoList;
+        return taskResponseList;
     }
 }

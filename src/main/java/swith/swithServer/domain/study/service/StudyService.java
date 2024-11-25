@@ -4,6 +4,7 @@ package swith.swithServer.domain.study.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import swith.swithServer.domain.study.dto.StudyGetRequest;
 import swith.swithServer.domain.study.dto.StudyRequest;
 import swith.swithServer.domain.study.dto.StudyUpdateRequest;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
@@ -12,6 +13,8 @@ import swith.swithServer.domain.study.entity.Study;
 import swith.swithServer.domain.study.repository.StudyRepository;
 import swith.swithServer.global.error.ErrorCode;
 import swith.swithServer.global.error.exception.BusinessException;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,12 +28,23 @@ public class StudyService {
                 .orElseThrow(()-> new BusinessException(ErrorCode.STUDY_DOESNT_EXIST));
         return study;
     }
+    //그룹, 날짜로 스터디 일정 찾기
+    public Study getStudyByGroupDate(Long groupId, StudyGetRequest studyGetRequest) {
+        StudyGroup studyGroup = groupRepository.findById(groupId)
+                .orElseThrow(()-> new BusinessException(ErrorCode.GROUP_DOESNT_EXIST));
+        Study study = studyRepository.findByStudyGroupAndDate(studyGroup, studyGetRequest.getDate())
+                .orElseThrow(() -> new BusinessException(ErrorCode.STUDY_DOESNT_EXIST));
+        return study;
+    }
 
     //study 생성
     @Transactional
     public Study createStudy(StudyRequest studyRequest, Long id){
         StudyGroup studyGroup = groupRepository.findById(id)
                 .orElseThrow(()->new BusinessException(ErrorCode.GROUP_DOESNT_EXIST));
+        if(studyRepository.findByStudyGroupAndDate(studyGroup, studyRequest.getDate()).isPresent()){
+            throw new BusinessException(ErrorCode.STUDY_EXIST);
+        }
         Study study = new Study(studyRequest.getDate(), studyRequest.getTime(), studyRequest.getLocation(), studyGroup);
         return studyRepository.save(study);
     }

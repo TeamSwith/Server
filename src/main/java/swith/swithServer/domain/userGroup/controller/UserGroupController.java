@@ -10,12 +10,11 @@ import swith.swithServer.domain.study.dto.MessageResponse;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.studyGroup.service.GroupService;
 import swith.swithServer.domain.user.dto.UserNicknameImageResponse;
-import swith.swithServer.domain.userGroup.entity.UserGroup;
 import swith.swithServer.domain.userGroup.repository.UserGroupRepository;
 import swith.swithServer.domain.user.entity.User;
-import swith.swithServer.domain.user.service.UserService;
-import swith.swithServer.domain.userGroup.dto.UserGroupDto;
+import swith.swithServer.domain.userGroup.dto.UserGroupRequest;
 import swith.swithServer.domain.userGroup.service.UserGroupService;
+import swith.swithServer.global.oauth.service.OauthService;
 import swith.swithServer.global.response.ApiResponse;
 
 import java.util.List;
@@ -29,7 +28,7 @@ import java.util.stream.Collectors;
 public class UserGroupController {
 
     private final UserGroupService userGroupService;
-    private final UserService userService;
+    private final OauthService authService;
     private final GroupService groupService;
     private final UserGroupRepository userGroupRepository;
 
@@ -38,9 +37,9 @@ public class UserGroupController {
     @PostMapping("/create")
     @Operation(summary = "스터디 가입하기")
     public ApiResponse<MessageResponse> createUserGroup(
-            @RequestBody UserGroupDto userGroupDto){
-        User user = userService.getUserById(userGroupDto.getUserId());
-        StudyGroup studyGroup = groupService.getGroupById(userGroupDto.getGroupId());
+            @RequestBody UserGroupRequest userGroupRequest){
+        User user = authService.getLoginUser();
+        StudyGroup studyGroup = groupService.getGroupById(userGroupRequest.getGroupId());
         userGroupService.createUserGroup(user, studyGroup);
         studyGroup.updateMemberNum(studyGroup.getMemberNum()+1);
         return new ApiResponse<>(201, MessageResponse.from("redirect:http://localhost:8080/api/group/"+studyGroup.getId()));

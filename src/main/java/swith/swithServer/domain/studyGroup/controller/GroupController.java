@@ -33,25 +33,23 @@ public class GroupController {
 
         //id와 pw가 매칭되는 group 여부 확인
         StudyGroup studyGroup = groupService.getGroupByInsertIdPw(groupRequest);
-        //user 조회
-        User user = userService.getUserById(groupRequest.getUserId());
-        //현재 로그인 되어 있는 user와 일치하는지 확인          email이 unique하다고 생각해 비교 대상으로 삼았습니다.
-        if (user.getEmail().equals(authService.getLoginUser().getEmail())) {
+        //로그인 유저 받아오기
+        User user= authService.getLoginUser();
             //가입 여부 확인
-            boolean isUserInGroup = groupService.isUserInGroup(user, studyGroup);
-            if (isUserInGroup) {
-                //가입되어 있을 때
-                return new ApiResponse<>(200, GroupLoginResponse.from(studyGroup.getId(), "이미 가입되어 있음", "redirect:/" + studyGroup.getId()));
+        boolean isUserInGroup = groupService.isUserInGroup(user, studyGroup);
+        if (isUserInGroup) {
+            //가입되어 있을 때
+            return new ApiResponse<>(200, GroupLoginResponse.from(studyGroup.getId(), "이미 가입되어 있음", "redirect:/" + studyGroup.getId()));
+        } else {
+            //가입되어 있지 않을 때 group 의 정원 확인
+            if (studyGroup.getMemberNum() < studyGroup.getMaxNum()) {
+                return new ApiResponse<>(200, GroupLoginResponse.from(studyGroup.getId(), "가입 전", "redirect:http://localhost:8080/api/user-group/create"));
             } else {
-                //가입되어 있지 않을 때 group 의 정원 확인
-                if (studyGroup.getMemberNum() < studyGroup.getMaxNum()) {
-                    return new ApiResponse<>(200, GroupLoginResponse.from(studyGroup.getId(), "가입 전", "redirect:http://localhost:8080/api/user-group/create"));
-                } else {
-                    return new ApiResponse<>(404, MessageResponse.from("정원을 초과했습니다."));
-                }
+                return new ApiResponse<>(404, MessageResponse.from("정원을 초과했습니다."));
             }
         }
-        return new ApiResponse<>(400, MessageResponse.from("요청한 사용자와 일치하지 않습니다."));
+
+        //return new ApiResponse<>(400, MessageResponse.from("요청한 사용자와 일치하지 않습니다."));
     }
 
 
