@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
@@ -25,6 +26,7 @@ import swith.swithServer.global.oauth.dto.KakaoUserDto;
 
 
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OauthService {
@@ -132,6 +134,7 @@ public class OauthService {
     public User getLoginUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String principal = (String) authentication.getPrincipal(); // 이메일
+        log.info("로그인된 회원의 email : "+principal);
 
         return userRepository.findByEmail(principal)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_DOESNT_EXIST));
