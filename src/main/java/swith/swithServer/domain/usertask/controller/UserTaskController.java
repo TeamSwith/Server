@@ -7,37 +7,28 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import swith.swithServer.domain.usertask.dto.UpdateTaskStatusRequest;
 import swith.swithServer.domain.usertask.service.UserTaskService;
+import swith.swithServer.global.error.ErrorCode;
+import swith.swithServer.global.error.exception.BusinessException;
+import swith.swithServer.global.oauth.service.OauthService;
+import swith.swithServer.domain.user.entity.User;
 import swith.swithServer.global.response.ApiResponse;
 
 @RestController
-@RequestMapping("/api/usertasks")
+@RequestMapping("/usertasks")
 @RequiredArgsConstructor
-@Tag(name="User 과제")
+@Tag(name = "User 과제")
 public class UserTaskController {
 
     private final UserTaskService userTaskService;
 
-    // Task 상태 COMPLETED로 업데이트 API
-    @PutMapping("/{userId}/{taskId}/COMPLETED")
-    @Operation(summary = "과제 완료 처리", description = "Using userId, taskId")
+    @PutMapping("/{taskId}")
+    @Operation(summary = "과제 상태 업데이트", description = "현재 로그인된 사용자와 taskId를 사용하여 과제 상태를 업데이트합니다.")
     public ApiResponse<String> updateTaskStatus(
-            @Parameter(description = "ID of the user", required = true)
-            @PathVariable(name = "userId") Long userId,
             @Parameter(description = "ID of the task", required = true)
-            @PathVariable(name = "taskId") Long taskId) {
-        String updatedStatus = userTaskService.updateTaskStatus(userId, taskId);
+            @PathVariable(name = "taskId") Long taskId,
+            @RequestBody UpdateTaskStatusRequest request) {
+        String updatedStatus = userTaskService.updateTaskStatus(taskId, request.getTaskStatus());
         return new ApiResponse<>(200, "Task status updated to " + updatedStatus);
     }
 
-    // Task 상태 PENDING으로 업데이트 API
-    @PutMapping("/{userId}/{taskId}/PENDING")
-    @Operation(summary = "과제 미완료 처리", description = "Using userId, taskId")
-    public ApiResponse<String> updateTaskStatusToPending(
-            @Parameter(description = "ID of the user", required = true)
-            @PathVariable(name = "userId") Long userId,
-            @Parameter(description = "ID of the task", required = true)
-            @PathVariable(name = "taskId") Long taskId) {
-        String updatedStatus = userTaskService.updateTaskStatusToPending(userId, taskId);
-        return new ApiResponse<>(200, "Task status updated to " + updatedStatus);
-    }
 }

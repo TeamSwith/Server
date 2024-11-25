@@ -16,6 +16,9 @@ import swith.swithServer.domain.user.repository.UserRepository;
 import swith.swithServer.global.error.ErrorCode;
 import swith.swithServer.global.error.exception.BusinessException;
 import org.springframework.transaction.annotation.Transactional;
+import swith.swithServer.global.oauth.service.OauthService;
+import swith.swithServer.domain.user.entity.User; // getLoginUser 사용하려고 추가함
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,20 +30,23 @@ public class CommentService {
     private final StudyRepository studyRepository;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final OauthService authService;
 
     // 댓글 생성 API
+
     @Transactional
-    public Comment createComment(Long studyId, CommentRequest request) {
+    public CommentResponse createComment(Long studyId, Long groupId, CommentRequest request) {
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_STUDY_ID));
 
-        StudyGroup studyGroup = groupRepository.findById(request.getGroupId())
+        StudyGroup studyGroup = groupRepository.findById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
 
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_USER_ID));
+        User user = authService.getLoginUser();
 
-        return commentRepository.save(request.toEntity(study, user, studyGroup));
+        Comment comment = request.toEntity(study, user, studyGroup);
+
+        return CommentResponse.fromEntity(commentRepository.save(comment));
     }
 
     // 댓글 삭제 API (commentId)
