@@ -13,7 +13,7 @@ public class GroupResponse {
     private String groupInsertId;
     private Long maxNum;
     private String subject;
-    private Long period;
+    private String period;
     private String communication;
 
     public static GroupResponse from(StudyGroup studyGroup) {
@@ -22,7 +22,7 @@ public class GroupResponse {
                 .groupInsertId(studyGroup.getGroupInsertId())
                 .maxNum(studyGroup.getMaxNum())
                 .subject(studyGroup.getSubject())
-                .period(studyGroup.getPeriod())
+                .period(studyGroup.getPeriod().getLabel()) // Period enum → String 변환
                 .communication(studyGroup.getCommunication())
                 .build();
     }
