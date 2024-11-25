@@ -22,13 +22,9 @@ import swith.swithServer.global.oauth.service.OauthService;
 public class StudyService {
     private final StudyRepository studyRepository;
     private final GroupRepository groupRepository;
-    private final OauthService oauthService;
 
     //id로 찾기
     public Study getStudyById(Long id){
-        User user=oauthService.getLoginUser();
-        log.info("이메일 test:"+user.getEmail());
-
         Study study=studyRepository.findById(id)
                 .orElseThrow(()-> new BusinessException(ErrorCode.STUDY_DOESNT_EXIST));
         return study;
