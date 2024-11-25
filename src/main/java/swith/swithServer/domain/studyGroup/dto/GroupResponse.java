@@ -22,7 +22,7 @@ public class GroupResponse {
                 .groupInsertId(studyGroup.getGroupInsertId())
                 .maxNum(studyGroup.getMaxNum())
                 .subject(studyGroup.getSubject())
-                .period(studyGroup.getPeriod().getLabel()) // Period enum → String 변환
+                .period(studyGroup.getPeriod().getLabel())
                 .communication(studyGroup.getCommunication())
                 .build();
     }

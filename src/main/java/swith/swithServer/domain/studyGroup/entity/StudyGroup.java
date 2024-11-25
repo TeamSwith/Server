@@ -41,12 +41,10 @@ public class StudyGroup extends BaseEntity {
     @NotNull
     private String subject;
 
-//    @NotNull
-//    private Long period;
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "period", length = 20) // 최대 길이를 20자로 설정
+    @Column(name = "period", length = 20)
     private Period period;
 
     @NotNull
@@ -65,7 +63,7 @@ public class StudyGroup extends BaseEntity {
         this.notice = notice;
     }
 
-    public void updateGroupDetails(String groupName, Long maxNum, String subject, Period period, String communication) { // 변경된 부분
+    public void updateGroupDetails(String groupName, Long maxNum, String subject, Period period, String communication) {
         this.groupName = groupName;
         this.maxNum = maxNum;
         this.subject = subject;

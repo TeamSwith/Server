@@ -13,56 +13,20 @@ import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 @NoArgsConstructor(force = true)
 public class GroupCreateRequest {
 
-    private String groupInsertId; // 필수
-    private String groupPw;       // 필수
+    private String groupInsertId;
+    private String groupPw;
 
     public StudyGroup toEntity() {
         return StudyGroup.builder()
                 .groupInsertId(this.groupInsertId)
                 .groupPw(this.groupPw)
-                .groupName("")             // 기본값
-                .maxNum(0L)                // 기본값
-                .memberNum(0L)             // 기본값
-                .subject("")               // 기본값
-                .period(Period.NONE)          // 기본값
-                .communication("")         // 기본값
-                .notice("")                // 기본값
+                .groupName("")
+                .maxNum(0L)
+                .memberNum(0L)
+                .subject("")
+                .period(Period.NONE)
+                .communication("")
+                .notice("")
                 .build();
     }
-
-//    private final String groupInsertId;
-//    private final String groupPw;
-//    private final String groupName;
-//    private final Long maxNum;
-//    private final Long memberNum;
-//    private final String subject;
-//    private final String period; // 변경된 부분
-//    private final String communication;
-//
-//    public static GroupCreateRequest from(String groupInsertId, String groupPw, String groupName, Long maxNum, Long memberNum, String subject, String period, String communication) {
-//        return GroupCreateRequest.builder()
-//                .groupInsertId(groupInsertId)
-//                .groupPw(groupPw)
-//                .groupName(groupName)
-//                .maxNum(maxNum)
-//                .memberNum(memberNum)
-//                .subject(subject)
-//                .period(period)
-//                .communication(communication)
-//                .build();
-//    }
-//
-//    public StudyGroup toEntity() {
-//        return StudyGroup.builder()
-//                .groupInsertId(this.groupInsertId)
-//                .groupPw(this.groupPw)
-//                .groupName(this.groupName != null ? this.groupName : "")
-//                .maxNum(this.maxNum != null ? this.maxNum : 0L)
-//                .memberNum(this.memberNum != null ? this.memberNum : 0L)
-//                .subject(this.subject != null ? this.subject : "")
-//                .period(Period.fromLabel(this.period))
-//                .communication(this.communication != null ? this.communication : "")
-//                .build();
-//
-//    }
 }

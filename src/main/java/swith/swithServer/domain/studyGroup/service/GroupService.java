@@ -62,6 +62,7 @@ public class GroupService {
         return groupRepository.save(studyGroup);
     }
 
+    // 그룹아이디로 스터디 아이디 가져오기
     public String findGroupInsertIdByGroupId(Long groupId) {
         StudyGroup studyGroup = groupRepository.findById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));

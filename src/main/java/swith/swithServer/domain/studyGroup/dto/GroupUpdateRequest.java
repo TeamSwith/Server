@@ -34,7 +34,7 @@ public class GroupUpdateRequest {
                 this.groupName,
                 this.maxNum,
                 this.subject,
-                Period.fromLabel(this.period), // 변경된 부분
+                Period.fromLabel(this.period),
                 this.communication
         );
     }

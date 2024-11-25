@@ -20,7 +20,7 @@ public enum Period {
 
     public static Period fromLabel(String label) {
         if (label == null || label.isEmpty()) {
-            return NONE; // label이 비어있거나 null이면 NONE 반환
+            return NONE;
         }
 
         for (Period period : Period.values()) {
