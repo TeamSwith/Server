@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import jakarta.validation.constraints.NotNull;
+import swith.swithServer.domain.studyGroup.entity.Period;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 
 @Getter
@@ -23,7 +24,7 @@ public class GroupUpdateRequest {
     private String subject;
 
     @NotNull
-    private Long period;
+    private String period;
 
     @NotNull
     private String communication;
@@ -33,7 +34,7 @@ public class GroupUpdateRequest {
                 this.groupName,
                 this.maxNum,
                 this.subject,
-                this.period,
+                Period.fromLabel(this.period),
                 this.communication
         );
     }
