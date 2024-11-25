@@ -3,6 +3,8 @@ package swith.swithServer.global.oauth.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -139,5 +141,6 @@ public class OauthService {
     public KakaoUserDto getUserInfo(User user){
         return KakaoUserDto.from(user);
     }
+
 
 }

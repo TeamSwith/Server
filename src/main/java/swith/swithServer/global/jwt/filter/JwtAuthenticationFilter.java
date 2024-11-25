@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,21 +27,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        // Swagger 관련 경로는 필터링하지 않도록 예외 처리
-        if (request.getRequestURI().startsWith("/api/swagger-ui/") || request.getRequestURI().startsWith("/api/v3/api-docs/")|| request.getRequestURI().startsWith("/api/oauth/kakao/login")) {
-             chain.doFilter(request, response);
-            return;
-        }
-
-        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
-            chain.doFilter(request, response);
-            return;
-        }
-
-        if (!request.getRequestURI().equals("/api/getLoginUser")) {
-            chain.doFilter(request, response);
-            return;
-        }
 
         String header = request.getHeader("Authorization");
         String token = null;
@@ -64,6 +50,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                        // 세션 생성 및 SecurityContext 저장
+                        HttpSession session = request.getSession(true);
+                        session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+
                     }
                 }
             } catch (Exception e) { // 유효하지 않은 토큰 예외 처리
