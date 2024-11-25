@@ -43,7 +43,9 @@ public enum ErrorCode {
     GROUP_LOGIN_ERROR(404, "아이디와 비밀번호가 일치하지 않습니다."),
 
     //STUDY
-    STUDY_DOESNT_EXIST(404,"존재하지 않는 스터디입니다."),
+    STUDY_DOESNT_EXIST(404,"존재하지 않는 스터디 일정입니다."),
+
+    STUDY_EXIST(404, "이미 존재하는 스터디 일정입니다."),
 
     //Task
     TASK_DOESNT_EXIST(404, "존재하지 않는 과제입니다");

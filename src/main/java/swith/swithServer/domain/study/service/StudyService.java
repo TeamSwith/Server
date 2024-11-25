@@ -14,6 +14,8 @@ import swith.swithServer.domain.study.repository.StudyRepository;
 import swith.swithServer.global.error.ErrorCode;
 import swith.swithServer.global.error.exception.BusinessException;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class StudyService {
@@ -40,6 +42,9 @@ public class StudyService {
     public Study createStudy(StudyRequest studyRequest, Long id){
         StudyGroup studyGroup = groupRepository.findById(id)
                 .orElseThrow(()->new BusinessException(ErrorCode.GROUP_DOESNT_EXIST));
+        if(studyRepository.findByStudyGroupAndDate(studyGroup, studyRequest.getDate()).isPresent()){
+            throw new BusinessException(ErrorCode.STUDY_EXIST);
+        }
         Study study = new Study(studyRequest.getDate(), studyRequest.getTime(), studyRequest.getLocation(), studyGroup);
         return studyRepository.save(study);
     }
