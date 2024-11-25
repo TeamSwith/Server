@@ -9,7 +9,7 @@ import swith.swithServer.domain.study.entity.Study;
 import swith.swithServer.domain.study.service.StudyService;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.studyGroup.service.GroupService;
-import swith.swithServer.domain.task.dto.TaskResponseDto;
+import swith.swithServer.domain.task.dto.TaskResponse;
 import swith.swithServer.domain.task.entity.Task;
 import swith.swithServer.domain.task.service.TaskService;
 import swith.swithServer.global.response.ApiResponse;
@@ -28,19 +28,19 @@ public class TaskController {
 
     @PostMapping("/create")
     @Operation(summary = "과제 생성")
-    public ApiResponse<TaskResponseDto> createTask(@PathVariable Long id, @PathVariable Long studyId, @RequestParam String content){
+    public ApiResponse<TaskResponse> createTask(@PathVariable Long id, @PathVariable Long studyId, @RequestParam String content){
         StudyGroup studyGroup = groupService.getGroupById(id);
         Task createdTask = taskService.createTask(studyId, content);
-        return new ApiResponse<>(201, TaskResponseDto.from(createdTask));
+        return new ApiResponse<>(201, TaskResponse.from(createdTask));
     }
 
     @GetMapping("/get")
     @Operation(summary = "과제 가져오기")
-    public ApiResponse<List<TaskResponseDto>> getTask(@PathVariable Long id, @PathVariable Long studyId){
+    public ApiResponse<List<TaskResponse>> getTask(@PathVariable Long id, @PathVariable Long studyId){
         StudyGroup studyGroup = groupService.getGroupById(id);
         Study study = studyService.getStudyById(studyId);
         List<Task> task = taskService.getTaskByStudy(study);
-        return new ApiResponse<>(200, TaskResponseDto.from(task));
+        return new ApiResponse<>(200, TaskResponse.from(task));
 
     }
     @DeleteMapping("/{taskId}")

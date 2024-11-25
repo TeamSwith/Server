@@ -8,6 +8,5 @@ import lombok.Getter;
 public class GroupRequest {
     private String groupInsertId;
     private String groupPw;
-    private Long userId;
 }
 

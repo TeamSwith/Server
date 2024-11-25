@@ -5,7 +5,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class UserGroupDto {
+public class UserGroupRequest {
     private Long groupId;
-    private Long userId;
 }

@@ -4,6 +4,7 @@ package swith.swithServer.domain.study.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import swith.swithServer.domain.study.dto.StudyGetRequest;
 import swith.swithServer.domain.study.dto.StudyRequest;
 import swith.swithServer.domain.study.dto.StudyUpdateRequest;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
@@ -23,6 +24,14 @@ public class StudyService {
     public Study getStudyById(Long id){
         Study study=studyRepository.findById(id)
                 .orElseThrow(()-> new BusinessException(ErrorCode.STUDY_DOESNT_EXIST));
+        return study;
+    }
+    //그룹, 날짜로 스터디 일정 찾기
+    public Study getStudyByGroupDate(Long groupId, StudyGetRequest studyGetRequest) {
+        StudyGroup studyGroup = groupRepository.findById(groupId)
+                .orElseThrow(()-> new BusinessException(ErrorCode.GROUP_DOESNT_EXIST));
+        Study study = studyRepository.findByStudyGroupAndDate(studyGroup, studyGetRequest.getDate())
+                .orElseThrow(() -> new BusinessException(ErrorCode.STUDY_DOESNT_EXIST));
         return study;
     }
 

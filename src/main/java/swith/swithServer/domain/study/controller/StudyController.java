@@ -5,15 +5,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import swith.swithServer.domain.study.dto.MessageResponse;
-import swith.swithServer.domain.study.dto.StudyRequest;
-import swith.swithServer.domain.study.dto.StudyResponse;
-import swith.swithServer.domain.study.dto.StudyUpdateRequest;
+import swith.swithServer.domain.study.dto.*;
 import swith.swithServer.domain.study.entity.Study;
 import swith.swithServer.domain.study.service.StudyService;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.studyGroup.service.GroupService;
 import swith.swithServer.global.response.ApiResponse;
+
 @RestController
 @RequestMapping("/group/{id}/study")
 @RequiredArgsConstructor
@@ -50,11 +48,12 @@ public class StudyController {
         return new ApiResponse<>(204,MessageResponse.from());
     }
 
-    @GetMapping("/{studyId}")
+    @PostMapping("/get")            //@GetMapping은 RequestBody를 사용할 수 없는 오류가 있어 post로 해놨습니다.
     @Operation(summary = "스터디 일정 가져오기")
-    public ApiResponse<StudyResponse> getStudyInfo(@PathVariable Long id, @PathVariable Long studyId){
-        StudyGroup studyGroup = groupService.getGroupById(id);
-        Study study = studyService.getStudyById(studyId);
+    public ApiResponse<StudyResponse> getStudyInfo(
+            @PathVariable Long id,
+            @RequestBody StudyGetRequest studyGetRequest){
+        Study study = studyService.getStudyByGroupDate(id,studyGetRequest);
         return new ApiResponse<>(200, StudyResponse.from(study));
 
     }
