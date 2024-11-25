@@ -61,6 +61,7 @@ public class GroupService {
         StudyGroup studyGroup = request.toEntity();
         return groupRepository.save(studyGroup);
     }
+
     public String findGroupInsertIdByGroupId(Long groupId) {
         StudyGroup studyGroup = groupRepository.findById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));

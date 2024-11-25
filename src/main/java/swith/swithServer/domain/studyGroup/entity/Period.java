@@ -1,6 +1,7 @@
 package swith.swithServer.domain.studyGroup.entity;
 
 public enum Period {
+    NONE(""),
     ONE_MONTH("1개월"),
     THREE_MONTHS("3개월"),
     SIX_MONTHS("6개월"),
@@ -18,6 +19,10 @@ public enum Period {
     }
 
     public static Period fromLabel(String label) {
+        if (label == null || label.isEmpty()) {
+            return NONE; // label이 비어있거나 null이면 NONE 반환
+        }
+
         for (Period period : Period.values()) {
             if (period.label.equals(label)) {
                 return period;
