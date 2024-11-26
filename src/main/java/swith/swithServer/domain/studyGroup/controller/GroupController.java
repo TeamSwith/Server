@@ -6,13 +6,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import swith.swithServer.domain.study.dto.MessageResponse;
+import swith.swithServer.domain.studyGroup.dto.*;
 import swith.swithServer.global.response.ApiResponse;
-import swith.swithServer.domain.studyGroup.dto.GroupCreateRequest;
-import swith.swithServer.domain.studyGroup.dto.GroupUpdateRequest;
-import swith.swithServer.domain.studyGroup.dto.GroupResponse;
 import swith.swithServer.domain.studyGroup.service.GroupService;
-import swith.swithServer.domain.studyGroup.dto.GroupRequest;
-import swith.swithServer.domain.studyGroup.dto.GroupLoginResponse;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.user.entity.User;
 import swith.swithServer.domain.user.service.UserService;
@@ -24,7 +20,6 @@ import swith.swithServer.global.oauth.service.OauthService;
 @Tag(name="스터디 그룹(studyGroup)")
 public class GroupController {
     private final GroupService groupService;
-    private final UserService userService;
     private final OauthService authService;
 
     @PostMapping("/join")
@@ -48,8 +43,6 @@ public class GroupController {
                 return new ApiResponse<>(404, MessageResponse.from("정원을 초과했습니다."));
             }
         }
-
-        //return new ApiResponse<>(400, MessageResponse.from("요청한 사용자와 일치하지 않습니다."));
     }
 
 
@@ -66,8 +59,8 @@ public class GroupController {
     @Operation(summary = "공지사항 수정")
     public ApiResponse<String> updateNotice(
             @PathVariable Long id,
-            @RequestParam String notice) {
-        StudyGroup updatedNotice = groupService.updateNotice(id, notice);
+            @RequestBody StringRequest stringRequest) {
+        StudyGroup updatedNotice = groupService.updateNotice(id, stringRequest);
         return new ApiResponse<>(200, updatedNotice.getNotice());
     }
 
