@@ -12,6 +12,8 @@ import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.studyGroup.service.GroupService;
 import swith.swithServer.global.response.ApiResponse;
 
+import java.time.LocalDate;
+
 @RestController
 @RequestMapping("/group/{id}/study")
 @RequiredArgsConstructor
@@ -48,12 +50,12 @@ public class StudyController {
         return new ApiResponse<>(204,MessageResponse.from());
     }
 
-    @PostMapping("/get")            //@GetMapping은 RequestBody를 사용할 수 없는 오류가 있어 post로 해놨습니다.
+    @GetMapping("/{date}")
     @Operation(summary = "스터디 일정 가져오기")
     public ApiResponse<StudyResponse> getStudyInfo(
             @PathVariable Long id,
-            @RequestBody StudyGetRequest studyGetRequest){
-        Study study = studyService.getStudyByGroupDate(id,studyGetRequest);
+            @PathVariable LocalDate date){
+        Study study = studyService.getStudyByGroupDate(id,date);
         return new ApiResponse<>(200, StudyResponse.from(study));
 
     }
