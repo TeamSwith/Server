@@ -3,11 +3,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import swith.swithServer.domain.studyGroup.dto.GroupRequest;
+import swith.swithServer.domain.studyGroup.dto.*;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
-import swith.swithServer.domain.studyGroup.dto.GroupCreateRequest;
-import swith.swithServer.domain.studyGroup.dto.GroupUpdateRequest;
-import swith.swithServer.domain.studyGroup.dto.GroupResponse;
 import swith.swithServer.domain.studyGroup.repository.GroupRepository;
 import swith.swithServer.domain.userGroup.repository.UserGroupRepository;
 import swith.swithServer.domain.user.entity.User;
@@ -44,11 +41,10 @@ public class GroupService {
 
     //notice 수정
     @Transactional
-    public StudyGroup updateNotice(Long id, String notice) {
+    public StudyGroup updateNotice(Long id, StringRequest stringRequest) {
         StudyGroup studyGroup = groupRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.GROUP_DOESNT_EXIST));
-
-        studyGroup.updateNotice(notice);
+        studyGroup.updateNotice(stringRequest.getMessage());
         return groupRepository.save(studyGroup);
     }
 
