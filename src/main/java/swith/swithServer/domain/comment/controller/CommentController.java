@@ -2,12 +2,9 @@ package swith.swithServer.domain.comment.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import swith.swithServer.domain.comment.entity.Comment;
-import swith.swithServer.domain.user.repository.UserRepository;
-import swith.swithServer.global.jwt.service.JwtTokenProvider;
 import swith.swithServer.global.response.ApiResponse;
 import swith.swithServer.domain.comment.dto.CommentRequest;
 import swith.swithServer.domain.comment.dto.CommentResponse;
