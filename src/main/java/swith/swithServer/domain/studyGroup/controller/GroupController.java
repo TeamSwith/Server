@@ -94,7 +94,7 @@ public class GroupController {
         return new ApiResponse<>(200, response);
     }
     // groupID로 groupInsertId 가져오는 API
-    @GetMapping("/{groupId}/group_insert_id")
+    @GetMapping("/{groupId}")
     @Operation(summary = "스터디 그룹 ID 조회", description = "using group_id")
     public ApiResponse<String> getGroupInsertId(
             @Parameter(description = "ID of the group to fetch the insert ID", required = true)
