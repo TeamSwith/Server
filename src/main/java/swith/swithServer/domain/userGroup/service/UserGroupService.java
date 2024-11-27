@@ -17,6 +17,7 @@ public class UserGroupService {
     @Transactional
     public UserGroup createUserGroup(User user, StudyGroup studyGroup){
         UserGroup userGroup = new UserGroup(user, studyGroup);
+        studyGroup.updateMemberNum(studyGroup.getMemberNum()+1);
         return userGroupRepository.save(userGroup);
     }
 

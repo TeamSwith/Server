@@ -41,7 +41,6 @@ public class UserGroupController {
         User user = authService.getLoginUser();
         StudyGroup studyGroup = groupService.getGroupById(userGroupRequest.getGroupId());
         userGroupService.createUserGroup(user, studyGroup);
-        studyGroup.updateMemberNum(studyGroup.getMemberNum()+1);
         return new ApiResponse<>(201, MessageResponse.from("redirect:http://localhost:8080/api/group/"+studyGroup.getId()));
     }
 

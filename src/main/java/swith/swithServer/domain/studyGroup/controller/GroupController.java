@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import swith.swithServer.domain.study.dto.MessageResponse;
 import swith.swithServer.domain.studyGroup.dto.*;
+import swith.swithServer.domain.userGroup.service.UserGroupService;
 import swith.swithServer.global.response.ApiResponse;
 import swith.swithServer.domain.studyGroup.service.GroupService;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
@@ -21,6 +22,7 @@ import swith.swithServer.global.oauth.service.OauthService;
 public class GroupController {
     private final GroupService groupService;
     private final OauthService authService;
+    private final UserGroupService userGroupService;
 
     @PostMapping("/join")
     @Operation(summary = "스터디 그룹 가입 여부 확인")
@@ -45,6 +47,13 @@ public class GroupController {
         }
     }
 
+    @GetMapping("/{id}/getMem")
+    @Operation(summary = "현재 스터디 인원 가져오기")
+    public ApiResponse<Long> getMemberNum(@PathVariable Long id){
+        StudyGroup studyGroup = groupService.getGroupById(id);
+        Long memberNum = studyGroup.getMemberNum();
+        return new ApiResponse<>(200, memberNum);
+    }
 
     @GetMapping("/{id}")
     @Operation(summary = "공지사항 가져오기")
@@ -69,6 +78,9 @@ public class GroupController {
     @Operation(summary = "스터디 그룹 생성", description = "")
     public ApiResponse<StudyGroup> createGroup(@RequestBody GroupCreateRequest request) {
         StudyGroup createdStudyGroup = groupService.createGroup(request);
+        //로그인 유저 받아오기
+        User user= authService.getLoginUser();
+        userGroupService.createUserGroup(user, createdStudyGroup);
         return new ApiResponse<>(201, createdStudyGroup);
     }
 
