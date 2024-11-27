@@ -12,7 +12,6 @@ import swith.swithServer.global.response.ApiResponse;
 import swith.swithServer.domain.studyGroup.service.GroupService;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.user.entity.User;
-import swith.swithServer.domain.user.service.UserService;
 import swith.swithServer.global.oauth.service.OauthService;
 
 @RestController
@@ -50,6 +49,7 @@ public class GroupController {
     @GetMapping("/{id}/getMem")
     @Operation(summary = "현재 스터디 인원 가져오기")
     public ApiResponse<Long> getMemberNum(@PathVariable Long id){
+        User user = authService.getLoginUser();
         StudyGroup studyGroup = groupService.getGroupById(id);
         Long memberNum = studyGroup.getMemberNum();
         return new ApiResponse<>(200, memberNum);
@@ -59,6 +59,7 @@ public class GroupController {
     @Operation(summary = "공지사항 가져오기")
     public ApiResponse<String> getNotice(
             @PathVariable Long id) {
+        User user = authService.getLoginUser();
         StudyGroup studyGroup = groupService.getGroupById(id);
         String notice = studyGroup.getNotice();
         return new ApiResponse<>(200, notice);
@@ -69,6 +70,7 @@ public class GroupController {
     public ApiResponse<String> updateNotice(
             @PathVariable Long id,
             @RequestBody StringRequest stringRequest) {
+        User user = authService.getLoginUser();
         StudyGroup updatedNotice = groupService.updateNotice(id, stringRequest);
         return new ApiResponse<>(200, updatedNotice.getNotice());
     }
@@ -121,6 +123,7 @@ public class GroupController {
             @Parameter(description = "ID of the group to be deleted", required = true)
             @PathVariable(name = "groupId") Long groupId) {
         GroupResponse groupToDelete = groupService.getGroupDetails(groupId);
+        userGroupService.deleteUserGroup(groupId);
         groupService.deleteGroup(groupId);
         return new ApiResponse<>(200, groupToDelete); // 명시적으로 GroupResponse 반환
     }

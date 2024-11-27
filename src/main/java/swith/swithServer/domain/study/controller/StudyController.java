@@ -10,6 +10,8 @@ import swith.swithServer.domain.study.entity.Study;
 import swith.swithServer.domain.study.service.StudyService;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.studyGroup.service.GroupService;
+import swith.swithServer.domain.user.entity.User;
+import swith.swithServer.global.oauth.service.OauthService;
 import swith.swithServer.global.response.ApiResponse;
 
 import java.time.LocalDate;
@@ -21,12 +23,14 @@ import java.time.LocalDate;
 public class StudyController {
     private final StudyService studyService;
     private final GroupService groupService;
+    private final OauthService authService;
 
     @PostMapping
     @Operation(summary="스터디 일정 생성")
     public ApiResponse<StudyResponse> createStudy(
             @PathVariable Long id, @RequestBody StudyRequest studyRequest
             ){
+        User user = authService.getLoginUser();
         Study createdStudy = studyService.createStudy(studyRequest, id);
         return new ApiResponse<>(201, StudyResponse.from(createdStudy));
     }
@@ -37,6 +41,7 @@ public class StudyController {
             @PathVariable Long id,
             @PathVariable Long studyId,
             @RequestBody StudyUpdateRequest studyUpdateRequest){
+        User user = authService.getLoginUser();
         StudyGroup studyGroup = groupService.getGroupById(id);
         Study updatedStudy = studyService.updateStudy(studyId, studyUpdateRequest);
         return new ApiResponse<>(200, StudyResponse.from(updatedStudy));
@@ -45,6 +50,7 @@ public class StudyController {
     @DeleteMapping("/{studyId}")
     @Operation(summary = "스터디 일정 삭제")
     public ApiResponse<MessageResponse> deleteStudy(@PathVariable Long id, @PathVariable Long studyId){
+        User user = authService.getLoginUser();
         StudyGroup studyGroup = groupService.getGroupById(id);
         studyService.deleteStudy(studyId);
         return new ApiResponse<>(204,MessageResponse.from());
@@ -55,6 +61,7 @@ public class StudyController {
     public ApiResponse<StudyResponse> getStudyInfo(
             @PathVariable Long id,
             @PathVariable LocalDate date){
+        User user = authService.getLoginUser();
         Study study = studyService.getStudyByGroupDate(id,date);
         return new ApiResponse<>(200, StudyResponse.from(study));
 
