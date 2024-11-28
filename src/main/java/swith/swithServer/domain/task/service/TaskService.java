@@ -11,6 +11,7 @@ import swith.swithServer.domain.studyGroup.service.GroupService;
 import swith.swithServer.domain.task.entity.Task;
 import swith.swithServer.domain.task.repository.TaskRepository;
 import swith.swithServer.domain.usertask.entity.UserTask;
+import swith.swithServer.domain.usertask.service.UserTaskService;
 import swith.swithServer.domain.usertask.repository.UserTaskRepository;
 import swith.swithServer.global.error.ErrorCode;
 import swith.swithServer.global.error.exception.BusinessException;
@@ -30,6 +31,7 @@ public class TaskService {
     private final StudyRepository studyRepository;
     private final UserTaskRepository userTaskRepository;
     private final UserGroupRepository userGroupRepository;
+    private final UserTaskService userTaskService;
 
 
     //study로 과제 찾기
@@ -57,8 +59,13 @@ public class TaskService {
     //과제 삭제
     @Transactional
     public void deleteTask(Long id){
+
+        userTaskService.deleteUserTasksByTaskId(id);
         Task task = taskRepository.findById(id)
                 .orElseThrow(()-> new BusinessException(ErrorCode.TASK_DOESNT_EXIST));
         taskRepository.delete(task);
+
     }
+
+
 }

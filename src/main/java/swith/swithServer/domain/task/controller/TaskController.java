@@ -49,6 +49,7 @@ public class TaskController {
         return new ApiResponse<>(200, TaskResponse.from(task));
 
     }
+
     @DeleteMapping("/{taskId}")
     @Operation(summary = "과제 삭제")
     public ApiResponse<MessageResponse> deleteTask(@PathVariable Long id, @PathVariable Long studyId, @PathVariable Long taskId){

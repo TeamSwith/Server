@@ -19,6 +19,8 @@ import swith.swithServer.domain.task.entity.Task;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.studyGroup.repository.GroupRepository;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserTaskService {
@@ -29,6 +31,7 @@ public class UserTaskService {
     private final GroupRepository studyGroupRepository;
     private final TaskRepository taskRepository;
 
+    // 과제 상태 Update
     @Transactional
     public UserTaskUpdateResponse updateTaskStatus(Long taskId, String taskStatus) {
         User loginUser = authService.getLoginUser();
@@ -58,21 +61,18 @@ public class UserTaskService {
         return new UserTaskUpdateResponse(userTask.getId(), newStatus.name());
     }
 
+    // UserTask 생성
     @Transactional
     public UserTask createUserTask(Long userId, Long taskId, Long groupId, String taskStatus) {
-        // User 검증
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_DOESNT_EXIST));
 
-        // StudyGroup 검증
         StudyGroup studyGroup = studyGroupRepository.findById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.GROUP_DOESNT_EXIST));
 
-        // Task 검증
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.TASK_DOESNT_EXIST));
 
-        // TaskStatus 변환
         TaskStatus status;
         try {
             status = TaskStatus.valueOf(taskStatus.toUpperCase());
@@ -80,8 +80,17 @@ public class UserTaskService {
             throw new BusinessException(ErrorCode.NOT_VALID_ERROR);
         }
 
-        // UserTask 생성 및 저장
         UserTask userTask = new UserTask(studyGroup, user, task, status);
         return userTaskRepository.save(userTask);
+    }
+
+    // UserTask 삭제
+    @Transactional
+    public void deleteUserTasksByTaskId(Long task_id) {
+        Task task = taskRepository.findById(task_id)
+                .orElseThrow(() -> new BusinessException(ErrorCode.TASK_DOESNT_EXIST));
+
+        List<UserTask> userTasks = userTaskRepository.findAllByTask(task);
+        userTaskRepository.deleteAllInBatch(userTasks);
     }
 }
