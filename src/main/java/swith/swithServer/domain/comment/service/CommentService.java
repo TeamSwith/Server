@@ -2,6 +2,7 @@ package swith.swithServer.domain.comment.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import swith.swithServer.domain.comment.dto.CommentResponseWithStudyId;
 import swith.swithServer.domain.comment.entity.Comment;
 import swith.swithServer.domain.comment.dto.CommentRequest;
 import swith.swithServer.domain.comment.dto.CommentResponse;
@@ -64,27 +65,31 @@ public class CommentService {
 
     // 스터디 모든 댓글 조회 API (studyId)
     @Transactional(readOnly = true)
-    public List<CommentResponse> getCommentsByStudyId(Long studyId) {
+    public CommentResponseWithStudyId getCommentsByStudyIdWithStudyId(Long studyId) {
         User user = authService.getLoginUser();
+
+        // studyId 유효성 검사
         studyRepository.findById(studyId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_STUDY_ID));
 
+        // 댓글 리스트 조회
         List<Comment> comments = commentRepository.findByStudyIdOrderByIdAsc(studyId);
-        return comments.stream()
-                .map(CommentResponse::fromEntity)
-                .collect(Collectors.toList());
+
+        // DTO 생성 및 반환 (Entity 리스트와 studyId를 전달)
+        return CommentResponseWithStudyId.fromEntity(studyId, comments);
     }
 
     // 댓글 수정 API
     @Transactional
-    public String updateCommentContent(Long commentId, CommentUpdateRequest request) {
+    public CommentResponse updateCommentContent(Long commentId, CommentUpdateRequest request) {
         User user = authService.getLoginUser();
+
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_DOESNT_EXIST));
 
         comment.updateContent(request.getContent());
         commentRepository.save(comment);
 
-        return comment.getContent();
+        return CommentResponse.fromEntity(comment);
     }
 }
