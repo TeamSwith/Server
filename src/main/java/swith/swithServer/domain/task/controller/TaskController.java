@@ -36,7 +36,7 @@ public class TaskController {
         User user = authService.getLoginUser();
         StudyGroup studyGroup = groupService.getGroupById(id);
         Task createdTask = taskService.createTask(studyId, stringRequest);
-        return new ApiResponse<>(201, TaskResponse.from(createdTask));
+        return new ApiResponse<>(201, TaskResponse.from(createdTask, user));
     }
 
     @GetMapping("/get")
@@ -46,7 +46,7 @@ public class TaskController {
         StudyGroup studyGroup = groupService.getGroupById(id);
         Study study = studyService.getStudyById(studyId);
         List<Task> task = taskService.getTaskByStudy(study);
-        return new ApiResponse<>(200, TaskResponse.from(task));
+        return new ApiResponse<>(200, TaskResponse.from(task, user));
 
     }
     @DeleteMapping("/{taskId}")

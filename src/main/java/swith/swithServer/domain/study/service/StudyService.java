@@ -4,22 +4,30 @@ package swith.swithServer.domain.study.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import swith.swithServer.domain.comment.entity.Comment;
+import swith.swithServer.domain.comment.repository.CommentRepository;
 import swith.swithServer.domain.study.dto.StudyRequest;
 import swith.swithServer.domain.study.dto.StudyUpdateRequest;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.studyGroup.repository.GroupRepository;
 import swith.swithServer.domain.study.entity.Study;
 import swith.swithServer.domain.study.repository.StudyRepository;
+import swith.swithServer.domain.task.entity.Task;
+import swith.swithServer.domain.task.repository.TaskRepository;
+import swith.swithServer.domain.usertask.repository.UserTaskRepository;
 import swith.swithServer.global.error.ErrorCode;
 import swith.swithServer.global.error.exception.BusinessException;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class StudyService {
     private final StudyRepository studyRepository;
     private final GroupRepository groupRepository;
+    private final CommentRepository commentRepository;
+    private final TaskRepository taskRepository;
 
     //id로 찾기
     public Study getStudyById(Long id){
@@ -63,6 +71,12 @@ public class StudyService {
     public void deleteStudy(Long id){
         Study study = studyRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.STUDY_DOESNT_EXIST));
+        //일정 삭제시 출석 상태, 코멘트, 과제 테이블 삭제
+//출석 상태는 아직 없어서 추후에 추가
+        List<Comment> comments = commentRepository.findByStudyIdOrderByIdAsc(id);
+        commentRepository.deleteAll(comments);
+        List<Task> tasks = taskRepository.findByStudy(study);
+        taskRepository.deleteAll(tasks);
         studyRepository.delete(study);
     }
 
