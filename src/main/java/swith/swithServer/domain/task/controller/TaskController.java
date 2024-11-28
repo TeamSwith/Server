@@ -13,6 +13,8 @@ import swith.swithServer.domain.studyGroup.service.GroupService;
 import swith.swithServer.domain.task.dto.TaskResponse;
 import swith.swithServer.domain.task.entity.Task;
 import swith.swithServer.domain.task.service.TaskService;
+import swith.swithServer.domain.user.entity.User;
+import swith.swithServer.global.oauth.service.OauthService;
 import swith.swithServer.global.response.ApiResponse;
 
 import java.util.List;
@@ -25,11 +27,13 @@ public class TaskController {
     private final TaskService taskService;
     private final StudyService studyService;
     private final GroupService groupService;
+    private final OauthService authService;
 
 
     @PostMapping("/create")
     @Operation(summary = "과제 생성")
     public ApiResponse<TaskResponse> createTask(@PathVariable Long id, @PathVariable Long studyId, @RequestBody StringRequest stringRequest){
+        User user = authService.getLoginUser();
         StudyGroup studyGroup = groupService.getGroupById(id);
         Task createdTask = taskService.createTask(studyId, stringRequest);
         return new ApiResponse<>(201, TaskResponse.from(createdTask));
@@ -38,6 +42,7 @@ public class TaskController {
     @GetMapping("/get")
     @Operation(summary = "과제 가져오기")
     public ApiResponse<List<TaskResponse>> getTask(@PathVariable Long id, @PathVariable Long studyId){
+        User user = authService.getLoginUser();
         StudyGroup studyGroup = groupService.getGroupById(id);
         Study study = studyService.getStudyById(studyId);
         List<Task> task = taskService.getTaskByStudy(study);
@@ -47,6 +52,7 @@ public class TaskController {
     @DeleteMapping("/{taskId}")
     @Operation(summary = "과제 삭제")
     public ApiResponse<MessageResponse> deleteTask(@PathVariable Long id, @PathVariable Long studyId, @PathVariable Long taskId){
+        User user = authService.getLoginUser();
         StudyGroup studyGroup = groupService.getGroupById(id);
         Study study = studyService.getStudyById(studyId);
         taskService.deleteTask(taskId);
