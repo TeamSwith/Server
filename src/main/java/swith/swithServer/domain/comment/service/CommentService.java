@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import swith.swithServer.global.oauth.service.OauthService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,13 +33,13 @@ public class CommentService {
 
     @Transactional
     public CommentResponse createComment(Long studyId, Long groupId, CommentRequest request) {
+        User user = authService.getLoginUser();
+
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_STUDY_ID));
 
         StudyGroup studyGroup = groupRepository.findById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
-
-        User user = authService.getLoginUser();
 
         Comment comment = request.toEntity(study, user, studyGroup);
 
@@ -68,14 +67,15 @@ public class CommentService {
     public CommentResponseWithStudyId getCommentsByStudyIdWithStudyId(Long studyId) {
         User user = authService.getLoginUser();
 
-        // studyId 유효성 검사
         studyRepository.findById(studyId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_STUDY_ID));
 
-        // 댓글 리스트 조회
         List<Comment> comments = commentRepository.findByStudyIdOrderByIdAsc(studyId);
 
-        // DTO 생성 및 반환 (Entity 리스트와 studyId를 전달)
+        if (comments.isEmpty()) {
+            throw new BusinessException(ErrorCode.NO_COMMENTS_FOUND);
+        }
+
         return CommentResponseWithStudyId.fromEntity(studyId, comments);
     }
 
