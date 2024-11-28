@@ -19,7 +19,7 @@ import java.util.List;
 public class StudyGroup extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "studyGroupId")
+    @Column(name = "id")
     private Long id;
 
     // 사용자 입력 ID
