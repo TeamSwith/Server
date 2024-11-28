@@ -35,7 +35,7 @@ public class TaskController {
     public ApiResponse<TaskResponse> createTask(@PathVariable Long id, @PathVariable Long studyId, @RequestBody StringRequest stringRequest){
         User user = authService.getLoginUser();
         StudyGroup studyGroup = groupService.getGroupById(id);
-        Task createdTask = taskService.createTask(studyId, stringRequest);
+        Task createdTask = taskService.createTask(studyGroup, studyId, stringRequest);
         return new ApiResponse<>(201, TaskResponse.from(createdTask));
     }
 
@@ -49,6 +49,7 @@ public class TaskController {
         return new ApiResponse<>(200, TaskResponse.from(task));
 
     }
+
     @DeleteMapping("/{taskId}")
     @Operation(summary = "과제 삭제")
     public ApiResponse<MessageResponse> deleteTask(@PathVariable Long id, @PathVariable Long studyId, @PathVariable Long taskId){
