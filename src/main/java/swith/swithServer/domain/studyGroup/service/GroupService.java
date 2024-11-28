@@ -68,18 +68,18 @@ public class GroupService {
     }
 
     // 그룹아이디로 스터디 아이디 가져오기
-    public String findGroupInsertIdByGroupId(Long groupId) {
+    public String findGroupInsertIdByGroupId(Long id) {
         User user = authService.getLoginUser();
-        StudyGroup studyGroup = groupRepository.findById(groupId)
+        StudyGroup studyGroup = groupRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
         return studyGroup.getGroupInsertId();
     }
 
     // 그룹 정보 수정
     @Transactional
-    public GroupResponse updateGroupAndGetDetails(Long groupId, GroupUpdateRequest updateRequest) {
+    public GroupResponse updateGroupAndGetDetails(Long id, GroupUpdateRequest updateRequest) {
         User user = authService.getLoginUser();
-        StudyGroup studyGroup = groupRepository.findById(groupId)
+        StudyGroup studyGroup = groupRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
 
         updateRequest.applyTo(studyGroup);
@@ -89,9 +89,9 @@ public class GroupService {
     }
 
     // groupId로 그룹정보 GET
-    public GroupResponse getGroupDetails(Long groupId) {
+    public GroupResponse getGroupDetails(Long id) {
         User user = authService.getLoginUser();
-        StudyGroup studyGroup = groupRepository.findById(groupId)
+        StudyGroup studyGroup = groupRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
 
         return GroupResponse.from(studyGroup);
@@ -99,9 +99,9 @@ public class GroupService {
 
     // groupId로 그룹 삭제
     @Transactional
-    public GroupResponse deleteGroup(Long groupId) {
+    public GroupResponse deleteGroup(Long id) {
         User user = authService.getLoginUser();
-        StudyGroup studyGroup = groupRepository.findById(groupId)
+        StudyGroup studyGroup = groupRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
 
         List<UserGroup> userGroups = userGroupRepository.findAllByStudyGroup(studyGroup);
@@ -112,7 +112,7 @@ public class GroupService {
 
         GroupResponse groupResponse = GroupResponse.from(studyGroup);
 
-        groupRepository.deleteById(groupId);
+        groupRepository.deleteById(id);
         return groupResponse;
     }
 

@@ -88,47 +88,47 @@ public class GroupController {
     }
 
     // groupId로 그룹 정보 받아오는 API
-    @GetMapping("/{groupId}/details")
+    @GetMapping("/{id}/details")
     @Operation(summary = "스터디 그룹 정보 조회", description = "using groupId")
     public ApiResponse<GroupResponse> getGroupDetails(
             @Parameter(description = "ID of the group to fetch details", required = true)
-            @PathVariable(name = "groupId") Long groupId) {
-        GroupResponse response = groupService.getGroupDetails(groupId);
+            @PathVariable(name = "id") Long id) {
+        GroupResponse response = groupService.getGroupDetails(id);
         return new ApiResponse<>(200, response);
     }
 
     // groupID로 groupInsertId 가져오는 API
-    @GetMapping("/{groupId}")
+    @GetMapping("/{id}")
     @Operation(summary = "스터디 그룹 ID 조회", description = "using group_id")
 //    public ApiResponse<String> getGroupInsertId(
     public ApiResponse<GroupIdAndInsertIdResponse> getGroupInsertId(
 
             @Parameter(description = "ID of the group to fetch the insert ID", required = true)
-            @PathVariable(name = "groupId") Long groupId) {
-        StudyGroup studyGroup = groupService.getGroupById(groupId);
+            @PathVariable(name = "id") Long id) {
+        StudyGroup studyGroup = groupService.getGroupById(id);
         return new ApiResponse<>(200, GroupIdAndInsertIdResponse.from(studyGroup));
 //        String groupInsertId = groupService.findGroupInsertIdByGroupId(groupId);
 //        return new ApiResponse<>(200, groupInsertId);
     }
 
     // 스터디 그룹 정보 수정 API
-    @PatchMapping("/{groupId}/details")
+    @PatchMapping("/{id}/details")
     @Operation(summary = "스터디 그룹 정보 수정", description = "Using groupId")
     public ApiResponse<GroupResponse> updateGroup(
             @Parameter(description = "ID of the group to be updated", required = true)
-            @PathVariable(name = "groupId") Long groupId,
+            @PathVariable(name = "id") Long id,
             @RequestBody GroupUpdateRequest updateRequest) {
-        return new ApiResponse<>(200, groupService.updateGroupAndGetDetails(groupId, updateRequest));
+        return new ApiResponse<>(200, groupService.updateGroupAndGetDetails(id, updateRequest));
 
     }
 
     // 스터디 그룹 삭제 API
-    @DeleteMapping("/{groupId}")
-    @Operation(summary = "스터디 그룹 삭제", description = "Using GroupId")
+    @DeleteMapping("/{id}")
+    @Operation(summary = "스터디 그룹 삭제", description = "Using id")
     public ApiResponse<GroupResponse> deleteGroup(
             @Parameter(description = "ID of the group to be deleted", required = true)
-            @PathVariable(name = "groupId") Long groupId) {
-        GroupResponse deletedGroup = groupService.deleteGroup(groupId);
+            @PathVariable(name = "id") Long id) {
+        GroupResponse deletedGroup = groupService.deleteGroup(id);
         return new ApiResponse<>(200, deletedGroup);
     }
 

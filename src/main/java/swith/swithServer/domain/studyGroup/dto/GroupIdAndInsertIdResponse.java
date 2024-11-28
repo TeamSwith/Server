@@ -7,7 +7,7 @@ import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 @Getter
 @AllArgsConstructor
 public class GroupIdAndInsertIdResponse {
-    private Long groupId;
+    private Long id;
     private String groupInsertId;
 
     public static GroupIdAndInsertIdResponse from(StudyGroup studyGroup) {
