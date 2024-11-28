@@ -12,6 +12,7 @@ import swith.swithServer.global.response.ApiResponse;
 import swith.swithServer.domain.studyGroup.service.GroupService;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.user.entity.User;
+import swith.swithServer.domain.user.service.UserService;
 import swith.swithServer.global.oauth.service.OauthService;
 
 @RestController
@@ -30,8 +31,8 @@ public class GroupController {
         //id와 pw가 매칭되는 group 여부 확인
         StudyGroup studyGroup = groupService.getGroupByInsertIdPw(groupRequest);
         //로그인 유저 받아오기
-        User user= authService.getLoginUser();
-            //가입 여부 확인
+        User user = authService.getLoginUser();
+        //가입 여부 확인
         boolean isUserInGroup = groupService.isUserInGroup(user, studyGroup);
         if (isUserInGroup) {
             //가입되어 있을 때
@@ -48,14 +49,14 @@ public class GroupController {
 
     @GetMapping("/{id}/getMem")
     @Operation(summary = "현재 스터디 인원 가져오기")
-    public ApiResponse<Long> getMemberNum(@PathVariable Long id){
+    public ApiResponse<Long> getMemberNum(@PathVariable Long id) {
         User user = authService.getLoginUser();
         StudyGroup studyGroup = groupService.getGroupById(id);
         Long memberNum = studyGroup.getMemberNum();
         return new ApiResponse<>(200, memberNum);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/notice")
     @Operation(summary = "공지사항 가져오기")
     public ApiResponse<String> getNotice(
             @PathVariable Long id) {
@@ -81,7 +82,7 @@ public class GroupController {
     public ApiResponse<StudyGroup> createGroup(@RequestBody GroupCreateRequest request) {
         StudyGroup createdStudyGroup = groupService.createGroup(request);
         //로그인 유저 받아오기
-        User user= authService.getLoginUser();
+        User user = authService.getLoginUser();
         userGroupService.createUserGroup(user, createdStudyGroup);
         return new ApiResponse<>(201, createdStudyGroup);
     }
@@ -95,14 +96,19 @@ public class GroupController {
         GroupResponse response = groupService.getGroupDetails(groupId);
         return new ApiResponse<>(200, response);
     }
+
     // groupID로 groupInsertId 가져오는 API
-    @GetMapping("/{groupId}/group_insert_id")
+    @GetMapping("/{groupId}")
     @Operation(summary = "스터디 그룹 ID 조회", description = "using group_id")
-    public ApiResponse<String> getGroupInsertId(
+//    public ApiResponse<String> getGroupInsertId(
+    public ApiResponse<GroupIdAndInsertIdResponse> getGroupInsertId(
+
             @Parameter(description = "ID of the group to fetch the insert ID", required = true)
             @PathVariable(name = "groupId") Long groupId) {
-        String groupInsertId = groupService.findGroupInsertIdByGroupId(groupId);
-        return new ApiResponse<>(200, groupInsertId);
+        StudyGroup studyGroup = groupService.getGroupById(groupId);
+        return new ApiResponse<>(200, GroupIdAndInsertIdResponse.from(studyGroup));
+//        String groupInsertId = groupService.findGroupInsertIdByGroupId(groupId);
+//        return new ApiResponse<>(200, groupInsertId);
     }
 
     // 스터디 그룹 정보 수정 API
@@ -122,13 +128,10 @@ public class GroupController {
     public ApiResponse<GroupResponse> deleteGroup(
             @Parameter(description = "ID of the group to be deleted", required = true)
             @PathVariable(name = "groupId") Long groupId) {
-        GroupResponse groupToDelete = groupService.getGroupDetails(groupId);
-        userGroupService.deleteUserGroup(groupId);
-        groupService.deleteGroup(groupId);
-        return new ApiResponse<>(200, groupToDelete); // 명시적으로 GroupResponse 반환
+        GroupResponse deletedGroup = groupService.deleteGroup(groupId);
+        return new ApiResponse<>(200, deletedGroup);
     }
+
+
 }
-
-
-
 

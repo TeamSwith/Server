@@ -6,10 +6,14 @@ import org.springframework.transaction.annotation.Transactional;
 import swith.swithServer.domain.studyGroup.dto.*;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.studyGroup.repository.GroupRepository;
+import swith.swithServer.domain.userGroup.entity.UserGroup;
 import swith.swithServer.domain.userGroup.repository.UserGroupRepository;
 import swith.swithServer.domain.user.entity.User;
 import swith.swithServer.global.error.ErrorCode;
 import swith.swithServer.global.error.exception.BusinessException;
+import swith.swithServer.global.oauth.service.OauthService;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +22,7 @@ public class GroupService {
     @Autowired
     private final GroupRepository groupRepository;
     private final UserGroupRepository userGroupRepository;
+    private final OauthService authService;
 
 
     //id로 찾기
@@ -51,6 +56,7 @@ public class GroupService {
     // 스터디 생성
     @Transactional
     public StudyGroup createGroup(GroupCreateRequest request) {
+        User user = authService.getLoginUser();
         if (groupRepository.existsByGroupInsertId(request.getGroupInsertId())) {
             throw new BusinessException(ErrorCode.GROUP_INSERT_ID_ALREADY_EXISTS);
         }
@@ -60,6 +66,7 @@ public class GroupService {
 
     // 그룹아이디로 스터디 아이디 가져오기
     public String findGroupInsertIdByGroupId(Long groupId) {
+        User user = authService.getLoginUser();
         StudyGroup studyGroup = groupRepository.findById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
         return studyGroup.getGroupInsertId();
@@ -68,6 +75,7 @@ public class GroupService {
     // 그룹 정보 수정
     @Transactional
     public GroupResponse updateGroupAndGetDetails(Long groupId, GroupUpdateRequest updateRequest) {
+        User user = authService.getLoginUser();
         StudyGroup studyGroup = groupRepository.findById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
 
@@ -79,6 +87,7 @@ public class GroupService {
 
     // groupId로 그룹정보 GET
     public GroupResponse getGroupDetails(Long groupId) {
+        User user = authService.getLoginUser();
         StudyGroup studyGroup = groupRepository.findById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
 
@@ -87,10 +96,16 @@ public class GroupService {
 
     // groupId로 그룹 삭제
     @Transactional
-    public void deleteGroup(Long groupId) {
-        if (!groupRepository.existsById(groupId)) {
-            throw new BusinessException(ErrorCode.INVALID_GROUP_ID);
-        }
+    public GroupResponse deleteGroup(Long groupId) {
+        User user = authService.getLoginUser();
+        StudyGroup studyGroup = groupRepository.findById(groupId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
+        List<UserGroup> userGroups = userGroupRepository.findAllByStudyGroup(studyGroup);
+        userGroupRepository.deleteAll(userGroups);
+
+        GroupResponse groupResponse = GroupResponse.from(studyGroup);
+
         groupRepository.deleteById(groupId);
+        return groupResponse;
     }
 }

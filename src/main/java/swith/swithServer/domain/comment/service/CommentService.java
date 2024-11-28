@@ -2,6 +2,7 @@ package swith.swithServer.domain.comment.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import swith.swithServer.domain.comment.dto.CommentResponseWithStudyId;
 import swith.swithServer.domain.comment.entity.Comment;
 import swith.swithServer.domain.comment.dto.CommentRequest;
 import swith.swithServer.domain.comment.dto.CommentResponse;
@@ -12,12 +13,10 @@ import swith.swithServer.domain.study.entity.Study;
 import swith.swithServer.domain.user.entity.User;
 import swith.swithServer.domain.studyGroup.repository.GroupRepository;
 import swith.swithServer.domain.study.repository.StudyRepository;
-import swith.swithServer.domain.user.repository.UserRepository;
 import swith.swithServer.global.error.ErrorCode;
 import swith.swithServer.global.error.exception.BusinessException;
 import org.springframework.transaction.annotation.Transactional;
 import swith.swithServer.global.oauth.service.OauthService;
-import swith.swithServer.domain.user.entity.User; // getLoginUser 사용하려고 추가함
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +27,6 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final StudyRepository studyRepository;
-    private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final OauthService authService;
 
@@ -52,6 +50,7 @@ public class CommentService {
     // 댓글 삭제 API (commentId)
     @Transactional
     public void deleteComment(Long commentId) {
+        User user = authService.getLoginUser();
         Comment comment = getCommentById(commentId);
         commentRepository.delete(comment);
     }
@@ -59,31 +58,38 @@ public class CommentService {
     // 댓글 조회(1개 / 삭제 API에 이용)
     @Transactional(readOnly = true)
     public Comment getCommentById(Long commentId) {
+        User user = authService.getLoginUser();
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_DOESNT_EXIST));
     }
 
     // 스터디 모든 댓글 조회 API (studyId)
     @Transactional(readOnly = true)
-    public List<CommentResponse> getCommentsByStudyId(Long studyId) {
+    public CommentResponseWithStudyId getCommentsByStudyIdWithStudyId(Long studyId) {
+        User user = authService.getLoginUser();
+
+        // studyId 유효성 검사
         studyRepository.findById(studyId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_STUDY_ID));
 
+        // 댓글 리스트 조회
         List<Comment> comments = commentRepository.findByStudyIdOrderByIdAsc(studyId);
-        return comments.stream()
-                .map(CommentResponse::fromEntity)
-                .collect(Collectors.toList());
+
+        // DTO 생성 및 반환 (Entity 리스트와 studyId를 전달)
+        return CommentResponseWithStudyId.fromEntity(studyId, comments);
     }
 
     // 댓글 수정 API
     @Transactional
-    public String updateCommentContent(Long commentId, CommentUpdateRequest request) {
+    public CommentResponse updateCommentContent(Long commentId, CommentUpdateRequest request) {
+        User user = authService.getLoginUser();
+
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_DOESNT_EXIST));
 
         comment.updateContent(request.getContent());
         commentRepository.save(comment);
 
-        return comment.getContent();
+        return CommentResponse.fromEntity(comment);
     }
 }

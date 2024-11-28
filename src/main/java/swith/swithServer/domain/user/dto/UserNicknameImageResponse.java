@@ -7,11 +7,15 @@ import swith.swithServer.domain.user.entity.User;
 @Getter
 @AllArgsConstructor
 public class UserNicknameImageResponse {
-
+    private Long id;
     private String nickname;
     private String image;
 
     public static UserNicknameImageResponse from(User user) {
-        return new UserNicknameImageResponse(user.getNickname(), user.getImage());
+        return new UserNicknameImageResponse(
+                user.getId(),
+                user.getNickname(),
+                user.getImage()
+        );
     }
 }
