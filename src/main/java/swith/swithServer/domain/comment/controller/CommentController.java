@@ -47,7 +47,7 @@ public class CommentController {
 
     }
 
-//    // 댓글 조회 API
+    // 댓글 조회 API
     @GetMapping("/{studyId}")
     @Operation(summary = "댓글 조회", description = "Get comments using commentid")
     public ApiResponse<CommentResponseWithStudyId> getCommentsByStudyId(

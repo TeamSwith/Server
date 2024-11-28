@@ -3,6 +3,7 @@ package swith.swithServer.domain.usertask.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import swith.swithServer.domain.usertask.dto.UserTaskUpdateResponse;
 import swith.swithServer.domain.usertask.entity.UserTask;
 import swith.swithServer.domain.usertask.entity.TaskStatus;
 import swith.swithServer.domain.usertask.repository.UserTaskRepository;
@@ -19,7 +20,7 @@ public class UserTaskService {
     private final OauthService authService;
 
     @Transactional
-    public String updateTaskStatus(Long taskId, String taskStatus) {
+    public UserTaskUpdateResponse updateTaskStatus(Long taskId, String taskStatus) {
         User loginUser = authService.getLoginUser();
         if (loginUser == null) {
             throw new BusinessException(ErrorCode.USER_DOESNT_EXIST);
@@ -44,6 +45,6 @@ public class UserTaskService {
         }
 
         userTask.updateTaskStatus(newStatus);
-        return newStatus.name();
+        return new UserTaskUpdateResponse(userTask.getId(), newStatus.name());
     }
 }

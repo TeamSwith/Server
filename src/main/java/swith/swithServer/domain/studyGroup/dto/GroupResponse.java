@@ -9,6 +9,7 @@ import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 @Builder
 @AllArgsConstructor
 public class GroupResponse {
+    private String groupId;
     private String groupName;
     private String groupInsertId;
     private Long maxNum;
@@ -18,6 +19,7 @@ public class GroupResponse {
 
     public static GroupResponse from(StudyGroup studyGroup) {
         return GroupResponse.builder()
+                .groupId(String.valueOf(studyGroup.getId()))
                 .groupName(studyGroup.getGroupName())
                 .groupInsertId(studyGroup.getGroupInsertId())
                 .maxNum(studyGroup.getMaxNum())

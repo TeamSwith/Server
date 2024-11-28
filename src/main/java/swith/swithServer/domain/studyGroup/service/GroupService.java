@@ -6,11 +6,14 @@ import org.springframework.transaction.annotation.Transactional;
 import swith.swithServer.domain.studyGroup.dto.*;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.studyGroup.repository.GroupRepository;
+import swith.swithServer.domain.userGroup.entity.UserGroup;
 import swith.swithServer.domain.userGroup.repository.UserGroupRepository;
 import swith.swithServer.domain.user.entity.User;
 import swith.swithServer.global.error.ErrorCode;
 import swith.swithServer.global.error.exception.BusinessException;
 import swith.swithServer.global.oauth.service.OauthService;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -93,11 +96,16 @@ public class GroupService {
 
     // groupId로 그룹 삭제
     @Transactional
-    public void deleteGroup(Long groupId) {
+    public GroupResponse deleteGroup(Long groupId) {
         User user = authService.getLoginUser();
-        if (!groupRepository.existsById(groupId)) {
-            throw new BusinessException(ErrorCode.INVALID_GROUP_ID);
-        }
+        StudyGroup studyGroup = groupRepository.findById(groupId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
+        List<UserGroup> userGroups = userGroupRepository.findAllByStudyGroup(studyGroup);
+        userGroupRepository.deleteAll(userGroups);
+
+        GroupResponse groupResponse = GroupResponse.from(studyGroup);
+
         groupRepository.deleteById(groupId);
+        return groupResponse;
     }
 }
