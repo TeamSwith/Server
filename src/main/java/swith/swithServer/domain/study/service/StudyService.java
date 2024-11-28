@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import swith.swithServer.domain.comment.entity.Comment;
 import swith.swithServer.domain.comment.repository.CommentRepository;
+import swith.swithServer.domain.comment.service.CommentService;
 import swith.swithServer.domain.study.dto.StudyRequest;
 import swith.swithServer.domain.study.dto.StudyUpdateRequest;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
@@ -14,7 +15,7 @@ import swith.swithServer.domain.study.entity.Study;
 import swith.swithServer.domain.study.repository.StudyRepository;
 import swith.swithServer.domain.task.entity.Task;
 import swith.swithServer.domain.task.repository.TaskRepository;
-import swith.swithServer.domain.usertask.repository.UserTaskRepository;
+import swith.swithServer.domain.task.service.TaskService;
 import swith.swithServer.global.error.ErrorCode;
 import swith.swithServer.global.error.exception.BusinessException;
 
@@ -28,6 +29,8 @@ public class StudyService {
     private final GroupRepository groupRepository;
     private final CommentRepository commentRepository;
     private final TaskRepository taskRepository;
+    private final TaskService taskService;
+    private final CommentService commentService;
 
     //id로 찾기
     public Study getStudyById(Long id){
@@ -74,9 +77,13 @@ public class StudyService {
         //일정 삭제시 출석 상태, 코멘트, 과제 테이블 삭제
 //출석 상태는 아직 없어서 추후에 추가
         List<Comment> comments = commentRepository.findByStudyIdOrderByIdAsc(id);
-        commentRepository.deleteAll(comments);
+        for(Comment comment : comments){
+            commentService.deleteComment(comment.getId());
+        }
         List<Task> tasks = taskRepository.findByStudy(study);
-        taskRepository.deleteAll(tasks);
+        for(Task task : tasks){
+            taskService.deleteTask(task.getId());
+        }
         studyRepository.delete(study);
     }
 

@@ -14,6 +14,8 @@ import swith.swithServer.domain.task.dto.TaskResponse;
 import swith.swithServer.domain.task.entity.Task;
 import swith.swithServer.domain.task.service.TaskService;
 import swith.swithServer.domain.user.entity.User;
+import swith.swithServer.domain.usertask.entity.UserTask;
+import swith.swithServer.domain.usertask.service.UserTaskService;
 import swith.swithServer.global.oauth.service.OauthService;
 import swith.swithServer.global.response.ApiResponse;
 
@@ -28,6 +30,7 @@ public class TaskController {
     private final StudyService studyService;
     private final GroupService groupService;
     private final OauthService authService;
+    private final UserTaskService userTaskService;
 
 
     @PostMapping("/create")
@@ -35,8 +38,9 @@ public class TaskController {
     public ApiResponse<TaskResponse> createTask(@PathVariable Long id, @PathVariable Long studyId, @RequestBody StringRequest stringRequest){
         User user = authService.getLoginUser();
         StudyGroup studyGroup = groupService.getGroupById(id);
-        Task createdTask = taskService.createTask(studyId, stringRequest);
-        return new ApiResponse<>(201, TaskResponse.from(createdTask, user));
+        Task createdTask = taskService.createTask(studyGroup, studyId, stringRequest);
+        UserTask userTask = userTaskService.getUserTaskByUserAndTask(user, createdTask);
+        return new ApiResponse<>(201, TaskResponse.from(createdTask, userTask));
     }
 
     @GetMapping("/get")
@@ -46,7 +50,8 @@ public class TaskController {
         StudyGroup studyGroup = groupService.getGroupById(id);
         Study study = studyService.getStudyById(studyId);
         List<Task> task = taskService.getTaskByStudy(study);
-        return new ApiResponse<>(200, TaskResponse.from(task, user));
+        List<UserTask> userTasks = userTaskService.getUserTaskByUserAndTaskList(user,task);
+        return new ApiResponse<>(200, TaskResponse.from(task, userTasks));
 
     }
     @DeleteMapping("/{taskId}")

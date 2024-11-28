@@ -19,6 +19,7 @@ import swith.swithServer.domain.task.entity.Task;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.studyGroup.repository.GroupRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,6 +31,27 @@ public class UserTaskService {
     private final UserRepository userRepository;
     private final GroupRepository studyGroupRepository;
     private final TaskRepository taskRepository;
+
+
+    //user랑 task로 usertask 찾기
+    public UserTask getUserTaskByUserAndTask(User user, Task task) {
+        UserTask userTask = userTaskRepository.findByUserAndTask(user,task)
+                .orElseThrow(()-> new BusinessException(ErrorCode.USER_TASK_NOT_FOUND));
+        return userTask;
+    }
+
+    //user랑 tasklislt로 usertask 찾기
+    public List<UserTask> getUserTaskByUserAndTaskList(User user, List<Task> tasks){
+        List<UserTask> userTaskList = new ArrayList<>();
+        for( Task task : tasks){
+            UserTask userTask = userTaskRepository.findByUserAndTask(user, task)
+                    .orElseThrow(()->new BusinessException(ErrorCode.USER_TASK_NOT_FOUND));
+            userTaskList.add(userTask);
+        }
+        return userTaskList;
+    }
+
+
 
     // 과제 상태 Update
     @Transactional
