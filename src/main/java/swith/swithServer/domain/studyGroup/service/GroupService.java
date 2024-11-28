@@ -12,8 +12,8 @@ import swith.swithServer.domain.user.entity.User;
 import swith.swithServer.global.error.ErrorCode;
 import swith.swithServer.global.error.exception.BusinessException;
 import swith.swithServer.global.oauth.service.OauthService;
-import swith.swithServer.domain.study.repository.StudyRepository; // StudyRepository 추가
-import swith.swithServer.domain.study.entity.Study; // Study 엔티티 추가
+import swith.swithServer.domain.study.repository.StudyRepository;
+import swith.swithServer.domain.study.entity.Study;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final UserGroupRepository userGroupRepository;
     private final OauthService authService;
-    private final StudyRepository studyRepository; // StudyRepository 추가
+    private final StudyRepository studyRepository;
 
 
     //id로 찾기

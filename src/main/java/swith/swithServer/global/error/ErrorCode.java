@@ -22,6 +22,7 @@ public enum ErrorCode {
 
     // Comment 관련 에러
     COMMENT_DOESNT_EXIST(404, "존재하지 않는 댓글입니다."),
+    NO_COMMENTS_FOUND(404, "조회할 댓글이 없습니다."),
 
     // UserGroup 관련 에러
     GROUP_HAS_NO_USERS(404, "그룹에 사용자가 없습니다."),
