@@ -3,6 +3,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import swith.swithServer.domain.study.service.StudyService;
 import swith.swithServer.domain.studyGroup.dto.*;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.studyGroup.repository.GroupRepository;
@@ -26,6 +27,7 @@ public class GroupService {
     private final UserGroupRepository userGroupRepository;
     private final OauthService authService;
     private final StudyRepository studyRepository;
+    private final StudyService studyService;
 
 
     //id로 찾기
@@ -108,8 +110,9 @@ public class GroupService {
         userGroupRepository.deleteAll(userGroups);
 
         List<Study> studies = studyRepository.findAllByStudyGroup(studyGroup);
-        studyRepository.deleteAll(studies);
-
+        for(Study study : studies){
+            studyService.deleteStudy(study.getId());
+        }
         GroupResponse groupResponse = GroupResponse.from(studyGroup);
 
         groupRepository.deleteById(id);
