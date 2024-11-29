@@ -56,10 +56,15 @@ public class UserTaskService {
     // 과제 상태 Update
     @Transactional
     public UserTaskUpdateResponse updateTaskStatus(Long taskId, String taskStatus) {
-        User loginUser = authService.getLoginUser();
-        if (loginUser == null) {
-            throw new BusinessException(ErrorCode.USER_DOESNT_EXIST);
-        }
+        User user = authService.getLoginUser();
+
+        // Task 조회
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.TASK_DOESNT_EXIST));
+
+        // UserTask 조회
+        UserTask userTask = userTaskRepository.findByUserAndTask(user, task)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_TASK_NOT_FOUND));
 
         TaskStatus newStatus;
         try {
@@ -68,9 +73,8 @@ public class UserTaskService {
             throw new BusinessException(ErrorCode.NOT_VALID_ERROR);
         }
 
-        UserTask userTask = userTaskRepository.findByUserIdAndId(loginUser.getId(), taskId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_TASK_NOT_FOUND));
 
+        // 상태 전환 검증
         if (newStatus == TaskStatus.COMPLETED && userTask.getTaskStatus() == TaskStatus.COMPLETED) {
             throw new BusinessException(ErrorCode.TASK_ALREADY_COMPLETED);
         }
@@ -79,8 +83,11 @@ public class UserTaskService {
             throw new BusinessException(ErrorCode.TASK_NOT_COMPLETED);
         }
 
+        // 상태 업데이트
         userTask.updateTaskStatus(newStatus);
-        return new UserTaskUpdateResponse(userTask.getId(), newStatus.name());
+
+        // 결과 반환
+        return new UserTaskUpdateResponse(user.getId(), userTask.getId(), newStatus.name());
     }
 
     // UserTask 생성
