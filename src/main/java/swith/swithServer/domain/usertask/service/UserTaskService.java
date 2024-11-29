@@ -87,7 +87,7 @@ public class UserTaskService {
         userTask.updateTaskStatus(newStatus);
 
         // 결과 반환
-        return new UserTaskUpdateResponse(userTask.getId(), newStatus.name());
+        return new UserTaskUpdateResponse(user.getId(), userTask.getId(), newStatus.name());
     }
 
     // UserTask 생성
