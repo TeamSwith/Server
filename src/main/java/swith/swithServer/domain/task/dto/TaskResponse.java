@@ -48,13 +48,17 @@ public class TaskResponse {
         List<TaskResponse> taskResponseList = new ArrayList<>();
         int i=0;
         for(Task tasks : task){
-            TaskResponse taskResponse = TaskResponse.builder()
-                    .id(tasks.getId())
-                    .taskStatus(userTasks.get(i).getTaskStatus())
-                    .content(tasks.getContent())
-                    .build();
-            taskResponseList.add(taskResponse);
-            i++;
+            if(userTasks.get(i)!=null) {
+                TaskResponse taskResponse = TaskResponse.builder()
+                        .id(tasks.getId())
+                        .taskStatus(userTasks.get(i).getTaskStatus())
+                        .content(tasks.getContent())
+                        .build();
+                i++;
+                taskResponseList.add(taskResponse);
+            }
+            else
+                i++;
         }
         return taskResponseList;
     }
