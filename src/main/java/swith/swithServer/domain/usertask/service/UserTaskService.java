@@ -21,6 +21,7 @@ import swith.swithServer.domain.studyGroup.repository.GroupRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -44,9 +45,11 @@ public class UserTaskService {
     public List<UserTask> getUserTaskByUserAndTaskList(User user, List<Task> tasks){
         List<UserTask> userTaskList = new ArrayList<>();
         for( Task task : tasks){
-            UserTask userTask = userTaskRepository.findByUserAndTask(user, task)
-                    .orElseThrow(()->new BusinessException(ErrorCode.USER_TASK_NOT_FOUND));
-            userTaskList.add(userTask);
+            Optional<UserTask> userTask = userTaskRepository.findByUserAndTask(user, task);
+            if(userTask.isPresent())
+                userTaskList.add(userTask.get());
+            else
+                userTaskList.add(null);
         }
         return userTaskList;
     }
