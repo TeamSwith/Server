@@ -104,7 +104,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/ec2_key.pem ubuntu@${{ secrets.EC2_HOST }} << EOF
             echo "Listing all Docker containers:"
             sudo docker ps -a
-            cd /home/ubuntu/
+#            cd /home/ubuntu/
             sudo docker-compose pull
             sudo docker-compose up -d
           EOF
