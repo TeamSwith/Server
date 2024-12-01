@@ -103,6 +103,9 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/ec2_key.pem ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
             echo "Listing all Docker containers:"
+            sudo docker rm -f $(sudo docker ps -qa)
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/ubuntu:latest
             sudo docker-compose pull
             sudo docker-compose up -d
+            sudo docker image prune -f
           EOF
