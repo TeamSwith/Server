@@ -1,6 +1,14 @@
-version: '3.9'
 
 services:
+
+  backend:
+    container_name: ubuntu
+    image: swithserver/ubuntu:latest
+    expose:
+      - "8080:8080"
+    networks:
+      - swith
+
   nginx:
     container_name: nginx
     image: nginx:latest
@@ -17,13 +25,7 @@ services:
       - swith
     restart: always
 
-  backend:
-    container_name: ubuntu
-    image: swithserver/ubuntu:latest
-    expose:
-      - "8080:8080"
-    networks:
-      - swith
+
 
   certbot:
      container_name: certbot
