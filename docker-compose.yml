@@ -9,6 +9,14 @@ services:
     networks:
       - swith
 
+  frontend:
+    container_name: frontend
+    image: swithserver/front
+    expose:
+      - "3000"
+    networks:
+      - swith
+
   nginx:
     container_name: nginx
     image: nginx:latest
