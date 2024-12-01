@@ -2,7 +2,7 @@
 services:
 
   backend:
-    container_name: ubuntu
+    container_name: backend
     image: swithserver/ubuntu:latest
     expose:
       - "8080:8080"
@@ -20,7 +20,7 @@ services:
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
     depends_on:
-      - ubuntu
+      - backend
     networks:
       - swith
     restart: always
