@@ -105,6 +105,7 @@ jobs:
             echo "Listing all Docker containers:"
             sudo docker rm -f $(sudo docker ps -qa)
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/ubuntu:latest
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/front
             sudo docker-compose pull
             sudo docker-compose up -d
             sudo docker image prune -f
