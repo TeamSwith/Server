@@ -47,7 +47,8 @@ public class AuthController {
         }
 
         String redirectUrl = String.format(
-                "http://localhost:3000/local-callback?access-token=%s&refresh-token=%s",
+//                "http://localhost:3000/local-callback?access-token=%s&refresh-token=%s",
+                "https://swithweb.com/local-callback?access-token=%s&refresh-token=%s",
                 jwtTokens.getAccessToken(),
                 jwtTokens.getRefreshToken()
         );
