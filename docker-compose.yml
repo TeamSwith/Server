@@ -29,6 +29,7 @@ services:
         - /etc/letsencrypt/archive:/etc/letsencrypt/archive:ro
     depends_on:
       - backend
+      - frontend
     networks:
       - swith
     restart: always
