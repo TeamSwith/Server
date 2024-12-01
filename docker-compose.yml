@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    depends_on:
+      - ubuntu
+    networks:
+      - swith
+    restart: always
+
+  backend:
+    container_name: ubuntu
+    image: swithserver/ubuntu:latest
+    expose:
+      - "8080:8080"
+    networks:
+      - swith
+
+  certbot:
+    container_name: certbot
+    image: certbot/certbot:latest
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do sleep 12h & wait $${!}; certbot renew --quiet; done;'"
+    networks:
+      - swith
+
+
+networks:
+  swith:
