@@ -4,6 +4,7 @@ package swith.swithServer.domain.study.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import swith.swithServer.domain.attend.service.AttendService;
 import swith.swithServer.domain.comment.entity.Comment;
 import swith.swithServer.domain.comment.repository.CommentRepository;
 import swith.swithServer.domain.comment.service.CommentService;
@@ -16,6 +17,9 @@ import swith.swithServer.domain.study.repository.StudyRepository;
 import swith.swithServer.domain.task.entity.Task;
 import swith.swithServer.domain.task.repository.TaskRepository;
 import swith.swithServer.domain.task.service.TaskService;
+import swith.swithServer.domain.user.entity.User;
+import swith.swithServer.domain.userGroup.entity.UserGroup;
+import swith.swithServer.domain.userGroup.repository.UserGroupRepository;
 import swith.swithServer.global.error.ErrorCode;
 import swith.swithServer.global.error.exception.BusinessException;
 
@@ -31,6 +35,8 @@ public class StudyService {
     private final TaskRepository taskRepository;
     private final TaskService taskService;
     private final CommentService commentService;
+    private final UserGroupRepository userGroupRepository;
+    private final AttendService attendService;
 
     //id로 찾기
     public Study getStudyById(Long id){
@@ -56,7 +62,12 @@ public class StudyService {
             throw new BusinessException(ErrorCode.STUDY_EXIST);
         }
         Study study = new Study(studyRequest.getDate(), studyRequest.getTime(), studyRequest.getLocation(), studyGroup);
-        return studyRepository.save(study);
+        List<UserGroup> userList = userGroupRepository.findAllByStudyGroup(studyGroup);
+        studyRepository.save(study);
+        for(UserGroup userGroup : userList){
+            attendService.createAttend(userGroup.getUser(), study.getId());
+        }
+        return study;
     }
 
     //study 수정

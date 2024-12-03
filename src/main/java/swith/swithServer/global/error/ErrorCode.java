@@ -50,6 +50,10 @@ public enum ErrorCode {
 
     STUDY_EXIST(404, "이미 존재하는 스터디 일정입니다."),
 
+    //ATTEND
+    ATTEND_DOESNT_EXIST(404, "존재하지 않는 출석 테이블입니다."),
+
+    ALREADY_ATTEND(404, "이미 출석했습니다."),
     //Task
     TASK_DOESNT_EXIST(404, "존재하지 않는 과제입니다");
 
