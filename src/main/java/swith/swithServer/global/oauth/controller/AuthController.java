@@ -47,8 +47,32 @@ public class AuthController {
         }
 
         String redirectUrl = String.format(
-//                "http://localhost:3000/local-callback?access-token=%s&refresh-token=%s",
                 "https://swithweb.com/local-callback?access-token=%s&refresh-token=%s",
+                jwtTokens.getAccessToken(),
+                jwtTokens.getRefreshToken()
+        );
+
+        response.sendRedirect(redirectUrl);
+
+    }
+
+    @GetMapping("/oauth/kakao/local")
+    @Operation(summary = "카카오 로그인 - 토큰 발급")
+    public void kakaoCallbackLocal(@RequestParam String code, HttpServletResponse response) throws IOException {
+
+        String kakaoAccessToken = authService.getKakaoAccessToken(code);
+
+        KakaoUserDto kakaoUser = authService.getKakaoUserInfo(kakaoAccessToken);
+
+        JwtTokenDto jwtTokens;
+        if (authService.isUserExists(kakaoUser)) {
+            jwtTokens = authService.loginUser(kakaoUser);
+        } else {
+            jwtTokens = authService.SignupUser(kakaoUser);
+        }
+
+        String redirectUrl = String.format(
+                "http://localhost:3000/local-callback?access-token=%s&refresh-token=%s",
                 jwtTokens.getAccessToken(),
                 jwtTokens.getRefreshToken()
         );
