@@ -2,6 +2,7 @@ package swith.swithServer.domain.alarm.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import swith.swithServer.domain.alarm.dto.AlarmDeleteResponse;
 import swith.swithServer.domain.alarm.dto.AlarmResponse;
 import swith.swithServer.domain.alarm.entity.UserAlarm;
 import swith.swithServer.domain.alarm.service.AlarmService;
@@ -31,5 +32,13 @@ public class AlarmController {
     public ApiResponse<AlarmResponse> markAlarmAsRead(@PathVariable Long alarmId) {
         var userAlarm = alarmService.markAlarmAsRead(alarmId);
         return new ApiResponse<>(200, AlarmResponse.fromEntity(userAlarm));
+    }
+
+    // 알람 삭제
+
+    @DeleteMapping("/{alarmId}")
+    public ApiResponse<AlarmDeleteResponse> deleteAlarm(@PathVariable Long alarmId) {
+        AlarmDeleteResponse deletedAlarm = alarmService.deleteAlarm(alarmId);
+        return new ApiResponse<>(200, deletedAlarm);
     }
 }
