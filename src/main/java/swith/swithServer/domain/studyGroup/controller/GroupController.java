@@ -5,8 +5,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import swith.swithServer.domain.sse.service.SseEmitters;
 import swith.swithServer.domain.study.dto.MessageResponse;
 import swith.swithServer.domain.studyGroup.dto.*;
+import swith.swithServer.domain.userGroup.repository.UserGroupRepository;
 import swith.swithServer.domain.userGroup.service.UserGroupService;
 import swith.swithServer.global.response.ApiResponse;
 import swith.swithServer.domain.studyGroup.service.GroupService;
@@ -14,6 +16,9 @@ import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.user.entity.User;
 import swith.swithServer.domain.user.service.UserService;
 import swith.swithServer.global.oauth.service.OauthService;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/group")
@@ -23,6 +28,8 @@ public class GroupController {
     private final GroupService groupService;
     private final OauthService authService;
     private final UserGroupService userGroupService;
+    private final UserGroupRepository userGroupRepository;
+    private final SseEmitters sseEmitters;
 
     @PostMapping("/join")
     @Operation(summary = "스터디 그룹 가입 여부 확인")
@@ -73,6 +80,18 @@ public class GroupController {
             @RequestBody StringRequest stringRequest) {
         User user = authService.getLoginUser();
         StudyGroup updatedNotice = groupService.updateNotice(id, stringRequest);
+
+        StudyGroup studyGroup = groupService.getGroupById(id);
+
+        List<Long> userIds = userGroupRepository.findAllByStudyGroup(studyGroup).stream()
+                .map(userGroup -> userGroup.getUser().getId())
+                .collect(Collectors.toList());
+
+
+        for ( Long userId : userIds ){
+            sseEmitters.sendSse(userId,"Notice",updatedNotice.getNotice()); // 모든 클라이언트에 알림 전송
+        }
+
         return new ApiResponse<>(200, updatedNotice.getNotice());
     }
 
