@@ -4,6 +4,8 @@ package swith.swithServer.domain.study.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import swith.swithServer.domain.alarm.dto.AlarmResponse;
+import swith.swithServer.domain.alarm.entity.UserAlarm;
 import swith.swithServer.domain.comment.entity.Comment;
 import swith.swithServer.domain.comment.repository.CommentRepository;
 import swith.swithServer.domain.comment.service.CommentService;
@@ -17,20 +19,20 @@ import swith.swithServer.domain.task.entity.Task;
 import swith.swithServer.domain.task.repository.TaskRepository;
 import swith.swithServer.domain.task.service.TaskService;
 import swith.swithServer.domain.user.entity.User;
-import swith.swithServer.domain.userGroup.entity.UserGroup;
 import swith.swithServer.global.error.ErrorCode;
 import swith.swithServer.global.error.exception.BusinessException;
 
 import swith.swithServer.domain.alarm.entity.Alarm;
 import swith.swithServer.domain.alarm.service.AlarmService;
 
-import swith.swithServer.domain.alarm.entity.GroupAlarm;
-import swith.swithServer.domain.alarm.entity.UserAlarm;
 import swith.swithServer.domain.alarm.repository.AlarmRepository;
 import swith.swithServer.domain.alarm.repository.GroupAlarmRepository;
 import swith.swithServer.domain.alarm.repository.UserAlarmRepository;
 import swith.swithServer.domain.sse.service.SseEmitters;
 import swith.swithServer.domain.userGroup.repository.UserGroupRepository;
+import swith.swithServer.global.oauth.dto.KakaoUserDto;
+import swith.swithServer.global.oauth.service.OauthService;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -45,9 +47,7 @@ public class StudyService {
     private final TaskService taskService;
     private final CommentService commentService;
 
-    private final AlarmRepository alarmRepository;
-    private final UserAlarmRepository userAlarmRepository;
-    private final GroupAlarmRepository groupAlarmRepository;
+    private final OauthService oauthService;
     private final SseEmitters sseEmitters;
     private final UserGroupRepository userGroupRepository;
     private  final AlarmService alarmService;
@@ -79,7 +79,7 @@ public class StudyService {
         Study study = new Study(studyRequest.getDate(), studyRequest.getTime(), studyRequest.getLocation(), studyGroup);
         studyRepository.save(study);
 
-        // 사용자들에게 알림 전송 및 기록 저장
+//         사용자들에게 알림 전송 및 기록 저장
         notifyUsers(studyGroup, study);
 
         return study;
@@ -89,15 +89,16 @@ public class StudyService {
     @Transactional
     private void notifyUsers(StudyGroup studyGroup, Study study) {
         // 알림 메시지 생성
+
         String message = "새로운 스터디 일정이 생성되었습니다: " +
-                study.getDate() + " " + study.getTime() + " @ " + study.getLocation();
+                study.getDate() + "," + study.getTime() + "," + study.getLocation();
 
         // 그룹 및 사용자 알림 생성
         Alarm alarm = alarmService.createGroupAndUserAlarms(message, studyGroup);
 
         // SSE 알림 전송 (해당 그룹의 모든 사용자)
         userGroupRepository.findAllByStudyGroup(studyGroup)
-                .forEach(userGroup -> sseEmitters.sendNotification(userGroup.getUser().getId(), message));
+                .forEach(userGroup -> sseEmitters.sendSse(userGroup.getUser().getId(), "Alarm",message));
     }
 
     //study 수정
