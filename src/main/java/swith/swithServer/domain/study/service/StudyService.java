@@ -16,8 +16,19 @@ import swith.swithServer.domain.study.repository.StudyRepository;
 import swith.swithServer.domain.task.entity.Task;
 import swith.swithServer.domain.task.repository.TaskRepository;
 import swith.swithServer.domain.task.service.TaskService;
+import swith.swithServer.domain.user.entity.User;
+import swith.swithServer.domain.userGroup.entity.UserGroup;
 import swith.swithServer.global.error.ErrorCode;
 import swith.swithServer.global.error.exception.BusinessException;
+
+import swith.swithServer.domain.alarm.entity.Alarm;
+import swith.swithServer.domain.alarm.entity.GroupAlarm;
+import swith.swithServer.domain.alarm.entity.UserAlarm;
+import swith.swithServer.domain.alarm.repository.AlarmRepository;
+import swith.swithServer.domain.alarm.repository.GroupAlarmRepository;
+import swith.swithServer.domain.alarm.repository.UserAlarmRepository;
+import swith.swithServer.domain.sse.service.SseEmitters;
+import swith.swithServer.domain.userGroup.repository.UserGroupRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,6 +42,12 @@ public class StudyService {
     private final TaskRepository taskRepository;
     private final TaskService taskService;
     private final CommentService commentService;
+
+    private final AlarmRepository alarmRepository;
+    private final UserAlarmRepository userAlarmRepository;
+    private final GroupAlarmRepository groupAlarmRepository;
+    private final SseEmitters sseEmitters;
+    private final UserGroupRepository userGroupRepository;
 
     //id로 찾기
     public Study getStudyById(Long id){
@@ -56,8 +73,75 @@ public class StudyService {
             throw new BusinessException(ErrorCode.STUDY_EXIST);
         }
         Study study = new Study(studyRequest.getDate(), studyRequest.getTime(), studyRequest.getLocation(), studyGroup);
-        return studyRepository.save(study);
+//        return studyRepository.save(study);
+        studyRepository.save(study);
+
+        // 사용자들에게 알림 전송 및 기록 저장
+        notifyUsers(studyGroup, study);
+
+        return study;
     }
+    private void notifyUsers(StudyGroup studyGroup, Study study) {
+        // 그룹에 속한 사용자 목록 조회
+        List<UserGroup> userGroups = userGroupRepository.findAllByStudyGroup(studyGroup);
+
+        // 알림 메시지 생성
+        String message = "새로운 스터디 일정이 생성되었습니다: " +
+                study.getDate() + " " + study.getTime() + " @ " + study.getLocation();
+
+        // 사용자별 알림 처리
+        userGroups.forEach(userGroup -> {
+            User user = userGroup.getUser();
+
+            // SSE 알림 전송
+            sseEmitters.sendNotification(user.getId().toString(), message);
+
+            // 알림 저장
+            Alarm alarm = Alarm.builder()
+                    .content(message)
+                    .build();
+            alarmRepository.save(alarm);
+
+            UserAlarm userAlarm = UserAlarm.builder()
+                    .user(user)
+                    .alarm(alarm)
+                    .isRead(false)
+                    .build();
+            userAlarmRepository.save(userAlarm);
+        });
+    }
+//    private void notifyUsers(StudyGroup studyGroup, Study study) {
+//        // 알림 메시지 생성
+//        String message = "새로운 스터디 일정이 생성되었습니다: " +
+//                study.getDate() + " " + study.getTime() + " @ " + study.getLocation();
+//
+//        // 1. Alarm 생성
+//        Alarm alarm = Alarm.builder()
+//                .content(message)
+//                .build();
+//        alarmRepository.save(alarm);
+//
+//        // 2. GroupAlarm 저장
+//        GroupAlarm groupAlarm = GroupAlarm.builder()
+//                .studyGroup(studyGroup)
+//                .alarm(alarm)
+//                .build();
+//        groupAlarmRepository.save(groupAlarm);
+//
+//        // 3. UserAlarm 저장 및 SSE 알림 전송
+//        List<UserGroup> userGroups = userGroupRepository.findByStudyGroup(studyGroup);
+//        userGroups.forEach(userGroup -> {
+//            UserAlarm userAlarm = UserAlarm.builder()
+//                    .user(userGroup.getUser())
+//                    .alarm(alarm)
+//                    .isRead(false)
+//                    .build();
+//            userAlarmRepository.save(userAlarm);
+//
+//            // SSE 알림 전송
+//            sseEmitters.sendNotification(userGroup.getUser().getId().toString(), message);
+//        });
+//    }
 
     //study 수정
     @Transactional
