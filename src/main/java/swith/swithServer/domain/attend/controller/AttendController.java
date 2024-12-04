@@ -31,7 +31,7 @@ public class AttendController {
     ){
         StudyGroup studyGroup = groupService.getGroupById(id);
         User user = authService.getLoginUser();
-        Attend updatedAttend = attendService.updateAttend(user, studyId);
+        Attend updatedAttend = attendService.updateAttend(user, studyId, studyGroup);
         return new ApiResponse<>(200, AttendResponse.from(updatedAttend));
     }
 }

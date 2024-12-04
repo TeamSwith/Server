@@ -6,9 +6,12 @@ import org.springframework.transaction.annotation.Transactional;
 import swith.swithServer.domain.attend.entity.Attend;
 import swith.swithServer.domain.attend.entity.AttendStatus;
 import swith.swithServer.domain.attend.repository.AttendRepository;
+import swith.swithServer.domain.sse.service.SseEmitters;
 import swith.swithServer.domain.study.entity.Study;
 import swith.swithServer.domain.study.repository.StudyRepository;
+import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.user.entity.User;
+import swith.swithServer.domain.userGroup.repository.UserGroupRepository;
 import swith.swithServer.global.error.ErrorCode;
 import swith.swithServer.global.error.exception.BusinessException;
 
@@ -17,6 +20,8 @@ import swith.swithServer.global.error.exception.BusinessException;
 public class AttendService {
     private final StudyRepository studyRepository;
     private final AttendRepository attendRepository;
+    private final UserGroupRepository userGroupRepository;
+    private final SseEmitters sseEmitters;
 
     //user, study로 출석 상태 테이블 찾기
 //    public Attend getAttendByUserAndStudy(User user, Study study){
@@ -45,7 +50,7 @@ public class AttendService {
 
     //출석 상태 업데이트
     @Transactional
-    public Attend updateAttend(User user, Long studyId){
+    public Attend updateAttend(User user, Long studyId, StudyGroup studyGroup){
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(()-> new BusinessException(ErrorCode.STUDY_DOESNT_EXIST));
         Attend attend = attendRepository.findByUserAndStudy(user, study)
@@ -53,6 +58,14 @@ public class AttendService {
         if(attend.getAttendStatus()==AttendStatus.ATTEND)
             throw new BusinessException(ErrorCode.ALREADY_ATTEND);
         attend.updateAttendStatus(AttendStatus.ATTEND);
-        return attendRepository.save(attend);
+        attendRepository.save(attend);
+        updateUserAttend(studyGroup, attend);
+        return attend;
+    }
+//출석 상태 변화시 sse
+    @Transactional
+    private void updateUserAttend(StudyGroup studyGroup, Attend attend){
+        userGroupRepository.findAllByStudyGroup(studyGroup)
+                .forEach(userGroup -> sseEmitters.sendSse(userGroup.getUser().getId(), "Attend update", attend));
     }
 }

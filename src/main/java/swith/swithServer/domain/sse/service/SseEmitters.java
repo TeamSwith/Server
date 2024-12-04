@@ -24,6 +24,18 @@ public class SseEmitters {
         return emitter;
     }
 
+    //5분 출석용
+//    public SseEmitter start(Long userId) {
+//        SseEmitter emitter = new SseEmitter(5 * 60 * 1000L); // 5분 타임아웃
+//        emitters.put(userId, emitter);
+//
+//        emitter.onCompletion(() -> emitters.remove(userId));
+//        emitter.onTimeout(() -> emitters.remove(userId));
+//        emitter.onError((e) -> emitters.remove(userId));
+//
+//        return emitter;
+//    }
+
 
     public void sendSse(Long userId, String eventName, Object data) { // SSE 전송
         SseEmitter emitter = emitters.get(userId);

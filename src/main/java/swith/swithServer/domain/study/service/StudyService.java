@@ -145,16 +145,15 @@ public class StudyService {
         studyRepository.delete(study);
     }
 
+
     @Transactional
-    private void notifyStudyStart(StudyGroup studyGroup, Study study){
-        String message= "스터디가 시작되었습니다.";
+    public void notifyStudyStart(StudyGroup studyGroup, Study study){
+        String message= studyGroup.getGroupName()+"의 스터디가 시작되었습니다: "+study.getDate() + "," + study.getTime() + "," + study.getLocation();
 
         Alarm alarm = alarmService.createGroupAndUserAlarms(message, studyGroup);
 
-        List<UserGroup> userGroups= userGroupRepository.findAllByStudyGroup(studyGroup);
-        for( UserGroup userGroup : userGroups){
-            sseEmitters.sendNotification(userGroup.getUser().getId().toString(),message);
-        }
+        userGroupRepository.findAllByStudyGroup(studyGroup)
+                .forEach(userGroup -> sseEmitters.sendSse(userGroup.getUser().getId(), "Alarm",message));
     }
 
 }
