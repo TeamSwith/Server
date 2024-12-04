@@ -85,6 +85,7 @@ public class StudyService {
         return study;
     }
 
+
     @Transactional
     private void notifyUsers(StudyGroup studyGroup, Study study) {
         // 알림 메시지 생성
@@ -94,13 +95,10 @@ public class StudyService {
         // 그룹 및 사용자 알림 생성
         Alarm alarm = alarmService.createGroupAndUserAlarms(message, studyGroup);
 
-        // SSE 알림 전송
-        List<UserGroup> userGroups = userGroupRepository.findAllByStudyGroup(studyGroup);
-        userGroups.forEach(userGroup -> {
-            sseEmitters.sendNotification(userGroup.getUser().getId().toString(), message);
-        });
+        // SSE 알림 전송 (해당 그룹의 모든 사용자)
+        userGroupRepository.findAllByStudyGroup(studyGroup)
+                .forEach(userGroup -> sseEmitters.sendNotification(userGroup.getUser().getId(), message));
     }
-
 
     //study 수정
     @Transactional
