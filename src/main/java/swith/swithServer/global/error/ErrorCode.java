@@ -55,7 +55,12 @@ public enum ErrorCode {
 
     ALREADY_ATTEND(404, "이미 출석했습니다."),
     //Task
-    TASK_DOESNT_EXIST(404, "존재하지 않는 과제입니다");
+    TASK_DOESNT_EXIST(404, "존재하지 않는 과제입니다"),
+
+    //Alarm
+    ALARM_NOT_FOUND(404, "존재하지 않는 알람입니다"),
+    ALARM_ALREADY_READ(400, "이미 읽은 알림입니다."),
+    GROUP_ID_NOT_FOUND(404, "그룹 ID를 찾을 수 없습니다.");
 
     private final int status;
     private final String message;
