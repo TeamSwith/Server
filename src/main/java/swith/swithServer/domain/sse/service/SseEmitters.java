@@ -15,6 +15,17 @@ public class SseEmitters {
         emitters.put(userId, emitter);
     }
 
+    public void sendNotification(String userId, String message) {
+        SseEmitter emitter = emitters.get(userId);
+        if (emitter != null) {
+            try {
+                emitter.send(SseEmitter.event().name("notification").data(message));
+            } catch (IOException e) {
+                emitters.remove(userId); // 실패 시 제거
+            }
+        }
+    }
+
     public void removeEmitter(String userId) {
         emitters.remove(userId);
     }

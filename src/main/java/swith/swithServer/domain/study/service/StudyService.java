@@ -4,12 +4,14 @@ package swith.swithServer.domain.study.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import swith.swithServer.domain.alarm.entity.Alarm;
 import swith.swithServer.domain.attend.entity.Attend;
 import swith.swithServer.domain.attend.repository.AttendRepository;
 import swith.swithServer.domain.attend.service.AttendService;
 import swith.swithServer.domain.comment.entity.Comment;
 import swith.swithServer.domain.comment.repository.CommentRepository;
 import swith.swithServer.domain.comment.service.CommentService;
+import swith.swithServer.domain.sse.service.SseEmitters;
 import swith.swithServer.domain.study.dto.StudyRequest;
 import swith.swithServer.domain.study.dto.StudyUpdateRequest;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
@@ -39,6 +41,8 @@ public class StudyService {
     private final UserGroupRepository userGroupRepository;
     private final AttendService attendService;
     private final AttendRepository attendRepository;
+    private final SseEmitters sseEmitters;
+    private final AlarmService alarmService;
 
     //id로 찾기
     public Study getStudyById(Long id){
@@ -101,6 +105,18 @@ public class StudyService {
             taskService.deleteTask(task.getId());
         }
         studyRepository.delete(study);
+    }
+
+    @Transactional
+    private void notifyStudyStart(StudyGroup studyGroup, Study study){
+        String message= "스터디가 시작되었습니다.";
+
+        Alarm alarm = alarmService.createGroupAndUserAlarms(message, studyGroup);
+
+        List<UserGroup> userGroups= userGroupRepository.findAllByStudyGroup(studyGroup);
+        for( UserGroup userGroup : userGroups){
+            sseEmitters.sendNotification(userGroup.getUser().getId().toString(),message);
+        }
     }
 
 }
