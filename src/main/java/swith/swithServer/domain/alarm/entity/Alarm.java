@@ -28,10 +28,5 @@ public class Alarm extends BaseEntity{
     @Builder.Default
     @OneToMany(mappedBy = "alarm", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GroupAlarm> groupAlarms = new ArrayList<>();
-//    @OneToMany(mappedBy = "alarm", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<UserAlarm> userAlarms = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "alarm", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<GroupAlarm> groupAlarms = new ArrayList<>();
 }
 

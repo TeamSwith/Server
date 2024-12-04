@@ -84,6 +84,7 @@ public class StudyService {
 
         return study;
     }
+
     @Transactional
     private void notifyUsers(StudyGroup studyGroup, Study study) {
         // 알림 메시지 생성
@@ -100,35 +101,6 @@ public class StudyService {
         });
     }
 
-//    private void notifyUsers(StudyGroup studyGroup, Study study) {
-//        // 그룹에 속한 사용자 목록 조회
-//        List<UserGroup> userGroups = userGroupRepository.findAllByStudyGroup(studyGroup);
-//
-//        // 알림 메시지 생성
-//        String message = "새로운 스터디 일정이 생성되었습니다: " +
-//                study.getDate() + " " + study.getTime() + " @ " + study.getLocation();
-//
-//        // 사용자별 알림 처리
-//        userGroups.forEach(userGroup -> {
-//            User user = userGroup.getUser();
-//
-//            // SSE 알림 전송
-//            sseEmitters.sendNotification(user.getId().toString(), message);
-//
-//            // 알림 저장
-//            Alarm alarm = Alarm.builder()
-//                    .content(message)
-//                    .build();
-//            alarmRepository.save(alarm);
-//
-//            UserAlarm userAlarm = UserAlarm.builder()
-//                    .user(user)
-//                    .alarm(alarm)
-//                    .isRead(false)
-//                    .build();
-//            userAlarmRepository.save(userAlarm);
-//        });
-//    }
 
     //study 수정
     @Transactional

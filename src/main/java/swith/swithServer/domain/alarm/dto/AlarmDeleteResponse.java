@@ -15,7 +15,7 @@ public class AlarmDeleteResponse {
         return new AlarmDeleteResponse(
                 alarm.getId(),
                 alarm.getContent(),
-                alarm.getCreatedAt().toString() // LocalDateTime을 String으로 변환
+                alarm.getCreatedAt().toString()
         );
     }
 }

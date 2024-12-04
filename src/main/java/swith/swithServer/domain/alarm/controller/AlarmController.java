@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import swith.swithServer.domain.alarm.dto.AlarmDeleteResponse;
 import swith.swithServer.domain.alarm.dto.AlarmResponse;
-import swith.swithServer.domain.alarm.entity.UserAlarm;
 import swith.swithServer.domain.alarm.service.AlarmService;
 import swith.swithServer.domain.user.entity.User;
 import swith.swithServer.global.oauth.service.OauthService;

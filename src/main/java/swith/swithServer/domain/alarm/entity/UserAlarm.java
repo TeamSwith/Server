@@ -26,7 +26,7 @@ public class UserAlarm extends BaseEntity{
     @JoinColumn(name = "alarm_id")
     private Alarm alarm;
 
-    @Builder.Default // @Builder와 함께 기본값 사용을 명시
+    @Builder.Default
     private boolean isRead = false;
 
     public void markAsRead() {

@@ -38,14 +38,6 @@ public class AlarmService {
                 .map(AlarmResponse::fromEntity) // fromEntity 메서드를 활용
                 .collect(Collectors.toList());
 
-//        return userAlarms.stream()
-//                .map(userAlarm -> new AlarmResponse(
-//                        userAlarm.getAlarm().getId(),
-//                        userAlarm.getAlarm().getContent(),
-//                        userAlarm.isRead(),
-//                        userAlarm.getAlarm().getCreatedAt().toString()
-//                ))
-//                .collect(Collectors.toList());
     }
 
     // 알림 읽음 처리
@@ -54,12 +46,9 @@ public class AlarmService {
         UserAlarm userAlarm = userAlarmRepository.findById(userAlarmId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ALARM_NOT_FOUND));
 
-        // 이미 읽음 상태라면 예외 발생
         if (userAlarm.isRead()) {
             throw new BusinessException(ErrorCode.ALARM_ALREADY_READ);
         }
-
-        // 읽음 상태로 변경
         userAlarm.markAsRead();
         return userAlarmRepository.save(userAlarm);
     }
@@ -94,25 +83,21 @@ public class AlarmService {
         UserAlarm userAlarm = UserAlarm.builder()
                 .alarm(alarm)
                 .user(user)
-                .isRead(false) // 기본 읽음 상태는 false
+                .isRead(false)
                 .build();
         userAlarmRepository.save(userAlarm);
     }
 
 
+    // 알림 삭제
     @Transactional
     public AlarmDeleteResponse deleteAlarm(Long alarmId) {
-        // Alarm 조회
         Alarm alarm = alarmRepository.findById(alarmId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ALARM_NOT_FOUND));
 
-        // 관련된 UserAlarm 삭제
         userAlarmRepository.deleteByAlarm(alarm);
-
-        // 관련된 GroupAlarm 삭제
         groupAlarmRepository.deleteByAlarm(alarm);
 
-        // Alarm 삭제
         alarmRepository.delete(alarm);
         return AlarmDeleteResponse.fromEntity(alarm);
 
