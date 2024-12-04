@@ -4,6 +4,8 @@ package swith.swithServer.domain.study.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import swith.swithServer.domain.attend.entity.Attend;
+import swith.swithServer.domain.attend.repository.AttendRepository;
 import swith.swithServer.domain.attend.service.AttendService;
 import swith.swithServer.domain.comment.entity.Comment;
 import swith.swithServer.domain.comment.repository.CommentRepository;
@@ -17,7 +19,6 @@ import swith.swithServer.domain.study.repository.StudyRepository;
 import swith.swithServer.domain.task.entity.Task;
 import swith.swithServer.domain.task.repository.TaskRepository;
 import swith.swithServer.domain.task.service.TaskService;
-import swith.swithServer.domain.user.entity.User;
 import swith.swithServer.domain.userGroup.entity.UserGroup;
 import swith.swithServer.domain.userGroup.repository.UserGroupRepository;
 import swith.swithServer.global.error.ErrorCode;
@@ -37,6 +38,7 @@ public class StudyService {
     private final CommentService commentService;
     private final UserGroupRepository userGroupRepository;
     private final AttendService attendService;
+    private final AttendRepository attendRepository;
 
     //id로 찾기
     public Study getStudyById(Long id){
@@ -86,7 +88,10 @@ public class StudyService {
         Study study = studyRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.STUDY_DOESNT_EXIST));
         //일정 삭제시 출석 상태, 코멘트, 과제 테이블 삭제
-//출석 상태는 아직 없어서 추후에 추가
+        List<Attend> attends = attendRepository.findByStudy(study);
+        for(Attend attend : attends){
+            attendService.deleteAttend(attend.getId());
+        }
         List<Comment> comments = commentRepository.findByStudyIdOrderByIdAsc(id);
         for(Comment comment : comments){
             commentService.deleteComment(comment.getId());

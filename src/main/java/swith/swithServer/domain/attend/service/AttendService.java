@@ -8,7 +8,6 @@ import swith.swithServer.domain.attend.entity.AttendStatus;
 import swith.swithServer.domain.attend.repository.AttendRepository;
 import swith.swithServer.domain.study.entity.Study;
 import swith.swithServer.domain.study.repository.StudyRepository;
-import swith.swithServer.domain.task.entity.Task;
 import swith.swithServer.domain.user.entity.User;
 import swith.swithServer.global.error.ErrorCode;
 import swith.swithServer.global.error.exception.BusinessException;
@@ -35,9 +34,13 @@ public class AttendService {
     }
 
 
-
     //출석 테이블 삭제
-
+    @Transactional
+    public void deleteAttend(Long id){
+        Attend attend = attendRepository.findById(id)
+                .orElseThrow(()->new BusinessException(ErrorCode.ATTEND_DOESNT_EXIST));
+        attendRepository.delete(attend);
+    }
 
 
     //출석 상태 업데이트

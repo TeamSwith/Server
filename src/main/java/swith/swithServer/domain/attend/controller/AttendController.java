@@ -10,8 +10,6 @@ import swith.swithServer.domain.attend.entity.Attend;
 import swith.swithServer.domain.attend.service.AttendService;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.studyGroup.service.GroupService;
-import swith.swithServer.domain.task.entity.Task;
-import swith.swithServer.domain.task.service.TaskService;
 import swith.swithServer.domain.user.entity.User;
 import swith.swithServer.global.oauth.service.OauthService;
 import swith.swithServer.global.response.ApiResponse;
