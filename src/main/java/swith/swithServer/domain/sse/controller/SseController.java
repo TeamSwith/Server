@@ -1,6 +1,7 @@
 package swith.swithServer.domain.sse.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import swith.swithServer.domain.sse.service.SseEmitters;
@@ -16,9 +17,9 @@ public class SseController {
 
     // SSE 구독
     @GetMapping("/connect")
-    public SseEmitter connect() {
+    public ResponseEntity<SseEmitter> connect() {
         Long userId = authService.getLoginUser().getId(); // 로그인한 사용자의 ID 가져오기
-        return sseEmitters.add(userId);
+        return ResponseEntity.ok(sseEmitters.add(userId));
     }
 
 }
