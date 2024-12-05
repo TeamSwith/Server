@@ -24,11 +24,5 @@ public class SseController {
         return ResponseEntity.ok(sseEmitters.add(userId));
     }
 
-//    @GetMapping("/attend")
-//    public ResponseEntity<SseEmitter> start() {
-//        Long userId = authService.getLoginUser().getId();
-//        studyService.notifyStudyStart();
-//        return ResponseEntity.ok(sseEmitters.start(userId));
-//    }
 
 }

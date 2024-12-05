@@ -146,14 +146,14 @@ public class StudyService {
     }
 
 
-    @Transactional
-    public void notifyStudyStart(StudyGroup studyGroup, Study study){
-        String message= studyGroup.getGroupName()+"의 스터디가 시작되었습니다: "+study.getDate() + "," + study.getTime() + "," + study.getLocation();
-
-        Alarm alarm = alarmService.createGroupAndUserAlarms(message, studyGroup);
-
-        userGroupRepository.findAllByStudyGroup(studyGroup)
-                .forEach(userGroup -> sseEmitters.sendSse(userGroup.getUser().getId(), "Alarm",message));
-    }
+//    @Transactional
+//    public void notifyStudyStart(StudyGroup studyGroup, Study study){
+//        String message= studyGroup.getGroupName()+"의 스터디가 시작되었습니다: "+study.getDate() + "," + study.getTime() + "," + study.getLocation();
+//
+//        Alarm alarm = alarmService.createGroupAndUserAlarms(message, studyGroup);
+//
+//        userGroupRepository.findAllByStudyGroup(studyGroup)
+//                .forEach(userGroup -> sseEmitters.sendSse(userGroup.getUser().getId(), "Alarm",message));
+//    }
 
 }
