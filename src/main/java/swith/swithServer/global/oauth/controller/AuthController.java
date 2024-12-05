@@ -60,7 +60,7 @@ public class AuthController {
     @Operation(summary = "카카오 로그인 - 토큰 발급")
     public void kakaoCallbackLocal(@RequestParam String code, HttpServletResponse response) throws IOException {
 
-        String kakaoAccessToken = authService.getKakaoAccessToken(code);
+        String kakaoAccessToken = authService.getKakaoAccessTokenLocal(code);
 
         KakaoUserDto kakaoUser = authService.getKakaoUserInfo(kakaoAccessToken);
 
