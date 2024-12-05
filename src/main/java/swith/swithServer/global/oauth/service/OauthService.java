@@ -42,6 +42,8 @@ public class OauthService {
     private final String kakaoTokenUri = "https://kauth.kakao.com/oauth/token";
     private final String kakaoUserUri = "https://kapi.kakao.com/v2/user/me";
 
+    private final String localRedirectUrl = "https://swithweb.com/api/oauth/kakao/local";
+
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -74,6 +76,36 @@ public class OauthService {
             throw new RuntimeException("Failed to parse JSON response", e);
         }
     }
+
+    // local 용 getKakaoAccessToken 구현
+    public String getKakaoAccessTokenLocal(String code) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "authorization_code");
+        params.add("client_id", kakaoClientId);
+        params.add("redirect_uri", localRedirectUrl);
+        params.add("code", code);
+        params.add("client_secret", kakaoClientSecret);
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(kakaoTokenUri, HttpMethod.POST, request, String.class);
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(response.getBody());
+            return jsonNode.get("access_token").asText();
+        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+            throw new RuntimeException("Failed to parse JSON response", e);
+        }
+    }
+
 
     public KakaoUserDto getKakaoUserInfo(String accessToken) {
         RestTemplate restTemplate = new RestTemplate();
