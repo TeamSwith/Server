@@ -21,5 +21,4 @@ public class SseController {
         Long userId = authService.getLoginUser().getId(); // 로그인한 사용자의 ID 가져오기
         return ResponseEntity.ok(sseEmitters.add(userId));
     }
-
 }
