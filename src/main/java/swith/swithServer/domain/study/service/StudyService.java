@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import swith.swithServer.domain.alarm.dto.AlarmResponse;
+import swith.swithServer.domain.alarm.dto.SseAlarmResponse;
 import swith.swithServer.domain.alarm.entity.UserAlarm;
 import swith.swithServer.domain.alarm.entity.Alarm;
 import swith.swithServer.domain.attend.entity.Attend;
@@ -102,16 +103,19 @@ public class StudyService {
     @Transactional
     private void notifyUsers(StudyGroup studyGroup, Study study) {
         // 알림 메시지 생성
-
         String message = "새로운 스터디 일정이 생성되었습니다: " +
                 study.getDate() + "," + study.getTime() + "," + study.getLocation();
 
         // 그룹 및 사용자 알림 생성
         Alarm alarm = alarmService.createGroupAndUserAlarms(message, studyGroup);
 
+        SseAlarmResponse sseResponse = SseAlarmResponse.fromEntity(alarm, studyGroup.getId());
+
         // SSE 알림 전송 (해당 그룹의 모든 사용자)
         userGroupRepository.findAllByStudyGroup(studyGroup)
-                .forEach(userGroup -> sseEmitters.sendSse(userGroup.getUser().getId(), "Alarm",message));
+                .forEach(userGroup -> {
+                    sseEmitters.sendSse(userGroup.getUser().getId(), "Alarm", sseResponse);
+                });
     }
 
     //study 수정
