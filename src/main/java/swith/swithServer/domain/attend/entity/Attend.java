@@ -22,17 +22,22 @@ public class Attend extends BaseEntity {
     private Long id;
 
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "userId", nullable = false)
-//    private User user;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "studyId", nullable = false)
-//    private Study study;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "studyId", nullable = false)
+    private Study study;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     private AttendStatus attendStatus;
+
+    public Attend(User user, Study study){
+        this.user = user;
+        this.study = study;
+    }
 
     public void updateAttendStatus(AttendStatus attendStatus) {
         this.attendStatus = attendStatus;

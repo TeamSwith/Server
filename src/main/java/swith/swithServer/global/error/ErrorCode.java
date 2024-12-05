@@ -44,12 +44,17 @@ public enum ErrorCode {
     GROUP_LOGIN_ERROR(404, "아이디와 비밀번호가 일치하지 않습니다."),
 
     ALREADY_JOIN(404, "이미 가입한 그룹입니다."),
+    MAX_MEMBER(404, "인원이 가득 찼습니다."),
 
     //STUDY
     STUDY_DOESNT_EXIST(404,"존재하지 않는 스터디 일정입니다."),
 
     STUDY_EXIST(404, "이미 존재하는 스터디 일정입니다."),
 
+    //ATTEND
+    ATTEND_DOESNT_EXIST(404, "존재하지 않는 출석 테이블입니다."),
+
+    ALREADY_ATTEND(404, "이미 출석했습니다."),
     //Task
     TASK_DOESNT_EXIST(404, "존재하지 않는 과제입니다"),
 

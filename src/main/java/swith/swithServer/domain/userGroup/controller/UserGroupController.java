@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import swith.swithServer.domain.study.dto.MessageResponse;
+import swith.swithServer.domain.studyGroup.dto.GroupResponse;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.studyGroup.service.GroupService;
 import swith.swithServer.domain.user.dto.UserNicknameImageResponse;
@@ -36,12 +37,12 @@ public class UserGroupController {
     //매핑 테이블 생성
     @PostMapping("/create")
     @Operation(summary = "스터디 가입하기")
-    public ApiResponse<MessageResponse> createUserGroup(
+    public ApiResponse<GroupResponse> createUserGroup(
             @RequestBody UserGroupRequest userGroupRequest){
         User user = authService.getLoginUser();
         StudyGroup studyGroup = groupService.getGroupById(userGroupRequest.getGroupId());
         userGroupService.createUserGroup(user, studyGroup);
-        return new ApiResponse<>(201, MessageResponse.from("redirect:http://localhost:8080/api/group/"+studyGroup.getId()));
+        return new ApiResponse<>(201, GroupResponse.from(studyGroup));
     }
 
 
