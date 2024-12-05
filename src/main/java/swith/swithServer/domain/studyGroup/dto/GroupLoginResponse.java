@@ -10,13 +10,11 @@ import lombok.Getter;
 public class GroupLoginResponse {
     private Long groupId;
     private String message;
-    private String redirect;
 
-    public static GroupLoginResponse from(Long groupId, String message, String redirect){
+    public static GroupLoginResponse from(Long groupId, String message){
         return GroupLoginResponse.builder()
                 .groupId(groupId)
                 .message(message)
-                .redirect(redirect)
                 .build();
     }
 }

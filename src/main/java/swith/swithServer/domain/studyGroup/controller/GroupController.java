@@ -10,11 +10,12 @@ import swith.swithServer.domain.study.dto.MessageResponse;
 import swith.swithServer.domain.studyGroup.dto.*;
 import swith.swithServer.domain.userGroup.repository.UserGroupRepository;
 import swith.swithServer.domain.userGroup.service.UserGroupService;
+import swith.swithServer.global.error.ErrorCode;
+import swith.swithServer.global.error.exception.BusinessException;
 import swith.swithServer.global.response.ApiResponse;
 import swith.swithServer.domain.studyGroup.service.GroupService;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.user.entity.User;
-import swith.swithServer.domain.user.service.UserService;
 import swith.swithServer.global.oauth.service.OauthService;
 
 import java.util.List;
@@ -43,39 +44,37 @@ public class GroupController {
         boolean isUserInGroup = groupService.isUserInGroup(user, studyGroup);
         if (isUserInGroup) {
             //가입되어 있을 때
-            return new ApiResponse<>(200, GroupLoginResponse.from(studyGroup.getId(), "이미 가입되어 있음", "redirect:/" + studyGroup.getId()));
+            return new ApiResponse<>(200, GroupLoginResponse.from(studyGroup.getId(), "이미 가입되어 있음"));
         } else {
             //가입되어 있지 않을 때 group 의 정원 확인
             if (studyGroup.getMemberNum() < studyGroup.getMaxNum()) {
-                return new ApiResponse<>(200, GroupLoginResponse.from(studyGroup.getId(), "가입 전", "redirect:http://localhost:8080/api/user-group/create"));
+                return new ApiResponse<>(200, GroupLoginResponse.from(studyGroup.getId(), "가입 전"));
             } else {
-                return new ApiResponse<>(404, MessageResponse.from("정원을 초과했습니다."));
+                throw new BusinessException(ErrorCode.MAX_MEMBER);
             }
         }
     }
 
     @GetMapping("/{id}/getMem")
     @Operation(summary = "현재 스터디 인원 가져오기")
-    public ApiResponse<Long> getMemberNum(@PathVariable Long id) {
+    public ApiResponse<GroupMemResponse> getMemberNum(@PathVariable Long id) {
         User user = authService.getLoginUser();
         StudyGroup studyGroup = groupService.getGroupById(id);
-        Long memberNum = studyGroup.getMemberNum();
-        return new ApiResponse<>(200, memberNum);
+        return new ApiResponse<>(200, GroupMemResponse.from(studyGroup));
     }
 
     @GetMapping("/{id}/notice")
     @Operation(summary = "공지사항 가져오기")
-    public ApiResponse<String> getNotice(
+    public ApiResponse<GroupNoticeResponse> getNotice(
             @PathVariable Long id) {
         User user = authService.getLoginUser();
         StudyGroup studyGroup = groupService.getGroupById(id);
-        String notice = studyGroup.getNotice();
-        return new ApiResponse<>(200, notice);
+        return new ApiResponse<>(200, GroupNoticeResponse.from(studyGroup));
     }
 
     @PatchMapping("/{id}")
     @Operation(summary = "공지사항 수정")
-    public ApiResponse<String> updateNotice(
+    public ApiResponse<GroupNoticeResponse> updateNotice(
             @PathVariable Long id,
             @RequestBody StringRequest stringRequest) {
         User user = authService.getLoginUser();
@@ -92,7 +91,7 @@ public class GroupController {
             sseEmitters.sendSse(userId,"Notice",updatedNotice.getNotice()); // 모든 클라이언트에 알림 전송
         }
 
-        return new ApiResponse<>(200, updatedNotice.getNotice());
+        return new ApiResponse<>(200, GroupNoticeResponse.from(updatedNotice));
     }
 
     // 그룹 생성 API
