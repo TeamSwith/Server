@@ -3,6 +3,7 @@ package swith.swithServer.domain.attend.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import swith.swithServer.domain.attend.dto.SseAttendResponse;
 import swith.swithServer.domain.attend.entity.Attend;
 import swith.swithServer.domain.attend.entity.AttendStatus;
 import swith.swithServer.domain.attend.repository.AttendRepository;
@@ -22,11 +23,6 @@ public class AttendService {
     private final AttendRepository attendRepository;
     private final UserGroupRepository userGroupRepository;
     private final SseEmitters sseEmitters;
-
-    //user, study로 출석 상태 테이블 찾기
-//    public Attend getAttendByUserAndStudy(User user, Study study){
-//        Attend attend = attendRepository.find
-//    }
 
     //출석 테이블 생성
     @Transactional
@@ -65,7 +61,9 @@ public class AttendService {
 //출석 상태 변화시 sse
     @Transactional
     private void updateUserAttend(StudyGroup studyGroup, Attend attend){
+        SseAttendResponse sseAttendResponse = SseAttendResponse.fromEntity(attend, studyGroup);
+
         userGroupRepository.findAllByStudyGroup(studyGroup)
-                .forEach(userGroup -> sseEmitters.sendSse(userGroup.getUser().getId(), "Attend update", attend));
+                .forEach(userGroup -> sseEmitters.sendSse(userGroup.getUser().getId(), "Attend update", sseAttendResponse));
     }
 }
