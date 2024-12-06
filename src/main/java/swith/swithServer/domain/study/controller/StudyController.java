@@ -2,12 +2,14 @@ package swith.swithServer.domain.study.controller;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import swith.swithServer.domain.study.dto.*;
 import swith.swithServer.domain.study.entity.Study;
 import swith.swithServer.domain.study.service.StudyService;
+import swith.swithServer.domain.study.dto.StudyMonthlyResponse;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.studyGroup.service.GroupService;
 import swith.swithServer.domain.user.entity.User;
@@ -65,5 +67,16 @@ public class StudyController {
         Study study = studyService.getStudyByGroupDate(id,date);
         return new ApiResponse<>(200, StudyResponse.from(study));
 
+    }
+
+    @GetMapping("") // 연도, 월별 스터디 조화
+    @Operation(summary = "스터디 그룹 연도,월별 조회", description = "using groupId")
+    public ApiResponse<StudyMonthlyResponse> getGroupDetailsMonthly(
+            @Parameter(description = "ID of the group to fetch details", required = true)
+            @PathVariable(name = "id") Long id,
+            @RequestParam("year") String year,
+            @RequestParam("month") String month) {
+        StudyMonthlyResponse response = studyService.getStudyByYearMonth(id,year,month);
+        return new ApiResponse<>(200, response);
     }
 }
