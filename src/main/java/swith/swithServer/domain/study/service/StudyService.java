@@ -4,9 +4,7 @@ package swith.swithServer.domain.study.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import swith.swithServer.domain.alarm.dto.AlarmResponse;
 import swith.swithServer.domain.alarm.dto.SseAlarmResponse;
-import swith.swithServer.domain.alarm.entity.UserAlarm;
 import swith.swithServer.domain.alarm.entity.Alarm;
 import swith.swithServer.domain.attend.entity.Attend;
 import swith.swithServer.domain.attend.repository.AttendRepository;
@@ -15,6 +13,7 @@ import swith.swithServer.domain.comment.entity.Comment;
 import swith.swithServer.domain.comment.repository.CommentRepository;
 import swith.swithServer.domain.comment.service.CommentService;
 import swith.swithServer.domain.sse.service.SseEmitters;
+import swith.swithServer.domain.study.dto.StudyMonthlyResponse;
 import swith.swithServer.domain.study.dto.StudyRequest;
 import swith.swithServer.domain.study.dto.StudyUpdateRequest;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
@@ -24,21 +23,13 @@ import swith.swithServer.domain.study.repository.StudyRepository;
 import swith.swithServer.domain.task.entity.Task;
 import swith.swithServer.domain.task.repository.TaskRepository;
 import swith.swithServer.domain.task.service.TaskService;
-import swith.swithServer.domain.user.entity.User;
 import swith.swithServer.domain.userGroup.entity.UserGroup;
 import swith.swithServer.domain.userGroup.repository.UserGroupRepository;
 import swith.swithServer.global.error.ErrorCode;
 import swith.swithServer.global.error.exception.BusinessException;
 
-import swith.swithServer.domain.alarm.entity.Alarm;
 import swith.swithServer.domain.alarm.service.AlarmService;
 
-import swith.swithServer.domain.alarm.repository.AlarmRepository;
-import swith.swithServer.domain.alarm.repository.GroupAlarmRepository;
-import swith.swithServer.domain.alarm.repository.UserAlarmRepository;
-import swith.swithServer.domain.sse.service.SseEmitters;
-import swith.swithServer.domain.userGroup.repository.UserGroupRepository;
-import swith.swithServer.global.oauth.dto.KakaoUserDto;
 import swith.swithServer.global.oauth.service.OauthService;
 
 
@@ -76,6 +67,14 @@ public class StudyService {
         Study study = studyRepository.findByStudyGroupAndDate(studyGroup, date)
                 .orElseThrow(() -> new BusinessException(ErrorCode.STUDY_DOESNT_EXIST));
         return study;
+    }
+
+
+    public StudyMonthlyResponse getStudyByYearMonth(Long groupId, String year, String month) {
+        StudyGroup studyGroup = groupRepository.findById(groupId)
+                .orElseThrow(()-> new BusinessException(ErrorCode.GROUP_DOESNT_EXIST));
+        List<Integer> studyList = studyRepository.findByStudyGroupAndYearAndDate(studyGroup, year, month);
+        return  StudyMonthlyResponse.from(studyGroup,year,month,studyList);
     }
 
     //study 생성
