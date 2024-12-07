@@ -23,6 +23,17 @@ public class SseEmitters {
         emitter.onTimeout(() -> emitters.remove(userId));
         emitter.onError((e) -> emitters.remove(userId));
 
+        try {
+            emitter.send(SseEmitter.event()
+                    .name("connect")
+                    .data("SSE 연결 성공"));
+        } catch (IOException e) {
+            emitters.remove(userId);
+            System.out.println("더미 데이터 전송 실패: 사용자 ID: " + userId);
+        }
+
+//        startKeepAlive(userId, emitter);
+
         return emitter;
     }
 
@@ -82,4 +93,18 @@ public class SseEmitters {
     public ConcurrentHashMap<Long, SseEmitter> getAllEmitter(){
         return emitters;
     }
+
+//    private void startKeepAlive(Long userId, SseEmitter emitter) {
+//        new Thread(() -> {
+//            try {
+//                while (emitters.containsKey(userId)) {
+//                    Thread.sleep(30000);
+//                    emitter.send(SseEmitter.event().name("ping").data("keep-alive"));
+//                }
+//            } catch (IOException | InterruptedException e) {
+//                emitters.remove(userId);
+//                System.out.println("Keep-Alive 메시지 전송 중 오류 발생. 사용자 ID: " + userId);
+//            }
+//        }).start();
+//    }
 }
