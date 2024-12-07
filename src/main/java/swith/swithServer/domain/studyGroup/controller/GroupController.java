@@ -68,6 +68,7 @@ public class GroupController {
     public ApiResponse<GroupNoticeResponse> getNotice(
             @PathVariable Long id) {
         User user = authService.getLoginUser();
+
         StudyGroup studyGroup = groupService.getGroupById(id);
         return new ApiResponse<>(200, GroupNoticeResponse.from(studyGroup));
     }

@@ -45,6 +45,7 @@ public enum ErrorCode {
 
     ALREADY_JOIN(404, "이미 가입한 그룹입니다."),
     MAX_MEMBER(404, "인원이 가득 찼습니다."),
+    USER_NOT_IN_GROUP(403, "사용자가 그룹에 속해있지 않습니다."),
 
     //STUDY
     STUDY_DOESNT_EXIST(404,"존재하지 않는 스터디 일정입니다."),
