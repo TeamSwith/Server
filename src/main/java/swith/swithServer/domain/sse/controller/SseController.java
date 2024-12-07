@@ -27,11 +27,17 @@ public class SseController {
         return ResponseEntity.ok(sseEmitter);
     }
 
-    @DeleteMapping("/cleanUserEmitter/{id}")
-    @Operation(summary = "특정 회원의 emitter 삭제", description = "회원 id")
-    public ResponseEntity<String> clean(@PathVariable(name = "id") Long id) {
+    @DeleteMapping("/cleanUserEmitter")
+    @Operation(summary = "현재 로그인된 회원의 emitter 삭제", description = "회원 id")
+    public ResponseEntity<String> clean(){
         Long userId = authService.getLoginUser().getId();
         return ResponseEntity.ok(sseEmitters.cleanupEmitter(userId));
+    }
+
+    @DeleteMapping("/cleanUserEmitter/{id}")
+    @Operation(summary = "특정 회원의 emitter 삭제 [사용 지양]", description = "회원 id")
+    public ResponseEntity<String> clean(@PathVariable(name = "id") Long id) {
+        return ResponseEntity.ok(sseEmitters.cleanupEmitter(id));
     }
 
     @GetMapping("/checkUserEmitter")
@@ -49,5 +55,7 @@ public class SseController {
     public ResponseEntity<ConcurrentHashMap<Long, SseEmitter>> checkAllEmitters(){
         return ResponseEntity.ok(sseEmitters.getAllEmitter());
     }
+
+
 
 }
