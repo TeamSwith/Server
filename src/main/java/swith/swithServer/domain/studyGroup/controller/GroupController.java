@@ -19,6 +19,7 @@ import swith.swithServer.domain.user.entity.User;
 import swith.swithServer.global.oauth.service.OauthService;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @RestController
@@ -88,9 +89,15 @@ public class GroupController {
                 .collect(Collectors.toList());
 
 
-        for ( Long userId : userIds ){
-            sseEmitters.sendSse(userId,"Notice",updatedNotice.getNotice()); // 모든 클라이언트에 알림 전송
-        }
+        CompletableFuture.runAsync(() -> {
+            for (Long userId : userIds) {
+                try {
+                    sseEmitters.sendSse(userId, "Notice", updatedNotice.getNotice());
+                } catch (Exception e) {
+                    System.err.println("Failed to send SSE for user " + userId);
+                }
+            }
+        });
 
         return new ApiResponse<>(200, GroupNoticeResponse.from(updatedNotice));
     }

@@ -19,35 +19,35 @@ public class SseController {
     private final OauthService authService;
 
 
-    @GetMapping("/connect")
+    @GetMapping(value = "/connect/{id}", produces = "text/event-stream")
     @Operation(summary = "SSE 연결", description = "")
-    public ResponseEntity<SseEmitter> connect() {
-        Long userId = authService.getLoginUser().getId();
+    public ResponseEntity<SseEmitter> connect(@PathVariable(name = "id")Long userId) {
+        //Long userId = authService.getLoginUser().getId();
         SseEmitter sseEmitter = sseEmitters.add(userId);
         return ResponseEntity.ok(sseEmitter);
     }
 
-    @DeleteMapping("/cleanUserEmitter")
-    @Operation(summary = "현재 로그인된 회원의 emitter 삭제", description = "회원 id")
-    public ResponseEntity<String> clean(){
-        Long userId = authService.getLoginUser().getId();
-        return ResponseEntity.ok(sseEmitters.cleanupEmitter(userId));
-    }
+//    @DeleteMapping("/cleanUserEmitter")
+//    @Operation(summary = "현재 로그인된 회원의 emitter 삭제", description = "회원 id")
+//    public ResponseEntity<String> clean(){
+//        Long userId = authService.getLoginUser().getId();
+//        return ResponseEntity.ok(sseEmitters.cleanupEmitter(userId));
+//    }
 
     @DeleteMapping("/cleanUserEmitter/{id}")
-    @Operation(summary = "특정 회원의 emitter 삭제 [사용 지양]", description = "회원 id")
+    @Operation(summary = "특정 회원의 emitter 삭제", description = "회원 id")
     public ResponseEntity<String> clean(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(sseEmitters.cleanupEmitter(id));
     }
 
-    @GetMapping("/checkUserEmitter")
+    @GetMapping("/checkUserEmitter/{id}")
     @Operation(summary = "특정 회원의 emitter 존재 여부 확인", description = "")
-    public ResponseEntity<String> checkUserEmitter(){
-        Long userId = authService.getLoginUser().getId();
-        if(sseEmitters.hasEmitter(userId)){
-            return ResponseEntity.ok("Emitter with userID "+userId+" exists");
+    public ResponseEntity<String> checkUserEmitter(@PathVariable(name = "id") Long id){
+//        Long userId = authService.getLoginUser().getId();
+        if(sseEmitters.hasEmitter(id)){
+            return ResponseEntity.ok("Emitter with userID "+id+" exists");
         }
-        return ResponseEntity.ok("Emitter with userID "+userId+" doesn't exist");
+        return ResponseEntity.ok("Emitter with userID "+id+" doesn't exist");
     }
 
     @GetMapping("/checkAllEmitters")

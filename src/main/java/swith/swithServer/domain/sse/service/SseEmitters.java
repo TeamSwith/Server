@@ -23,7 +23,16 @@ public class SseEmitters {
         emitter.onTimeout(() -> emitters.remove(userId));
         emitter.onError((e) -> emitters.remove(userId));
 
-        sendSse(userId, "SseConnect","success");
+        try {
+            emitter.send(SseEmitter.event()
+                    .name("connect")
+                    .data("SSE 연결 성공"));
+        } catch (IOException e) {
+            emitters.remove(userId);
+            System.out.println("더미 데이터 전송 실패: 사용자 ID: " + userId);
+        }
+
+//        startKeepAlive(userId, emitter);
 
         return emitter;
     }
@@ -57,12 +66,20 @@ public class SseEmitters {
     }
 
 
-    public String cleanupEmitter(Long userId){
-        if(!hasEmitter(userId)){
-            return "Emitter with userID " + userId + " does not exist.";
+    public String cleanupEmitter(Long userId) {
+        SseEmitter emitter = getUserEmitter(userId);
+        if (emitter != null) {
+            try {
+                emitter.complete(); // 연결 정상 종료
+            } catch (Exception e) {
+                return "Failed to complete emitter for userId: " + userId;
+            } finally {
+                emitters.remove(userId); // 삭제
+            }
+            return "Emitter removed for userId: " + userId;
+        } else {
+            return "No emitter found for userId: " + userId;
         }
-        emitters.remove(userId);
-        return "Emitter with userID " + userId + " has been successfully deleted.";
     }
 
     public boolean hasEmitter(Long userId){
@@ -76,4 +93,18 @@ public class SseEmitters {
     public ConcurrentHashMap<Long, SseEmitter> getAllEmitter(){
         return emitters;
     }
+
+//    private void startKeepAlive(Long userId, SseEmitter emitter) {
+//        new Thread(() -> {
+//            try {
+//                while (emitters.containsKey(userId)) {
+//                    Thread.sleep(30000);
+//                    emitter.send(SseEmitter.event().name("ping").data("keep-alive"));
+//                }
+//            } catch (IOException | InterruptedException e) {
+//                emitters.remove(userId);
+//                System.out.println("Keep-Alive 메시지 전송 중 오류 발생. 사용자 ID: " + userId);
+//            }
+//        }).start();
+//    }
 }
