@@ -55,12 +55,20 @@ public class SseEmitters {
     }
 
 
-    public String cleanupEmitter(Long userId){
-        if(!hasEmitter(userId)){
-            return "Emitter with userID " + userId + " does not exist.";
+    public String cleanupEmitter(Long userId) {
+        SseEmitter emitter = getUserEmitter(userId);
+        if (emitter != null) {
+            try {
+                emitter.complete(); // 연결 정상 종료
+            } catch (Exception e) {
+                return "Failed to complete emitter for userId: " + userId;
+            } finally {
+                emitters.remove(userId); // 삭제
+            }
+            return "Emitter removed for userId: " + userId;
+        } else {
+            return "No emitter found for userId: " + userId;
         }
-        emitters.remove(userId);
-        return "Emitter with userID " + userId + " has been successfully deleted.";
     }
 
     public boolean hasEmitter(Long userId){
