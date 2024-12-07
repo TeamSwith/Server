@@ -52,8 +52,16 @@ public class GroupService {
     //notice 수정
     @Transactional
     public StudyGroup updateNotice(Long id, StringRequest stringRequest) {
+        User user = authService.getLoginUser();
+
         StudyGroup studyGroup = groupRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.GROUP_DOESNT_EXIST));
+
+        boolean isUserInGroup = userGroupRepository.existsByUserAndStudyGroup(user, studyGroup);
+        if (!isUserInGroup) {
+            throw new BusinessException(ErrorCode.USER_NOT_IN_GROUP);
+        }
+
         studyGroup.updateNotice(stringRequest.getMessage());
         return groupRepository.save(studyGroup);
     }
@@ -74,6 +82,11 @@ public class GroupService {
         User user = authService.getLoginUser();
         StudyGroup studyGroup = groupRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
+
+        boolean isUserInGroup = userGroupRepository.existsByUserAndStudyGroup(user, studyGroup);
+        if (!isUserInGroup) {
+            throw new BusinessException(ErrorCode.USER_NOT_IN_GROUP);
+        }
         return studyGroup.getGroupInsertId();
     }
 
@@ -84,6 +97,10 @@ public class GroupService {
         StudyGroup studyGroup = groupRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
 
+        boolean isUserInGroup = userGroupRepository.existsByUserAndStudyGroup(user, studyGroup);
+        if (!isUserInGroup) {
+            throw new BusinessException(ErrorCode.USER_NOT_IN_GROUP);
+        }
         updateRequest.applyTo(studyGroup);
         groupRepository.save(studyGroup);
 
@@ -96,6 +113,11 @@ public class GroupService {
         StudyGroup studyGroup = groupRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
 
+        boolean isUserInGroup = userGroupRepository.existsByUserAndStudyGroup(user, studyGroup);
+        if (!isUserInGroup) {
+            throw new BusinessException(ErrorCode.USER_NOT_IN_GROUP);
+        }
+
         return GroupResponse.from(studyGroup);
     }
 
@@ -105,6 +127,11 @@ public class GroupService {
         User user = authService.getLoginUser();
         StudyGroup studyGroup = groupRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
+
+        boolean isUserInGroup = userGroupRepository.existsByUserAndStudyGroup(user, studyGroup);
+        if (!isUserInGroup) {
+            throw new BusinessException(ErrorCode.USER_NOT_IN_GROUP);
+        }
 
         List<UserGroup> userGroups = userGroupRepository.findAllByStudyGroup(studyGroup);
         userGroupRepository.deleteAll(userGroups);

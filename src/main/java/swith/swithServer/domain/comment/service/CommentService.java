@@ -11,6 +11,7 @@ import swith.swithServer.domain.comment.repository.CommentRepository;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.study.entity.Study;
 import swith.swithServer.domain.user.entity.User;
+import swith.swithServer.domain.userGroup.repository.UserGroupRepository;
 import swith.swithServer.domain.studyGroup.repository.GroupRepository;
 import swith.swithServer.domain.study.repository.StudyRepository;
 import swith.swithServer.global.error.ErrorCode;
@@ -27,6 +28,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final StudyRepository studyRepository;
     private final GroupRepository groupRepository;
+    private final UserGroupRepository userGroupRepository;
     private final OauthService authService;
 
     // 댓글 생성 API
@@ -41,6 +43,11 @@ public class CommentService {
         StudyGroup studyGroup = groupRepository.findById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_GROUP_ID));
 
+        boolean isUserInGroup = userGroupRepository.existsByUserAndStudyGroup(user, studyGroup);
+        if (!isUserInGroup) {
+            throw new BusinessException(ErrorCode.USER_NOT_IN_GROUP);
+        }
+
         Comment comment = request.toEntity(study, user, studyGroup);
 
         return CommentResponse.fromEntity(commentRepository.save(comment));
@@ -51,6 +58,11 @@ public class CommentService {
     public void deleteComment(Long commentId) {
         User user = authService.getLoginUser();
         Comment comment = getCommentById(commentId);
+
+        if (!userGroupRepository.existsByUserAndStudyGroup(user, comment.getStudyGroup())) {
+            throw new BusinessException(ErrorCode.USER_NOT_IN_GROUP);
+        }
+
         commentRepository.delete(comment);
     }
 
@@ -58,8 +70,15 @@ public class CommentService {
     @Transactional(readOnly = true)
     public Comment getCommentById(Long commentId) {
         User user = authService.getLoginUser();
-        return commentRepository.findById(commentId)
+
+        Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_DOESNT_EXIST));
+
+        if (!userGroupRepository.existsByUserAndStudyGroup(user, comment.getStudyGroup())) {
+            throw new BusinessException(ErrorCode.USER_NOT_IN_GROUP);
+        }
+
+        return comment;
     }
 
     // 스터디 모든 댓글 조회 API (studyId)
@@ -67,8 +86,12 @@ public class CommentService {
     public CommentResponseWithStudyId getCommentsByStudyIdWithStudyId(Long studyId) {
         User user = authService.getLoginUser();
 
-        studyRepository.findById(studyId)
+        Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_STUDY_ID));
+
+        if (!userGroupRepository.existsByUserAndStudyGroup(user, study.getStudyGroup())) {
+            throw new BusinessException(ErrorCode.USER_NOT_IN_GROUP);
+        }
 
         List<Comment> comments = commentRepository.findByStudyIdOrderByIdAsc(studyId);
 
@@ -86,6 +109,9 @@ public class CommentService {
 
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_DOESNT_EXIST));
+        if (!userGroupRepository.existsByUserAndStudyGroup(user, comment.getStudyGroup())) {
+            throw new BusinessException(ErrorCode.USER_NOT_IN_GROUP);
+        }
 
         comment.updateContent(request.getContent());
         commentRepository.save(comment);
