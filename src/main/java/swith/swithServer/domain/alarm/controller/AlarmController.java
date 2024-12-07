@@ -1,5 +1,6 @@
 package swith.swithServer.domain.alarm.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import swith.swithServer.domain.alarm.dto.AlarmDeleteResponse;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/alarm")
+@Tag(name="알람")
 @RequiredArgsConstructor
 public class AlarmController {
 

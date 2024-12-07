@@ -17,6 +17,7 @@ import swith.swithServer.domain.userGroup.repository.UserGroupRepository;
 import swith.swithServer.global.error.ErrorCode;
 import swith.swithServer.global.error.exception.BusinessException;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
+import swith.swithServer.global.oauth.service.OauthService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,13 +30,14 @@ public class AlarmService {
     private final AlarmRepository alarmRepository;
     private final GroupAlarmRepository groupAlarmRepository;
     private final UserGroupRepository userGroupRepository;
+    private final OauthService authService;
 
 
     // 사용자 알림 조회
     public List<AlarmResponse> getUserAlarms(User user) {
         List<UserAlarm> userAlarms = userAlarmRepository.findByUser(user);
         return userAlarms.stream()
-                .map(AlarmResponse::fromEntity) // fromEntity 메서드를 활용
+                .map(AlarmResponse::fromEntity)
                 .collect(Collectors.toList());
 
     }
@@ -43,8 +45,15 @@ public class AlarmService {
     // 알림 읽음 처리
     @Transactional
     public UserAlarm markAlarmAsRead(Long userAlarmId) {
+        User user = authService.getLoginUser(); // 로그인된 유저 가져오기
+
         UserAlarm userAlarm = userAlarmRepository.findById(userAlarmId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ALARM_NOT_FOUND));
+
+        if (!userGroupRepository.existsByUserAndStudyGroup(user, userAlarm.getAlarm().getGroupAlarms().get(0).getStudyGroup()
+        )) {
+            throw new BusinessException(ErrorCode.USER_NOT_IN_GROUP);
+        }
 
         if (userAlarm.isRead()) {
             throw new BusinessException(ErrorCode.ALARM_ALREADY_READ);
@@ -92,8 +101,22 @@ public class AlarmService {
     // 알림 삭제
     @Transactional
     public AlarmDeleteResponse deleteAlarm(Long alarmId) {
+
+        User user = authService.getLoginUser();
+
         Alarm alarm = alarmRepository.findById(alarmId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ALARM_NOT_FOUND));
+
+        // 권한확인
+        GroupAlarm groupAlarm = alarm.getGroupAlarms().stream()
+                .findFirst()
+                .orElseThrow(() -> new BusinessException(ErrorCode.ALARM_NOT_FOUND));
+
+        StudyGroup studyGroup = groupAlarm.getStudyGroup();
+
+        if (!userGroupRepository.existsByUserAndStudyGroup(user, studyGroup)) {
+            throw new BusinessException(ErrorCode.USER_NOT_IN_GROUP);
+        }
 
         userAlarmRepository.deleteByAlarm(alarm);
         groupAlarmRepository.deleteByAlarm(alarm);
