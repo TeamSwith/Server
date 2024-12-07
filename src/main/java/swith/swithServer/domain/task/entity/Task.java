@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import swith.swithServer.domain.common.BaseEntity;
 import swith.swithServer.domain.study.entity.Study;
+import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 
 @Getter
 @Entity
