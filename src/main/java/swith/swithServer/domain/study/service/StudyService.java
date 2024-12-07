@@ -23,6 +23,7 @@ import swith.swithServer.domain.study.repository.StudyRepository;
 import swith.swithServer.domain.task.entity.Task;
 import swith.swithServer.domain.task.repository.TaskRepository;
 import swith.swithServer.domain.task.service.TaskService;
+import swith.swithServer.domain.user.entity.User;
 import swith.swithServer.domain.userGroup.entity.UserGroup;
 import swith.swithServer.domain.userGroup.repository.UserGroupRepository;
 import swith.swithServer.global.error.ErrorCode;
@@ -79,9 +80,13 @@ public class StudyService {
 
     //study 생성
     @Transactional
-    public Study createStudy(StudyRequest studyRequest, Long id){
+    public Study createStudy(StudyRequest studyRequest, Long id, User user){
         StudyGroup studyGroup = groupRepository.findById(id)
                 .orElseThrow(()->new BusinessException(ErrorCode.GROUP_DOESNT_EXIST));
+        boolean isUserInGroup = userGroupRepository.existsByUserAndStudyGroup(user, studyGroup);
+        if (!isUserInGroup) {
+            throw new BusinessException(ErrorCode.USER_NOT_IN_GROUP);
+        }
         if(studyRepository.findByStudyGroupAndDate(studyGroup, studyRequest.getDate()).isPresent()){
             throw new BusinessException(ErrorCode.STUDY_EXIST);
         }
@@ -119,9 +124,13 @@ public class StudyService {
 
     //study 수정
     @Transactional
-    public Study updateStudy(Long id, StudyUpdateRequest studyUpdateRequest){
+    public Study updateStudy(Long id, StudyUpdateRequest studyUpdateRequest, User user, StudyGroup studyGroup){
         Study study = studyRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.STUDY_DOESNT_EXIST));
+        boolean isUserInGroup = userGroupRepository.existsByUserAndStudyGroup(user, studyGroup);
+        if (!isUserInGroup) {
+            throw new BusinessException(ErrorCode.USER_NOT_IN_GROUP);
+        }
         study.updateTime(studyUpdateRequest.getTime());
         study.updateLocation(studyUpdateRequest.getLocation());
         return studyRepository.save(study);
@@ -148,15 +157,5 @@ public class StudyService {
         studyRepository.delete(study);
     }
 
-
-//    @Transactional
-//    public void notifyStudyStart(StudyGroup studyGroup, Study study){
-//        String message= studyGroup.getGroupName()+"의 스터디가 시작되었습니다: "+study.getDate() + "," + study.getTime() + "," + study.getLocation();
-//
-//        Alarm alarm = alarmService.createGroupAndUserAlarms(message, studyGroup);
-//
-//        userGroupRepository.findAllByStudyGroup(studyGroup)
-//                .forEach(userGroup -> sseEmitters.sendSse(userGroup.getUser().getId(), "Alarm",message));
-//    }
 
 }

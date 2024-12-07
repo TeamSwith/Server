@@ -14,8 +14,11 @@ import swith.swithServer.domain.task.dto.TaskResponse;
 import swith.swithServer.domain.task.entity.Task;
 import swith.swithServer.domain.task.service.TaskService;
 import swith.swithServer.domain.user.entity.User;
+import swith.swithServer.domain.userGroup.repository.UserGroupRepository;
 import swith.swithServer.domain.usertask.entity.UserTask;
 import swith.swithServer.domain.usertask.service.UserTaskService;
+import swith.swithServer.global.error.ErrorCode;
+import swith.swithServer.global.error.exception.BusinessException;
 import swith.swithServer.global.oauth.service.OauthService;
 import swith.swithServer.global.response.ApiResponse;
 
@@ -31,6 +34,7 @@ public class TaskController {
     private final GroupService groupService;
     private final OauthService authService;
     private final UserTaskService userTaskService;
+    private final UserGroupRepository userGroupRepository;
 
 
     @PostMapping("/create")
@@ -38,7 +42,7 @@ public class TaskController {
     public ApiResponse<TaskResponse> createTask(@PathVariable Long id, @PathVariable Long studyId, @RequestBody StringRequest stringRequest){
         User user = authService.getLoginUser();
         StudyGroup studyGroup = groupService.getGroupById(id);
-        Task createdTask = taskService.createTask(studyGroup, studyId, stringRequest);
+        Task createdTask = taskService.createTask(studyGroup, studyId, stringRequest, user);
         UserTask userTask = userTaskService.getUserTaskByUserAndTask(user, createdTask);
         return new ApiResponse<>(201, TaskResponse.from(createdTask, userTask));
     }
@@ -59,6 +63,10 @@ public class TaskController {
     public ApiResponse<MessageResponse> deleteTask(@PathVariable Long id, @PathVariable Long studyId, @PathVariable Long taskId){
         User user = authService.getLoginUser();
         StudyGroup studyGroup = groupService.getGroupById(id);
+        boolean isUserInGroup = userGroupRepository.existsByUserAndStudyGroup(user, studyGroup);
+        if (!isUserInGroup) {
+            throw new BusinessException(ErrorCode.USER_NOT_IN_GROUP);
+        }
         Study study = studyService.getStudyById(studyId);
         taskService.deleteTask(taskId);
         return new ApiResponse<>(204, MessageResponse.from());

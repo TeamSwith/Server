@@ -42,9 +42,13 @@ public class TaskService {
 
     //과제 생성
     @Transactional
-    public Task createTask(StudyGroup studyGroup, Long id, StringRequest stringRequest){
+    public Task createTask(StudyGroup studyGroup, Long id, StringRequest stringRequest, User user){
         Study study = studyRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.STUDY_DOESNT_EXIST));
+        boolean isUserInGroup = userGroupRepository.existsByUserAndStudyGroup(user, studyGroup);
+        if (!isUserInGroup) {
+            throw new BusinessException(ErrorCode.USER_NOT_IN_GROUP);
+        }
         Task task = new Task(stringRequest.getMessage(), study);
         Task savedTask = taskRepository.save(task);
 

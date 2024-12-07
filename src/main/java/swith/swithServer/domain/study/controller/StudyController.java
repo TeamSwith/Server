@@ -13,6 +13,9 @@ import swith.swithServer.domain.study.dto.StudyMonthlyResponse;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 import swith.swithServer.domain.studyGroup.service.GroupService;
 import swith.swithServer.domain.user.entity.User;
+import swith.swithServer.domain.userGroup.repository.UserGroupRepository;
+import swith.swithServer.global.error.ErrorCode;
+import swith.swithServer.global.error.exception.BusinessException;
 import swith.swithServer.global.oauth.service.OauthService;
 import swith.swithServer.global.response.ApiResponse;
 
@@ -26,6 +29,7 @@ public class StudyController {
     private final StudyService studyService;
     private final GroupService groupService;
     private final OauthService authService;
+    private final UserGroupRepository userGroupRepository;
 
     @PostMapping
     @Operation(summary="스터디 일정 생성")
@@ -33,7 +37,7 @@ public class StudyController {
             @PathVariable Long id, @RequestBody StudyRequest studyRequest
             ){
         User user = authService.getLoginUser();
-        Study createdStudy = studyService.createStudy(studyRequest, id);
+        Study createdStudy = studyService.createStudy(studyRequest, id, user);
         return new ApiResponse<>(201, StudyResponse.from(createdStudy));
     }
 
@@ -45,7 +49,7 @@ public class StudyController {
             @RequestBody StudyUpdateRequest studyUpdateRequest){
         User user = authService.getLoginUser();
         StudyGroup studyGroup = groupService.getGroupById(id);
-        Study updatedStudy = studyService.updateStudy(studyId, studyUpdateRequest);
+        Study updatedStudy = studyService.updateStudy(studyId, studyUpdateRequest, user, studyGroup);
         return new ApiResponse<>(200, StudyResponse.from(updatedStudy));
     }
 
@@ -54,6 +58,10 @@ public class StudyController {
     public ApiResponse<MessageResponse> deleteStudy(@PathVariable Long id, @PathVariable Long studyId){
         User user = authService.getLoginUser();
         StudyGroup studyGroup = groupService.getGroupById(id);
+        boolean isUserInGroup = userGroupRepository.existsByUserAndStudyGroup(user, studyGroup);
+        if (!isUserInGroup) {
+            throw new BusinessException(ErrorCode.USER_NOT_IN_GROUP);
+        }
         studyService.deleteStudy(studyId);
         return new ApiResponse<>(204,MessageResponse.from());
     }
