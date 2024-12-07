@@ -23,6 +23,8 @@ public class SseEmitters {
         emitter.onTimeout(() -> emitters.remove(userId));
         emitter.onError((e) -> emitters.remove(userId));
 
+        sendSse(userId, "SseConnect","success");
+
         return emitter;
     }
 
