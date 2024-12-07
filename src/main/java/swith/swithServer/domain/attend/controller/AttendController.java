@@ -21,6 +21,7 @@ import swith.swithServer.domain.usertask.entity.UserTask;
 import swith.swithServer.global.oauth.service.OauthService;
 import swith.swithServer.global.response.ApiResponse;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -36,9 +37,9 @@ public class AttendController {
 
     @GetMapping("/attendStatus")
     @Operation(summary = "출석 현황 가져오기")
-    public ApiResponse<List<AttendStatusResponse>> getTask(@PathVariable Long id, @PathVariable Long studyId){
+    public ApiResponse<List<AttendStatusResponse>> getTask(@PathVariable Long id, @PathVariable Long studyId, @PathVariable LocalDate date){
         StudyGroup studyGroup = groupService.getGroupById(id);
-        Study study = studyService.getStudyById(studyId);
+        Study study = studyService.getStudyByGroupDate(id,date);
         List<Attend> attends = attendRepository.findByStudy(study);
         return new ApiResponse<>(200, AttendStatusResponse.from(attends));
     }
