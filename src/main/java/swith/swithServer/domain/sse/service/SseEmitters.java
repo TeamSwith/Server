@@ -1,5 +1,6 @@
 package swith.swithServer.domain.sse.service;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -9,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
+@Getter
 public class SseEmitters {
 
     private final ConcurrentHashMap<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
@@ -33,6 +35,7 @@ public class SseEmitters {
                         .name(eventName)
                         .data(data));
             } catch (Exception e) {
+                cleanupEmitter(userId);
                 throw new RuntimeException("연결 중 오류 발생",e);
             }
         }
@@ -49,5 +52,26 @@ public class SseEmitters {
                 throw new RuntimeException("연결 중 오류 발생",e);
             }
         });
+    }
+
+
+    public String cleanupEmitter(Long userId){
+        if(!hasEmitter(userId)){
+            return "Emitter with userID " + userId + " does not exist.";
+        }
+        emitters.remove(userId);
+        return "Emitter with userID " + userId + " has been successfully deleted.";
+    }
+
+    public boolean hasEmitter(Long userId){
+        return emitters.containsKey(userId);
+    }
+
+    public SseEmitter getUserEmitter(Long userId){
+        return emitters.get(userId);
+    }
+
+    public ConcurrentHashMap<Long, SseEmitter> getAllEmitter(){
+        return emitters;
     }
 }
