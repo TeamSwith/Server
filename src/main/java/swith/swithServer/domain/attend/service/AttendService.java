@@ -51,6 +51,10 @@ public class AttendService {
                 .orElseThrow(()-> new BusinessException(ErrorCode.STUDY_DOESNT_EXIST));
         Attend attend = attendRepository.findByUserAndStudy(user, study)
                 .orElseThrow(()->new BusinessException(ErrorCode.ATTEND_DOESNT_EXIST));
+        boolean isUserInGroup = userGroupRepository.existsByUserAndStudyGroup(user, studyGroup);
+        if (!isUserInGroup) {
+            throw new BusinessException(ErrorCode.USER_NOT_IN_GROUP);
+        }
         if(attend.getAttendStatus()==AttendStatus.ATTEND)
             throw new BusinessException(ErrorCode.ALREADY_ATTEND);
         attend.updateAttendStatus(AttendStatus.ATTEND);
