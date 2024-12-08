@@ -48,7 +48,7 @@ public class GroupController {
             return new ApiResponse<>(200, GroupLoginResponse.from(studyGroup.getId(), "이미 가입되어 있음"));
         } else {
             //가입되어 있지 않을 때 group 의 정원 확인
-            if (studyGroup.getMemberNum() < studyGroup.getMaxNum()) {
+            if (studyGroup.getMemberNum().get() < studyGroup.getMaxNum()) {
                 return new ApiResponse<>(200, GroupLoginResponse.from(studyGroup.getId(), "가입 전"));
             } else {
                 throw new BusinessException(ErrorCode.MAX_MEMBER);

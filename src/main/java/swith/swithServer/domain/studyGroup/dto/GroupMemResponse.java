@@ -13,7 +13,7 @@ public class GroupMemResponse {
     public static GroupMemResponse from(StudyGroup studyGroup){
         return GroupMemResponse.builder()
                 .id(studyGroup.getId())
-                .mem(studyGroup.getMemberNum())
+                .mem(studyGroup.getMemberNum().get())
                 .build();
     }
 }

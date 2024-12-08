@@ -8,6 +8,7 @@ import swith.swithServer.domain.study.entity.Study;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 
 @Getter
@@ -36,7 +37,7 @@ public class StudyGroup extends BaseEntity {
     private Long maxNum;
 
     @NotNull
-    private Long memberNum;
+    private AtomicLong memberNum;
 
     @NotNull
     private String subject;
@@ -57,7 +58,7 @@ public class StudyGroup extends BaseEntity {
     private List<Study> studies = new ArrayList<>();
 
     public void updateMemberNum(Long memberNum){
-        this.memberNum = memberNum;
+        this.memberNum = new AtomicLong(memberNum);
     }
     public void updateNotice(String notice) {
         this.notice = notice;
