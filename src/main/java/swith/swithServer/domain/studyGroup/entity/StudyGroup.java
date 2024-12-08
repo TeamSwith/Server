@@ -37,7 +37,7 @@ public class StudyGroup extends BaseEntity {
     private Long maxNum;
 
     @NotNull
-    private AtomicLong memberNum;
+    private Long memberNum;
 
     @NotNull
     private String subject;
@@ -58,7 +58,7 @@ public class StudyGroup extends BaseEntity {
     private List<Study> studies = new ArrayList<>();
 
     public void updateMemberNum(Long memberNum){
-        this.memberNum = new AtomicLong(memberNum);
+        this.memberNum = memberNum;
     }
     public void updateNotice(String notice) {
         this.notice = notice;
