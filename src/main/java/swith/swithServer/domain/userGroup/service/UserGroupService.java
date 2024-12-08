@@ -27,7 +27,7 @@ public class UserGroupService {
             throw new BusinessException(ErrorCode.ALREADY_JOIN);
         }
         UserGroup userGroup = new UserGroup(user, studyGroup);
-        studyGroup.updateMemberNum(studyGroup.getMemberNum().incrementAndGet());
+        studyGroup.updateMemberNum(studyGroup.getMemberNum()+1);
         return userGroupRepository.save(userGroup);
     }
 

@@ -21,7 +21,6 @@ import swith.swithServer.domain.usertask.entity.UserTask;
 import swith.swithServer.global.oauth.service.OauthService;
 import swith.swithServer.global.response.ApiResponse;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
