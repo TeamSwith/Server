@@ -37,9 +37,9 @@ public class AttendController {
 
     @GetMapping("/attendStatus")
     @Operation(summary = "출석 현황 가져오기")
-    public ApiResponse<List<AttendStatusResponse>> getTask(@PathVariable Long id, @PathVariable Long studyId, @PathVariable LocalDate date){
+    public ApiResponse<List<AttendStatusResponse>> getTask(@PathVariable Long id, @PathVariable Long studyId){
         StudyGroup studyGroup = groupService.getGroupById(id);
-        Study study = studyService.getStudyByGroupDate(id,date);
+        Study study = studyService.getStudyById(studyId);
         List<Attend> attends = attendRepository.findByStudy(study);
         return new ApiResponse<>(200, AttendStatusResponse.from(attends));
     }
