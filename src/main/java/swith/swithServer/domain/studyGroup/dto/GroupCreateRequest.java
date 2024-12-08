@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import swith.swithServer.domain.studyGroup.entity.Period;
 import swith.swithServer.domain.studyGroup.entity.StudyGroup;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 @Getter
 @Builder
 @AllArgsConstructor
@@ -22,7 +24,7 @@ public class GroupCreateRequest {
                 .groupPw(this.groupPw)
                 .groupName("")
                 .maxNum(0L)
-                .memberNum(0L)
+                .memberNum(new AtomicLong(0))
                 .subject("")
                 .period(Period.NONE)
                 .communication("")
