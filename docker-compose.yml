@@ -33,7 +33,7 @@ services:
         - ./conf.d:/etc/nginx/conf.d
         - /etc/letsencrypt/live/swithweb.com:/etc/letsencrypt/live/swithweb.com:ro
         - /etc/letsencrypt/archive:/etc/letsencrypt/archive:ro
-       # - /var/lib/GeoIP/GeoLite2-Country.mmdb:/var/lib/GeoIP/GeoLite2-Country.mmdb # GeoIP 마운트
+        - /var/lib/GeoIP/GeoLite2-Country.mmdb:/var/lib/GeoIP/GeoLite2-Country.mmdb # GeoIP 마운트
     depends_on:
       - backend
       - frontend
