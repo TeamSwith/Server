@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
     software-properties-common \
     libmaxminddb-dev \
     mmdb-bin \
-    geoipupdate
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN add-apt-repository ppa:maxmind/ppa && apt-get update
 
