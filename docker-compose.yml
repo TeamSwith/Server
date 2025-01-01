@@ -23,7 +23,7 @@ services:
 
   nginx:
     container_name: nginx
-    image: nginx:latest
+    image: tiangolo/nginx-rtmp
     environment:
       - TZ=Asia/Seoul
     ports:
