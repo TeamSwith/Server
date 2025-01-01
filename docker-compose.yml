@@ -30,7 +30,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-        - ./conf.d:/etc/nginx/
+        - ./nginx/:/etc/nginx/
         - /etc/letsencrypt/live/swithweb.com:/etc/letsencrypt/live/swithweb.com:ro
         - /etc/letsencrypt/archive:/etc/letsencrypt/archive:ro
         - /var/lib/GeoIP/GeoLite2-Country.mmdb:/var/lib/GeoIP/GeoLite2-Country.mmdb # GeoIP 마운트
