@@ -1,4 +1,4 @@
-FROM nginx:latest
+FROM nginx:1.18.0
 
 # Install required packages
 RUN apt-get update && apt-get install -y \
@@ -22,9 +22,9 @@ RUN add-apt-repository ppa:maxmind/ppa && apt-get update
 WORKDIR /usr/src
 
 # Download and compile NGINX with GeoIP2 module
-RUN wget http://nginx.org/download/nginx-1.25.0.tar.gz && \
-    tar -zxvf nginx-1.25.0.tar.gz && \
-    cd nginx-1.25.0 && \
+RUN wget http://nginx.org/download/nginx-1.18.0.tar.gz && \
+    tar -zxvf nginx-1.18.0.tar.gz && \
+    cd nginx-1.18.0 && \
     git clone https://github.com/leev/ngx_http_geoip2_module.git && \
     ./configure --with-compat --add-dynamic-module=ngx_http_geoip2_module && \
     make modules && \
