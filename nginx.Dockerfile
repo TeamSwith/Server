@@ -1,13 +1,17 @@
 FROM nginx:latest
 
-# Install required packages
+# 필수 패키지 설치
 RUN apt-get update && apt-get install -y \
     wget \
     unzip \
     curl \
     libmaxminddb-dev \
     build-essential \
-    git \
+    gcc \
+    make \
+    zlib1g-dev \
+    libpcre3 libpcre3-dev \
+    openssl libssl-dev \
     && apt-get clean
 
 # Build GeoIP2 dynamic module
