@@ -23,7 +23,7 @@ services:
 
   nginx:
     container_name: nginx
-    image: k0ka/nginx-geoip2
+    image: swithserver/nginx
     environment:
       - TZ=Asia/Seoul
     ports:
