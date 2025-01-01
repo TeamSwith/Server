@@ -5,8 +5,8 @@ FROM nginx:1.22.1
 # GeoIP2 모듈 및 데이터베이스 설치
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        libnginx-mod-http-geoip2=1.22.1-9 \
-        geoipupdate && \
+        libnginx-mod-http-geoip2 \
+        curl && \
     rm -rf /var/lib/apt/lists/*
 
 
