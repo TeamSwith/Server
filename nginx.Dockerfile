@@ -1,4 +1,4 @@
-FROM nginx:1.18.0
+FROM ubuntu:20.04
 
 # Install required packages
 RUN apt-get update && apt-get install -y \
@@ -16,11 +16,14 @@ RUN apt-get update && apt-get install -y \
     mmdb-bin \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN add-apt-repository ppa:maxmind/ppa && apt-get update
+# Download and install GeoIPUpdate manually
+RUN wget https://github.com/maxmind/geoipupdate/releases/download/v4.11.0/geoipupdate_4.11.0_linux_amd64.deb && \
+    dpkg -i geoipupdate_4.11.0_linux_amd64.deb && \
+    rm geoipupdate_4.11.0_linux_amd64.deb
 
 WORKDIR /usr/src
 
-# Download and compile NGINX with GeoIP2 module
+# Download and compile NGINX 1.18.0 with GeoIP2 module
 RUN wget http://nginx.org/download/nginx-1.18.0.tar.gz && \
     tar -zxvf nginx-1.18.0.tar.gz && \
     cd nginx-1.18.0 && \
@@ -33,6 +36,6 @@ RUN wget http://nginx.org/download/nginx-1.18.0.tar.gz && \
 RUN mkdir -p /etc/nginx/modules && \
     cp -vi objs/ngx_http_geoip2_module.so /etc/nginx/modules/
 
-
 # Start NGINX
 CMD ["nginx", "-g", "daemon off;"]
+
