@@ -1,5 +1,12 @@
 FROM ubuntu:20.04
 
+# Set noninteractive mode for tzdata configuration
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Set timezone to Asia/Seoul
+ENV TZ=Asia/Seoul
+
+
 # Install required packages
 RUN apt-get update && apt-get install -y \
     wget \
@@ -14,6 +21,9 @@ RUN apt-get update && apt-get install -y \
     software-properties-common \
     libmaxminddb-dev \
     mmdb-bin \
+    tzdata \
+    && ln -fs /usr/share/zoneinfo/$TZ /etc/localtime \
+    && dpkg-reconfigure --frontend noninteractive tzdata \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Download and install GeoIPUpdate manually
