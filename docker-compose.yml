@@ -23,7 +23,7 @@ services:
 
   nginx:
     container_name: nginx
-    image: swithserver/nginx
+    image: nginx:latest
     environment:
       - TZ=Asia/Seoul
     ports:
