@@ -20,8 +20,6 @@ RUN wget http://nginx.org/download/nginx-1.25.0.tar.gz && \
     make modules && \
     cp objs/ngx_http_geoip2_module.so /etc/nginx/modules/
 
-# Copy NGINX configuration file
-COPY nginx.conf /etc/nginx/nginx.conf
 
 # Start NGINX
 CMD ["nginx", "-g", "daemon off;"]
