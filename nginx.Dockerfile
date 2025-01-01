@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y \
     libmaxminddb-dev \
     mmdb-bin \
     tzdata \
+    git \
     && ln -fs /usr/share/zoneinfo/$TZ /etc/localtime \
     && dpkg-reconfigure --frontend noninteractive tzdata \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
