@@ -32,9 +32,7 @@ RUN wget http://nginx.org/download/nginx-1.25.0.tar.gz && \
 
 # GeoIP2 module configuration
 RUN mkdir -p /etc/nginx/modules && \
-    cp -vi objs/ngx_http_geoip2_module.so /etc/nginx/modules/ && \
-    mkdir -p /etc/nginx/conf.d && \  # conf.d 디렉터리 생성 추가
-    echo "load_module modules/ngx_http_geoip2_module.so;" > /etc/nginx/conf.d/geoip2.conf
+    cp -vi objs/ngx_http_geoip2_module.so /etc/nginx/modules/
 
 
 # Start NGINX
