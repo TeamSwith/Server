@@ -52,7 +52,7 @@ RUN apt-get purge -y --auto-remove \
 #COPY ./nginx.conf /etc/nginx/nginx.conf
 
 # Expose ports and run NGINX
-EXPOSE 80 443
-CMD ["nginx", "-g", "daemon off;"]
+#EXPOSE 80 443
+#CMD ["nginx", "-g", "daemon off;"]
 
 
