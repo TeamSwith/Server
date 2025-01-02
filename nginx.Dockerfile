@@ -39,9 +39,6 @@ RUN apt-get purge -y --auto-remove \
     wget \
     curl \
     build-essential \
-    libpcre3-dev \
-    zlib1g-dev \
-    libmaxminddb-dev \
     git && \
     rm -rf /usr/src/*
 
