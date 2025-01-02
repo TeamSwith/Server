@@ -31,6 +31,7 @@ RUN ./configure \
     make modules
 
 # Copy the built module to the NGINX modules directory
+RUN mkdir -p /etc/nginx/modules/
 RUN cp objs/ngx_http_geoip2_module.so /etc/nginx/modules/
 
 # Clean up
