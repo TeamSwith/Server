@@ -85,7 +85,7 @@ jobs:
             context: .
             file: ./nginx.Dockerfile
             push: true
-            tags: ${{ secrets.DOCKER_USERNAME }}/nginx
+            tags: ${{ secrets.DOCKER_USERNAME }}/nginx:1.18.0
             no-cache: true # 캐시 사용하지 않음
 #      - name: Build and push Nginx Docker image
 #        run: |
