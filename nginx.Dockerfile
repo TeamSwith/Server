@@ -1,5 +1,5 @@
 # Use the official NGINX base image
-FROM nginx:1.24
+FROM nginx:1.24.0
 
 # Install dependencies
 RUN apt-get update && \
@@ -14,7 +14,7 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 # Download and extract NGINX source code
-ARG NGINX_VERSION=1.24
+ARG NGINX_VERSION=1.24.0
 WORKDIR /usr/src
 RUN wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
     tar -zxvf nginx-${NGINX_VERSION}.tar.gz && \

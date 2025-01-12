@@ -85,7 +85,7 @@ jobs:
             context: .
             file: ./nginx.Dockerfile
             push: true
-            tags: ${{ secrets.DOCKER_USERNAME }}/nginx:1.18.0
+            tags: ${{ secrets.DOCKER_USERNAME }}/nginx:1.24.0
             no-cache: true # 캐시 사용하지 않음
 #      - name: Build and push Nginx Docker image
 #        run: |
@@ -118,7 +118,7 @@ jobs:
             sudo docker rm -f $(sudo docker ps -qa)
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/ubuntu:latest
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/front
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/nginx:1.24
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/nginx:1.24.0
             sudo docker-compose pull
             sudo docker-compose up -d
             sudo docker image prune -f
